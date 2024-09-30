@@ -84,3 +84,4 @@ slovnik["bydliste"] = "Praha"  # přidání nového klíče do slovníku a nasta
 print(slovnik)
 slovnik.pop("bydliste")  # smazání klíče
 print(slovnik)
+
