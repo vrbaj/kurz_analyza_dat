@@ -60,6 +60,9 @@ def nasobeni_rady(*args):
 print(nasobeni_rady(1, 2, 3))
 
 def ukazka_argumenty(povinny_argument, *args):
+    """
+    Ukázka kombinace povinného argumentu a libovolných argumentů
+    """
     print(f"Toto je {povinny_argument}")
     for argument in args:
         print(f"Toto je volitelný argument {argument}")
@@ -67,13 +70,17 @@ def ukazka_argumenty(povinny_argument, *args):
 print(ukazka_argumenty(1, 2, 3))
 
 def vytiskni_jmeno(jmeno, prijmeni):
+    """
+    Demonstrace pojmenovaných argumentů a jejich nezávislosti na pořadí v definici funkce
+    """
     print(f"{jmeno} {prijmeni}")
 
 vytiskni_jmeno(prijmeni="Turing", jmeno="Alan")
 
 def vytiskni_latinskoamericke_jmeno(**kwargs):
     """
-    Libovolný počet pojmenovaných argumentů
+    Libovolný počet pojmenovaných argumentů.
+    Uvnitř funkce je kwargs slovník, ale jako parametry musíme vkládat pojmenované argumenty!
     """
     if "kmotrovske" in kwargs.keys():
         print(f"{kwargs['jmeno']} {kwargs['prostredni_jmeno']} {kwargs['prijmeni']} {kwargs['kmotrovske']}")
@@ -83,6 +90,9 @@ def vytiskni_latinskoamericke_jmeno(**kwargs):
 vytiskni_latinskoamericke_jmeno(jmeno="Louis", prostredni_jmeno="Rodriquez", prijmeni="Lopez", kmotrovske = "Juan")
 
 def oblibena_barva(barva="červená"):
+    """
+    Defaultní hodnota argumentu
+    """
     print(f"Moje oblíbená barva je {barva}")
 
 oblibena_barva()
