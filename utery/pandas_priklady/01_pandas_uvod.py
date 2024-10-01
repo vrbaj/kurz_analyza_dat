@@ -101,4 +101,14 @@ print(df_jmena.merge(df_zamestnani, on="id")) # v případě stejného názvu dv
 df_jmena.rename(columns={"id": "ID"}, inplace=True) # přejmenování názvu sloupce
 # Sloučení podle sloupců se dvěma různými názvy
 print("")
-print(df_jmena.merge(df_zamestnani, left_on="ID", right_on="id"))
+print(df_jmena.merge(df_zamestnani, left_on="ID", right_on="id", how="left"))
+
+# Přidání jednoho dalšího identifikátoru do tabulky se zaměstnáními
+df_zamestnani.loc[df_zamestnani.shape[0], :] = ["celník", "ID004"]
+print("")
+print(df_jmena)
+print(df_zamestnani)
+
+print("LEFT JOIN")
+print(df_jmena.merge(df_zamestnani, left_on="ID", right_on="id", how="left"))
+
