@@ -38,3 +38,33 @@ statistika, p_hodnota = stats.f_oneway(data_anova.iloc[:, 0],
                                        data_anova.iloc[:, 3])
 
 print(f"f-statistika: {statistika}, p-hodnota: {p_hodnota}.")
+
+# chí-kvadrát test dobré shody
+data_dobra_shoda = pd.read_csv("zachyty_data.csv")
+data_dobra_shoda.set_index("Přechod", inplace=True)
+print(data_dobra_shoda.head(6))
+
+# Celorepublikové počty
+celorepublikove_pocty = data_dobra_shoda.loc["Celorepublikové počty", :]
+print(celorepublikove_pocty)
+
+# Iterace přes jednotlivé přechody a vypočtení testové hodnoty
+for index, radek in data_dobra_shoda.iterrows():
+    if index == "Celorepublikové počty":
+        continue
+    else:
+        # Hodnoty záchytu z daného místa
+        zachyty = radek.values
+        # Kontingenční tabulka
+        data = [zachyty, celorepublikove_pocty]
+        # Provedení chí-kvadrát testu dobré shody
+        chi2_statistika, chi2_p_hodnota, _, _ = stats.chi2_contingency(data)
+        # Vypsání výsledků
+        print(f"\nPorovnání pro: {index}")
+        print(f"Chí-kvadrát statistika: {chi2_statistika}, p-hodnota: {chi2_p_hodnota}.")
+        # Vyhodnocení testu
+        if chi2_p_hodnota < 0.05:
+            print("Zamítame nulovou hypotézu: existuje významný rozdíl mezi záchyty"
+                  " a celorepublikovými počty.")
+        else:
+            print("Nedokážeme zamítnout nulovou hypotézu: žádný významný rozdíl nebyl zjištěn.")
