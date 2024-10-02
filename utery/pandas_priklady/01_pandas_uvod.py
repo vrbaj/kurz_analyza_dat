@@ -111,4 +111,21 @@ print(df_zamestnani)
 
 print("LEFT JOIN")
 print(df_jmena.merge(df_zamestnani, left_on="ID", right_on="id", how="left"))
+print("RIGHT JOIN")
+print(df_jmena.merge(df_zamestnani, left_on="ID", right_on="id", how="right"))
+print("INNER JOIN")
+print(df_jmena.merge(df_zamestnani, left_on="ID", right_on="id", how="inner"))
+print("OUTER JOIN")
+print(df_jmena.merge(df_zamestnani, left_on="ID", right_on="id", how="outer"))
 
+# Ukládání dat do souboru - df.to_...
+# Uložení do formátu CSV: sep - oddělovač, index=False - neuloží do souboru index
+df_jmena.to_csv("jmena.csv", sep=";", index=False)
+df_zamestnani.to_excel("zamestnani.xlsx")
+print(df_jmena.to_dict())
+
+# Načtení dat - pd.read_...
+nactena_data = pd.read_csv("jmena.csv", sep=";", encoding="utf-8")
+print(nactena_data)
+nactena_data = pd.read_excel("zamestnani.xlsx")
+print(nactena_data)
