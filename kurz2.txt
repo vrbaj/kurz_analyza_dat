@@ -1,0 +1,23 @@
+#1	"Úvod do shlukové analýzy a vybrané metody shlukové analýzy 1: k-nejbližších sousedů, k-means, DBSCAN
+Aplikace zvolených klasifikačních metod pomocí knihovny Scikit-learn a jejich porovnání"
+
+#2	"Hierarchické shlukování (dendrogram) a vybrané metody shlukové analýzy 2: samoorganizující se mapy
+Aplikace zvolených klasifikačních metod pomocí knihovny sklearn-som či minisom a jejich porovnání"
+
+#3	"Úvod do neuronových sítí, učení sítí, gradientní metody, multi-layer perceptron (MLP)
+MLP - univerzální aproximátor, učení neuronových sítí, klasifikace a regrese"
+
+#4	"Aplikace neuronových sítí pro zpracování časových řad
+Predikce časových řad"
+
+#5	"Aplikace neuronových sítí pro zpracování obrazových dat
+Problematika klasifikace, detekce objektů, tracking"
+
+#6	"Use case - ukázka pracovního postupu při zpracování nového datasetu
+Ukázka regresního datasetu"
+
+#7	"Use case - ukázka pracovního postupu při zpracování nového datasetu
+Ukázka klasifikačního datasetu"
+
+#8	"Vytváření automatických reportů ze zpracovaných dat
+Automatizace generování reportů s výsledky"
