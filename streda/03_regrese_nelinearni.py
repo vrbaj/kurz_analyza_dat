@@ -64,4 +64,18 @@ predikce_exp2_modelu = nejlepsi_parametry_exp2[0] * np.exp(nejlepsi_parametry_ex
 plt.figure()
 plt.scatter(H, PI)
 plt.scatter(H, predikce_exp2_modelu)
+
+plt.figure()
+residua_2exp = PI - predikce_exp2_modelu # výpočet residuí exp2
+fig = plt.figure()
+ax = fig.add_subplot(111)
+stats.probplot(residua_2exp, dist="norm", plot=pylab)  # QQ plot modelu exp2
+
 plt.show()
+
+print("Stav pacienta ve 70 dni")
+predikce_exp2_70 = nejlepsi_parametry_exp2[0] * np.exp(nejlepsi_parametry_exp2[1] * 70)
+print(predikce_exp2_70)
+
+print("Vyhodnocení modelů")
+print("")
