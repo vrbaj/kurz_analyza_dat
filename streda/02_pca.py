@@ -148,8 +148,8 @@ for i, pc_vars in enumerate(zip(pca_var, pca_cumvar)):
     ax_pccumvar.text(i, pc_vars[1] + 0.01 * min(pca_cumvar), f"{pc_vars[1]:.2%}", ha='center')
 
 ## popisky
-ax_pcvar.set_xlabel("Explained Variance")
-ax_pccumvar.set_xlabel("Cumulative Explained Variance")
+ax_pcvar.set_xlabel("Vyvětlená Variance")
+ax_pccumvar.set_xlabel("Kumulativní vysvětlená Variance")
 
 ## čísla na osách
 yticks = [f"{i:.0%}" for i in np.linspace(0,1,6)]
