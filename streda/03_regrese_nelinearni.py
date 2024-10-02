@@ -78,4 +78,5 @@ predikce_exp2_70 = nejlepsi_parametry_exp2[0] * np.exp(nejlepsi_parametry_exp2[1
 print(predikce_exp2_70)
 
 print("Vyhodnocení modelů")
-print("")
+print(f"Suma čtverců odchylek lineární model: {np.sum(residua_linearni_model ** 2)}")
+print(f"Suma čtverců odchylek exp2 modelu: {np.sum(residua_2exp ** 2)}")
