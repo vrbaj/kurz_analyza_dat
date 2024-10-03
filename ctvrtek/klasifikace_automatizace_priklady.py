@@ -12,8 +12,13 @@ from sklearn.metrics import accuracy_score, recall_score, precision_score, roc_c
 from matplotlib import pyplot as plt
 
 
+# Vytvoření tabulky pro výsledky
+df_vysledky = pd.DataFrame(columns = ["Klasifikator", "Parametry", "Presnost"],
+                           data=[]
+)
+
 # Nahrání dat
-data = pd.read_csv("klasifikace_balancovany.csv")
+data = pd.read_csv("klasifikace_nebalancovany.csv")
 # print(data.head())
 print(data.info())
 # Přejmenování prvního sloupce na "Vystup"
@@ -93,3 +98,13 @@ for klasifikator, nastaveni_parametru in zip(seznam_clf, seznam_nastaveni_parame
     print(f"Senzitivita: {recall_score(y_test, y_predikce):.2%}, "
           f"Specificita: {recall_score(y_test, y_predikce, pos_label=0):.2%}, "
           f"PPV: {precision_score(y_test, y_predikce):.2%}")
+
+    # Uložení nejlepšího výsledku klasifikátoru do tabulky
+    radek_vysledku = [klasifikator[0], grid_search.best_params_, test_score]
+    df_vysledky.loc[df_vysledky.shape[0], :] = radek_vysledku
+
+# Nalezení modelu s nejlepšími výsledky
+# Návrat řádku, kde je maximální hodnota přesnosti
+print(df_vysledky[df_vysledky["Presnost"] == df_vysledky["Presnost"].max()])
+# Uložení tabulky jako csv
+df_vysledky.to_csv("vysledky_klasifikace.csv", index=False)

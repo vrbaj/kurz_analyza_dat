@@ -11,7 +11,7 @@ from matplotlib import pyplot as plt
 
 
 # Nahrání dat
-data = pd.read_csv("klasifikace_balancovany.csv")
+data = pd.read_csv("klasifikace_nebalancovany.csv")
 # print(data.head())
 print(data.info())
 # Přejmenování prvního sloupce na "Vystup"
