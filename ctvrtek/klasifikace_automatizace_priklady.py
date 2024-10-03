@@ -52,12 +52,20 @@ print("-------------SVM-------------")
 # grid_search.best_params_ vrací nastavení pro model s nejvyšší dosaženou přesností
 # podle křížové validace
 print(f"Nejlepší nastavení SVM: {grid_search.best_params_}.")
-# Testování modelu na neznámých datech
-test_score = grid_search.score(X_test, y_test)
-print(f"Testovací přesnost: {test_score:.2%}")
 # Zjištění skóre z křížové validace trénovacích dat
 cv_skore = cross_val_score(grid_search.best_estimator_, X_train, y_train, cv=5, scoring="accuracy")
 cv_skore_text = []
 for skore in cv_skore:
     cv_skore_text.append(f"{skore:.2%}")
 print(f"Skóre z iterací křížové validace: {', '.join(cv_skore_text)}")
+# Testování modelu na neznámých datech
+test_score = grid_search.score(X_test, y_test)
+print(f"Testovací přesnost: {test_score:.2%}")
+# Matice záměn
+y_predikce = grid_search.predict(X_test)
+matice_zamen = confusion_matrix(y_test, y_predikce)
+TN, FP, FN, TP = matice_zamen.ravel()
+print(f"TP: {TP}, TN: {TN}, FP: {FP}, FN: {FN}")
+print(f"Senzitivita: {recall_score(y_test, y_predikce):.2%}, "
+      f"Specificita: {recall_score(y_test, y_predikce, pos_label=0):.2%}, "
+      f"'Preciznost': {precision_score(y_test, y_predikce):.2%}")
