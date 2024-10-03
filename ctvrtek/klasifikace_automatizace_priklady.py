@@ -28,7 +28,27 @@ y = data["Vystup"].to_numpy()
 # Rozdělení datasetu na trénovací a testovací sety
 X_train, X_test, y_train, y_test = train_test_split(X, y,
                                                     test_size=0.4, random_state=42)
-
+# Až sem stačí provést jednou!
+# Seznam objektů pro jednotlivé klasifikátory
+seznam_clf = [SVC(), DecisionTreeClassifier(), RandomForestClassifier()]
+seznam_nastaveni_parametru = [
+    # Nastavení hyperparametrů pro SVM
+    {"svm__C": [0.1, 1, 10], # Regularizační parametr
+     "svm__kernel": ["linear", "rbf"], # Kernel (jádrová funkce)
+     "svm__gamma": ["scale", "auto"]}, # Gamma parametr (pro 'rbf' kernel)
+    # Nastavení hyperparametrů pro rozhodovací strom
+    {"tree__max_depth": [3, 5, 10, None], # Maximální hloubka větvení
+     "tree__min_samples_split": [2, 5, 10], # Minimální počet vzorků v uzlu před rozdělením
+     "tree__min_samples_leaf": [1, 2, 4], # Minimální počet vzorků v koncovém uzlu
+     "tree__criterion": ["gini", "entropy"]}, # Kriteriální funkce pro rozdělení vzorků v uzlu
+    # Nastavení hyperparametrů pro náhodný les
+    {"rf__n_estimators": [50, 100], # Počet modelů v náhodném lese
+     "rf__max_depth": [3, 10, None], # Maximální hloubka větvení každého modelu
+     "rf__min_samples_split": [2, 5], # Minimální počet vzorků v uzlu před rozdělením
+     "rf__min_samples_leaf": [1, 2, 4], # Minimální počet vzorků v koncovém uzlu
+     "rf__criterion": ["gini", "entropy"], # Kriteriální funkce pro rozdělení vzorků v uzlu
+     "rf__bootstrap": [True, False]}, # Volba, zdali má být použit bootstrapping
+]
 # Vytvoření pipeline pro SVM klasifikaci
 pipeline = Pipeline([
     ('scaler', StandardScaler()), # Škálování dat různých rozsahů na stejný interval
@@ -68,4 +88,4 @@ TN, FP, FN, TP = matice_zamen.ravel()
 print(f"TP: {TP}, TN: {TN}, FP: {FP}, FN: {FN}")
 print(f"Senzitivita: {recall_score(y_test, y_predikce):.2%}, "
       f"Specificita: {recall_score(y_test, y_predikce, pos_label=0):.2%}, "
-      f"'Preciznost': {precision_score(y_test, y_predikce):.2%}")
+      f"PPV: {precision_score(y_test, y_predikce):.2%}")
