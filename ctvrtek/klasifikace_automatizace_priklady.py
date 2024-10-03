@@ -75,7 +75,7 @@ for klasifikator, nastaveni_parametru in zip(seznam_clf, seznam_nastaveni_parame
     print(f"-------------{klasifikator[0]}-------------")
     # grid_search.best_params_ vrací nastavení pro model s nejvyšší dosaženou přesností
     # podle křížové validace
-    print(f"Nejlepší nastavení SVM: {grid_search.best_params_}.")
+    print(f"Nejlepší nastavení: {grid_search.best_params_}.")
     # Zjištění skóre z křížové validace trénovacích dat
     cv_skore = cross_val_score(grid_search.best_estimator_, X_train, y_train, cv=5, scoring="accuracy")
     cv_skore_text = []
