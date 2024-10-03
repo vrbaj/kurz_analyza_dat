@@ -40,3 +40,11 @@ print(f"Přesnost predikce: {accuracy_score(y_test, y_predikce):.4f}")
 print(f"Senzitivita predikce: {recall_score(y_test, y_predikce):.4f}")
 print(f"Pozitivní prediktivní hodnota: {precision_score(y_test, y_predikce):.4f}")
 print(f"Selektivita predikce: {recall_score(y_test, y_predikce, pos_label=0):.4f}")
+
+fpr, tpr, _ = roc_curve(y_test, y_predikce) # Hodnoty TPR a FPR pro ROC křivku
+# Vykreslení ROC křivky
+plt.figure()
+plt.plot(fpr, tpr)
+plt.xlabel("FPR")
+plt.ylabel("TPR")
+plt.show()
