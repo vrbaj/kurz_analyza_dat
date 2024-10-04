@@ -4,6 +4,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 
+from sklearn import metrics
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import  LinearRegression
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.svm import SVR
+from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
+
 # načtení datasetu
 data = pd.read_csv("House_Rent_Dataset.csv")
 # hlavička
@@ -78,4 +86,25 @@ plt.title("Boxenplot pro pocet pokojů a najem")
 fig, axes = plt.subplots(figsize=(15,10))
 sns.boxenplot(x="koupelny", y="najem", data=data)
 plt.title("Boxenplot pro koupelny a najem")
+# smazání neužčitečných/problematických sloupečků z tabulky
+data = data.drop(["datum_inzeratu", "okres", "patro"], axis=1)
+# kontrola hlavičky po smazání
+print(data.head())
+
+# korelace pro číselné sloupečky
+corr = data[["pocet_pokoju", "najem", "plocha", "koupelny"]].corr()
+plt.subplots(figsize=(8, 6))
+sns.heatmap(corr, vmax=1, square=False,annot=True)
 plt.show()
+
+data = pd.get_dummies(data, columns=["druh_lokality", "mesto", "zarizeno",
+                                     "preferovany_najemce", "kontakt"])
+print(data.head())
+print(data.shape)
+
+# data pro regresi
+X = data.drop("najem", axis=1)
+y = data["najem"]
+
+X_trenovaci, X_testovaci, y_trenovaci, y_testovaci = train_test_split(X, y,
+                                                                      test_size=0.2, random_state=42)
