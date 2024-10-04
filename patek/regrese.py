@@ -107,4 +107,31 @@ X = data.drop("najem", axis=1)
 y = data["najem"]
 
 X_trenovaci, X_testovaci, y_trenovaci, y_testovaci = train_test_split(X, y,
-                                                                      test_size=0.2, random_state=42)
+                                                                      test_size=0.2,
+                                                                      random_state=42)
+print(y_trenovaci.shape)
+print(y_testovaci.shape)
+y_trenovaci = y_trenovaci.values.reshape(-1, 1)
+y_testovaci = y_testovaci.values.reshape(-1, 1)
+
+# škálování dat
+from sklearn.preprocessing import StandardScaler
+transformace_X = StandardScaler()
+transformace_y = StandardScaler()
+X_trenovaci = transformace_X.fit_transform(X_trenovaci)
+y_trenovaci = transformace_y.fit_transform(y_trenovaci)
+# POZOR NIKDY NEŠKÁLOVAT TRÉNOVACÍ A TESTOVACÍ DATA DOHROMADY!!!!! DATALEAKAGE
+X_testovaci = transformace_X.transform(X_testovaci)
+y_testovaci = transformace_y.transform(y_testovaci)
+
+# lineární regrese
+linearni_model = LinearRegression()
+linearni_model.fit(X_trenovaci, y_trenovaci)
+linearni_model_predikce = linearni_model.predict(X_testovaci)
+
+mae_lm = mean_absolute_error(y_testovaci, linearni_model_predikce)
+mse_lm = mean_squared_error(y_testovaci, linearni_model_predikce)
+rmse_lm = np.sqrt(mse_lm)
+print(f"Střední absolutní chyba lin. modelu {mae_lm}")
+print(f"Střední kvadratická chyba lin. modelu {mse_lm}")
+print(f"RMSE lineárního modelu {rmse_lm}")
