@@ -54,10 +54,28 @@ ax = sns.countplot(x="pocet_pokoju", data=data)
 plt.figure()
 ax = sns.countplot(x="koupelny", data=data)
 plt.show()
-print(data.koupelny.value_counts())
+
 fig = px.pie(data.koupelny.value_counts(), values="count", height=700, width=700, color_discrete_sequence=px.colors.sequential.deep,
-             title="Koupelny - koláčový graf")
+             title="Koupelny - koláčový graf", names=data.koupelny.value_counts().index)
 fig.update_traces(textfont_size=15)
 fig.show()
 
+# přehled měst
+ax = sns.countplot(x="mesto", data=data)
 #plt.show()
+
+fig = px.pie(data.mesto.value_counts(), values="count", height=700, width=700, color_discrete_sequence=px.colors.sequential.deep,
+             title="Města - koláčový graf", names=data.mesto.value_counts().index)
+fig.show()
+
+# bivariantní analýza
+# počet pokojů - nájem
+fig, axes = plt.subplots(figsize=(15,10))
+sns.boxenplot(x="pocet_pokoju", y="najem", data=data)
+plt.title("Boxenplot pro pocet pokojů a najem")
+
+# koupelny - nájem
+fig, axes = plt.subplots(figsize=(15,10))
+sns.boxenplot(x="koupelny", y="najem", data=data)
+plt.title("Boxenplot pro koupelny a najem")
+plt.show()
