@@ -135,3 +135,29 @@ rmse_lm = np.sqrt(mse_lm)
 print(f"Střední absolutní chyba lin. modelu {mae_lm}")
 print(f"Střední kvadratická chyba lin. modelu {mse_lm}")
 print(f"RMSE lineárního modelu {rmse_lm}")
+
+# regresní rozhodovací strom
+dt_model = DecisionTreeRegressor(random_state=42)
+dt_model.fit(X_trenovaci, y_trenovaci)
+dt_model_predikce = dt_model.predict(X_testovaci)
+
+mae_dt = mean_absolute_error(y_testovaci, dt_model_predikce)
+mse_dt = mean_squared_error(y_testovaci, dt_model_predikce)
+rmse_dt = np.sqrt(mse_dt)
+print(f"Střední absolutní chyba dt modelu {mae_dt}")
+print(f"Střední kvadratická chyba dt modelu {mse_dt}")
+print(f"RMSE dt modelu {rmse_dt}")
+
+# SVR
+svr_model = SVR()
+svr_model.fit(X_trenovaci, y_trenovaci)
+svr_model_predikce = svr_model.predict(X_testovaci)
+
+mae_svr = mean_absolute_error(y_testovaci, svr_model_predikce)
+mse_svr = mean_squared_error(y_testovaci, svr_model_predikce)
+rmse_svr = np.sqrt(mse_svr)
+print(f"Střední absolutní chyba svr modelu {mae_svr}")
+print(f"Střední kvadratická chyba svr modelu {mse_svr}")
+print(f"RMSE svr modelu {rmse_svr}")
+
+
