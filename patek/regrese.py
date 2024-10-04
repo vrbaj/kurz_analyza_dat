@@ -160,4 +160,28 @@ print(f"Střední absolutní chyba svr modelu {mae_svr}")
 print(f"Střední kvadratická chyba svr modelu {mse_svr}")
 print(f"RMSE svr modelu {rmse_svr}")
 
+# náhodný les
+rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+rf_model.fit(X_trenovaci, y_trenovaci)
+rf_model_predikce = rf_model.predict(X_testovaci)
+
+mae_rf = mean_absolute_error(y_testovaci, rf_model_predikce)
+mse_rf = mean_squared_error(y_testovaci, rf_model_predikce)
+rmse_rf = np.sqrt(mse_rf)
+print(f"Střední absolutní chyba rf modelu {mae_rf}")
+print(f"Střední kvadratická chyba rf modelu {mse_rf}")
+print(f"RMSE rf modelu {rmse_rf}")
+
+# lasso regresi
+from sklearn import linear_model
+lasso = linear_model.Lasso(alpha=0.1)
+lasso.fit(X_trenovaci, y_trenovaci)
+lasso_predikce = lasso.predict(X_testovaci)
+
+mae_lasso = mean_absolute_error(y_testovaci, lasso_predikce)
+mse_lasso = mean_squared_error(y_testovaci, lasso_predikce)
+rmse_lasso = np.sqrt(mse_lasso)
+print(f"Střední absolutní chyba lasso modelu {mae_lasso}")
+print(f"Střední kvadratická chyba lasso modelu {mse_lasso}")
+print(f"RMSE lasso modelu {rmse_lasso}")
 
