@@ -163,4 +163,18 @@ df_transakce.dropna(axis=0, inplace=True)
 print(df_transakce.shape)
 
 #TODO: Vsechny korunove transakce v cervnu 2023
+print(df_transakce[
+    (df_transakce["mena"] == "CZK") &
+    (df_transakce["datum"] > "2023-05-31") &
+    (df_transakce["datum"] < "2023-07-01")
+      ])
+
+print(df_transakce[
+    (df_transakce["mena"] == "CZK") &
+    (df_transakce["datum"].str.contains("2023-06"))
+      ])
 #TODO: Soucty EUR transakci pro jednotlive firmy (udaj firmy bude jeji nazev misto ICO)
+sloucena_tabulka = df_partneri.merge(df_transakce, on="ico", how="left")
+sloucena_tabulka_eur = sloucena_tabulka[sloucena_tabulka["mena"] == "EUR"]
+soucty_eur_pro_firmy = sloucena_tabulka_eur.groupby("nazev")["castka"].sum()
+print(soucty_eur_pro_firmy)
