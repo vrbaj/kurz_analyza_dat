@@ -3,7 +3,7 @@ import shutil
 
 
 if __name__ == "__main__":
-    cesta = Path(".")
+    cesta = Path("")
     print(cesta.resolve())  # vrátí absolutní cestu
     cela_cesta = Path("C:/", "Users")
     print(cela_cesta.resolve())
@@ -25,14 +25,14 @@ if __name__ == "__main__":
     adresare.mkdir(exist_ok=True, parents=True)  # vytvoření adresářů
 
     # Path(".", "temp").rename("prejmenovany_temp")  # přejmenování adresáře/souboru
-    zdroj = Path(".", "soubory", "soubor.txt")
-    cil = Path(".", "prejmenovany_temp", "soubor_kopie.txt")
+    zdroj = Path("", "soubory", "soubor.txt")
+    cil = Path("", "prejmenovany_temp", "soubor_kopie.txt")
     # shutil.copy2(zdroj, cil)  # kopírování souboru
     # zdroj.rename(cil)  # přesun souboru
 
-    adresar_pro_smazani = Path(".", "temp")
+    adresar_pro_smazani = Path("", "temp")
     print(adresar_pro_smazani.resolve())
     shutil.rmtree(adresar_pro_smazani)
 
-    soubor_pro_smazani = Path(".", "soubory", "soubor_pro_psani.txt")
+    soubor_pro_smazani = Path("", "soubory", "soubor_pro_psani.txt")
     soubor_pro_smazani.unlink(missing_ok=True)
