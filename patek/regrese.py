@@ -184,4 +184,3 @@ rmse_lasso = np.sqrt(mse_lasso)
 print(f"Střední absolutní chyba lasso modelu {mae_lasso}")
 print(f"Střední kvadratická chyba lasso modelu {mse_lasso}")
 print(f"RMSE lasso modelu {rmse_lasso}")
-
