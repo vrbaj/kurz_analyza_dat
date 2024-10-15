@@ -1,6 +1,6 @@
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, PageBreak,
-                                Table, Image, TableStyle)
+                                Table, Image, KeepTogether)
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 from reportlab.pdfbase.ttfonts import TTFont
@@ -12,6 +12,7 @@ pdfmetrics.registerFont(TTFont("Arial", "font/arial.ttf"))
 pdfmetrics.registerFont(TTFont("Courrier", "font/courbd.ttf"))
 
 import pandas as pd
+import numpy as np
 
 # Nacteni dat
 data_kontroly = pd.read_csv("Data_kontroly.csv", sep=";")
@@ -83,13 +84,44 @@ text_k_popisu_kontrol = (f"V období od {datum_od_pro_tisk} do {datum_do_pro_tis
                          f"ve výši {celkova_vybrana_castka} Kč.")
 odstavec_kratky_uvod = Paragraph(text_k_popisu_kontrol, styl_normalni)
 
+# Tabulka
+# Nahrani tabulky, jez bude vlozena
+tabulka = pd.read_csv("mezirocni_zmeny_kontroly.csv")
+# Zmena datoveho typu u mesice pro potlaceni zmeny na float
+tabulka["mesic"] = tabulka["mesic"].astype(str)
+# Prevedeni tabulky na seznam seznamu
+tabulka_v_seznamech = [["MĚSÍC", "2022", "2023", "MEZIROČNÍ ZMĚNA"]] + \
+                      np.array(tabulka).tolist()
+nadpis_pro_tabulku = Paragraph("Tabulka meziročních změn v počtu kontrol",
+                               styl_nadpis2)
+tabulka_report = Table(tabulka_v_seznamech)
+tabulka_report.setStyle(
+    # 'Vlastnost', rozsah bunek definovany cislem sloupce a radku, hodnota
+    [("FONTNAME", (0, 0), (-1, -1), "Arial"),
+     ("BACKGROUND", (0, 0), (-1, 0), colors.grey), # pozadi hlavicky
+     ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke), # text hlavicky
+     ("ALIGN", (0, 0), (0, -1), "LEFT"), # zarovnani prvniho sloupce
+     ("ALIGN", (-1, 0), (-1, -1), "RIGHT"), # zarovnani posledniho sloupce doprava
+     ("BOTTOMPADDING", (0, 0), (-1, 0), 12), # odsazeni od spodni hrany bunky
+     ("GRID", (0, 0), (-1, -1), 1, colors.black)] # ohraniceni bunek
+)
+
+# Vlozeni obrazku
+nadpis_k_obrazku = Paragraph("Mapa výskytů kontrol", styl_nadpis2)
+obrazek = Image("vyskyty_kontrol.png")
+sirka, vyska = obrazek.wrap(0, 0)
+obrazek.drawWidth = max_sirka
+obrazek.drawHeight = max_sirka / sirka * vyska
 # Ulozeni jednotlivych casti dokumentu
 prvky_dokumentu = [
     odsazeni_do_pul_stranky,
     nazev_dokumentu,
     zalomeni_stranky,
     nadpis_kratky_uvod,
-    odstavec_kratky_uvod
+    odstavec_kratky_uvod,
+    nadpis_pro_tabulku,
+    tabulka_report,
+    KeepTogether([nadpis_k_obrazku,obrazek]) # spolecne na stejne strance
 ]
 
 # Vygenerovani dokumentu
