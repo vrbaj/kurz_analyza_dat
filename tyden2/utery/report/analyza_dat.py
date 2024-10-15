@@ -101,6 +101,7 @@ print("\n----Kontingencni tabulka----")
 print(mezirocni_zmeny_kontab)
 fig, ax = plt.subplots(figsize=(10, 10))
 mezirocni_zmeny_kontab.reset_index().plot(ax=ax, x="mesic", y="mezirocni_zmena", kind="bar")
+mezirocni_zmeny_kontab.to_csv("mezirocni_zmeny_kontroly.csv")
 
 ## Ulozeni ID kontrol pro problematicke radky
 seznam_id = []
