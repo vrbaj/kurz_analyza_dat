@@ -103,4 +103,23 @@ print("\n----Kontingencni tabulka----")
 print(mezirocni_zmeny_kontab)
 fig, ax = plt.subplots(figsize=(10, 10))
 mezirocni_zmeny_kontab.reset_index().plot(ax=ax, x="mesic", y="mezirocni_zmena", kind="bar")
-plt.show()
+
+## Ulozeni ID kontrol pro problematicke radky
+seznam_id = []
+# Problemove pokuty (nebyla udelena zadna, nebo byla vyssi nez 5 tisíc)
+podminka_pokuty = (data_kontroly["penalty"] == 0) | (data_kontroly["penalty"]> 5000)
+seznam_id = seznam_id + data_kontroly[podminka_pokuty]["ID_kontrola"].tolist()
+# Radky s chybejicimi ID vozidla
+podminka_vozidla = data_kontroly["ID_vozidla"].isna()
+seznam_id = seznam_id + data_kontroly[podminka_vozidla]["ID_kontrola"].tolist()
+# Kontrola, jestli ID kontroly jsou unikatni
+tabulka_pocty_id_kontrol = data_kontroly["ID_kontrola"].value_counts().sort_values(ascending=False).reset_index()
+podminka_duplicity = tabulka_pocty_id_kontrol["count"] > 1
+seznam_id = seznam_id + tabulka_pocty_id_kontrol[podminka_duplicity]["ID_kontrola"].tolist()
+# Ulozeni do TXT souboru
+with open("problemova_id_kontroly.txt", "w") as f:
+    # Prevedeni seznamu na mnozinu pro odstraneni duplicit
+    for id in set(seznam_id):
+        # Iterace skrz seznam a vlozeni id po jednom, vzdy na novy radek
+        f.write(str(id) + "\n")
+# plt.show()
