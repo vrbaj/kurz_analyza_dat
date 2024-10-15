@@ -82,7 +82,7 @@ kody_kontroly_sumy.plot(x="kod", y="soucet", kind="bar")
 
 ## Mezirocni zmeny v poctu provedenych kontrol
 # Odstraneni casu z data
-data_kontroly["LocDate"] = data_kontroly["LocDate"].apply(lambda x: x.split(" "))
+data_kontroly["LocDate"] = data_kontroly["LocDate"].apply(lambda x: x.split(" ")[0])
 data_kontroly["LocDate"] = pd.to_datetime(data_kontroly["LocDate"])
 # Ulozeni informace o roce a mesici z datetime
 data_kontroly["rok"] = data_kontroly["LocDate"].dt.year
