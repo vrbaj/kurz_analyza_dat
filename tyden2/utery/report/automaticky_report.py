@@ -29,7 +29,7 @@ datum_do_pro_tisk = ".".join(datum_do_seznam)
 
 # Pocet vybranych pokut a celkova vybrana castka
 pocet_pokut = data_kontroly[data_kontroly["penalty"] > 0].shape[0]
-celkova_vybrana_castka = data_kontroly["penalty"].sum()
+celkova_vybrana_castka = f"{data_kontroly["penalty"].sum():,}".replace(",",'\xa0')
 
 # Vytvoreni objektu pro dokument
 dokument = SimpleDocTemplate("report.pdf", pagesize=A4)
@@ -72,10 +72,25 @@ styl_normalni.name = "normalni"
 styl_normalni.fontName = "Arial"
 
 # Prvni stranka dokumentu - nazev
+odsazeni_do_pul_stranky = Spacer(1, max_vyska / 2 - 48)
 nazev_dokumentu = Paragraph("Automatizovaný report", styl_nazev)
+zalomeni_stranky = PageBreak()
+
+# Kratky uvod
+nadpis_kratky_uvod = Paragraph("Krátký popis kontrol", styl_nadpis1)
+text_k_popisu_kontrol = (f"V období od {datum_od_pro_tisk} do {datum_do_pro_tisk} bylo"
+                         f" provedeno {pocet_pokut} kontrol. Celkově byly uloženy pokuty"
+                         f"ve výši {celkova_vybrana_castka} Kč.")
+odstavec_kratky_uvod = Paragraph(text_k_popisu_kontrol, styl_normalni)
 
 # Ulozeni jednotlivych casti dokumentu
-prvky_dokumentu = [nazev_dokumentu]
+prvky_dokumentu = [
+    odsazeni_do_pul_stranky,
+    nazev_dokumentu,
+    zalomeni_stranky,
+    nadpis_kratky_uvod,
+    odstavec_kratky_uvod
+]
 
 # Vygenerovani dokumentu
 dokument.build(prvky_dokumentu)
