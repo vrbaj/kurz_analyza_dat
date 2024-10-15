@@ -89,3 +89,17 @@ data_kontroly["rok"] = data_kontroly["LocDate"].dt.year
 data_kontroly["mesic"] = data_kontroly["LocDate"].dt.month
 # Odfiltrovani dat z roku 2024
 mezirocni_zmeny = data_kontroly[data_kontroly["rok"] != 2024].copy()
+# Seskupeni podle roku a mesice, nalezeni poctu pro kazdou kombinaci
+mezirocni_zmeny = mezirocni_zmeny.groupby(["rok", "mesic"]).size().reset_index()
+# Vytvoreni kontingencni tabulky, kde roky jsou ve sloupcich a mesice v radcich
+mezirocni_zmeny_kontab = mezirocni_zmeny.pivot(index="mesic", columns="rok",
+                                               values=0)
+# Relativni zmena poctu kontrol oproti roku 2022
+mezirocni_zmeny_kontab["mezirocni_zmena"] = (mezirocni_zmeny_kontab.iloc[:, 1] -
+                                            mezirocni_zmeny_kontab.iloc[:, 0]) / \
+                                            mezirocni_zmeny_kontab.iloc[:, 0]
+print("\n----Kontingencni tabulka----")
+print(mezirocni_zmeny_kontab)
+fig, ax = plt.subplots(figsize=(10, 10))
+mezirocni_zmeny_kontab.reset_index().plot(ax=ax, x="mesic", y="mezirocni_zmena", kind="bar")
+plt.show()
