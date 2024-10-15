@@ -44,4 +44,29 @@ kraje = {
     "CZ0720000000": "Zlínský kraj",
     "CZ0800000000": "Moravskoslezský kraj"
 }
-print(gdf_mapa.head())
+gdf_mapa["nazev"] = gdf_mapa["id"].apply(lambda x: kraje[x])
+print(gdf_mapa)
+
+## Vykresleni kontrol do mapy CR
+fig, ax = plt.subplots(figsize=(30, 30))
+# Zobrazeni mapy
+gdf_mapa.plot(ax=ax, color="grey")
+# Zobrazeni vyskytu kontrol
+data_kontroly[data_kontroly["LocDate"] < "2023-01-01"].plot(ax=ax, x="axisx",
+                                                            y="axisy", marker="o",
+                                                            kind="scatter", alpha=0.5,
+                                                            color="red", s=1)
+data_kontroly[data_kontroly["LocDate"] >= "2023-01-01"].plot(ax=ax, x="axisx", y="axisy",
+                                                             marker="x", kind="scatter",
+                                                             alpha=0.15, color="blue", s=1)
+# Odstraneni os a popisku os
+ax.spines["left"].set_visible(False)
+ax.spines["right"].set_visible(False)
+ax.spines["bottom"].set_visible(False)
+ax.spines["top"].set_visible(False)
+ax.set_xlabel("")
+ax.set_ylabel("")
+ax.set_xticks([])
+ax.set_yticks([])
+fig.savefig("vyskyty_kontrol.png")
+plt.show()
