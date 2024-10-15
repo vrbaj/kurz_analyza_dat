@@ -79,4 +79,13 @@ kody_kontroly_sumy = data_kontroly.groupby("kod")["penalty"].sum().reset_index()
 kody_kontroly_sumy.columns = ["kod", "soucet"]
 kody_kontroly_sumy = kody_kontroly_sumy.sort_values("soucet", ascending=False)
 kody_kontroly_sumy.plot(x="kod", y="soucet", kind="bar")
-plt.show()
+
+## Mezirocni zmeny v poctu provedenych kontrol
+# Odstraneni casu z data
+data_kontroly["LocDate"] = data_kontroly["LocDate"].apply(lambda x: x.split(" "))
+data_kontroly["LocDate"] = pd.to_datetime(data_kontroly["LocDate"])
+# Ulozeni informace o roce a mesici z datetime
+data_kontroly["rok"] = data_kontroly["LocDate"].dt.year
+data_kontroly["mesic"] = data_kontroly["LocDate"].dt.month
+# Odfiltrovani dat z roku 2024
+mezirocni_zmeny = data_kontroly[data_kontroly["rok"] != 2024].copy()
