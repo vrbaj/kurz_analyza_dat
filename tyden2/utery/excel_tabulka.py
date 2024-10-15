@@ -64,7 +64,6 @@ print(data.merged_cells)
 data.unmerge_cells("A1:C1")
 print("---------------")
 print(f"{data.merged_cells} - spojene bunky ")
-#data.unmerge_cells("D1:D3")
 sesit.save("sesit.xlsx")
 
 
