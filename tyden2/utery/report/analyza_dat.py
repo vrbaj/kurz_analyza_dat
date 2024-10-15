@@ -1,9 +1,7 @@
 # Importy knihoven
 import pandas as pd
-import geopandas as gpd
 from pathlib import Path
 from matplotlib import pyplot as plt
-from matplotlib.gridspec import GridSpec
 from shapely.geometry import Point
 
 # Vykresleni vsech sloupcu
