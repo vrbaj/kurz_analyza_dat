@@ -87,8 +87,9 @@ data_kontroly["LocDate"] = pd.to_datetime(data_kontroly["LocDate"])
 # Ulozeni informace o roce a mesici z datetime
 data_kontroly["rok"] = data_kontroly["LocDate"].dt.year
 data_kontroly["mesic"] = data_kontroly["LocDate"].dt.month
-# Odfiltrovani dat z roku 2024
-mezirocni_zmeny = data_kontroly[data_kontroly["rok"] != 2024].copy()
+# Odfiltrovani dat z roku 2024 a ceskych kontrol
+mezirocni_zmeny = data_kontroly[(data_kontroly["rok"] != 2024) &
+                                (data_kontroly["kod"] != "CZ")].copy()
 # Seskupeni podle roku a mesice, nalezeni poctu pro kazdou kombinaci
 mezirocni_zmeny = mezirocni_zmeny.groupby(["rok", "mesic"]).size().reset_index()
 # Vytvoreni kontingencni tabulky, kde roky jsou ve sloupcich a mesice v radcich
