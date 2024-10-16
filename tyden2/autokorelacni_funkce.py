@@ -6,7 +6,7 @@ np.random.seed(42)
 pocet_dni = 365
 perioda = 30
 amplituda_periody = 10
-amplituda_sumu = 2
+amplituda_sumu = 1
 
 # index dne
 time = np.arange(pocet_dni)
@@ -34,4 +34,26 @@ plt.title("Autokorelační funkce")
 plt.subplot(122)
 plot_pacf(casova_rada, ax=plt.gca(), lags=100)
 plt.title("Parciální autokorelační funkce")
+
+# autoregresní časová řada
+ar_rada = np.zeros(pocet_dni)
+ar_rada[0] = np.random.normal(0, 1)
+for t in range(2, pocet_dni):
+    ar_rada[t] = 0.8 * ar_rada[t - 1] + np.random.normal(0, 0.1)
+
+# vykreslení autoregresní řady
+plt.figure()
+plt.plot(ar_rada)
+plt.title("AR řada")
+plt.xlabel("den")
+plt.ylabel("hodnota")
+
+# vykreslení autokorelační a parciální autokorelační fukce
+plt.figure(figsize=(12, 6))
+plt.subplot(121)
+plot_acf(ar_rada, ax=plt.gca(), lags=100)
+plt.title("Autokorelační funkce - ar řada")
+plt.subplot(122)
+plot_pacf(ar_rada, ax=plt.gca(), lags=100)
+plt.title("Parciální autokorelační funkce - ar řada")
 plt.show()
