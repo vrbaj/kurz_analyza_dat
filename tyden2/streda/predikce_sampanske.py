@@ -25,6 +25,7 @@ print(df.info())
 print(df.describe())
 # převedení informaci o měsíci a roce na datetime
 df["mesic"] = pd.to_datetime(df["mesic"])
+df.set_index("mesic", inplace=True)
 # vykreslení časové řady
 df["prodano"].plot()
 
@@ -63,9 +64,9 @@ if test_result[1] < 0.05:
 else:
     print("Nestacionární časová řada dif12")
 # vykreslení dif. časové řado (12)
-fig = plt.figure()
+plt.figure()
 plt.title("Dif 12 časová řada")
-fig = df["prodano diference"].plot()
+df["prodano diference"].plot()
 
 # vykreslení autokorelační a parciální autokorelační funkce
 fig = plt.figure()
@@ -81,14 +82,14 @@ print(model_fit.summary())
 # predikce modelu
 df["predikce"] = model_fit.predict(start=90, end=103, dynamic=True)
 # vykreslení predikce modelu
-plt.figure()
+
 df[["prodano", "predikce"]].plot()
 # analýza chyb predikce (residuí)
 residua = pd.DataFrame(model_fit.resid)
-plt.figure()
+
 residua.plot()
 plt.title("Residua")
-plt.figure()
+
 residua.plot(kind="kde")
 print(residua.describe())
 # sezónní ARIMA model
@@ -99,6 +100,19 @@ print(sarimax_fit.summary())
 sarimax_fit.plot_diagnostics()
 
 df["sarimax_predikce"] = sarimax_fit.predict(start=90, end=103, dynamic=True)
-plt.figure()
 df[["prodano", "sarimax_predikce"]].plot()
+
+# dekompozice časové řady na řada = trend + sezónní složka + šum
+from statsmodels.tsa.seasonal import seasonal_decompose
+dekomponovana_rada = seasonal_decompose(df["prodano"], model="additive")
+print(type(dekomponovana_rada))
+dekomponovana_rada.plot()
+# přístup k jednotlivých složkám dekomponované časové řady tj trend
+# sezónní komponenta a residua
+plt.figure()
+plt.plot(dekomponovana_rada.trend)
+plt.figure()
+plt.plot(dekomponovana_rada.seasonal)
+plt.figure()
+plt.plot(dekomponovana_rada.resid)
 plt.show()
