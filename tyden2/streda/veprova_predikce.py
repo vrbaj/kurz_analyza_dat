@@ -10,7 +10,8 @@ import warnings
 from tqdm.contrib.itertools import product
 from sklearn.metrics import root_mean_squared_error as rmse
 
-def hledani_arima(trenovaci, testovaci, p, q, sezonnost=(0, 0, 0, 0)):
+def hledani_arima(trenovaci, testovaci, p, q, sezonnost=(0, 0, 0, 0),
+                  exogenni_trenovaci=None, exogenni_testovaci=None):
     """
     prohledá všechny kombinace od 0 až do p a od 0 až do q a najde nejlepší
     ARIMA model, s tím že kvalitu posoudíme podle RMSE
@@ -33,7 +34,7 @@ def hledani_arima(trenovaci, testovaci, p, q, sezonnost=(0, 0, 0, 0)):
         try:
             model = ARIMA(trenovaci, order=(p_hodnota, d_hodnota, q_hodnota),
                           seasonal_order=sezonnost,
-                          trend="n")
+                          trend="n", exog=exogenni_trenovaci)
         except Exception as ex:
             print(ex)
             print(p_hodnota, d_hodnota, q_hodnota, sezonnost)
@@ -45,7 +46,8 @@ def hledani_arima(trenovaci, testovaci, p, q, sezonnost=(0, 0, 0, 0)):
                 model_fit = model.fit()
                 # predikce modelu
                 predikce = model_fit.predict(start=min(testovaci.index),
-                                             end=max(testovaci.index), dynamic=True)
+                                             end=max(testovaci.index), dynamic=True,
+                                             exog=exogenni_testovaci)
                 rmse_hodnota = rmse(testovaci, predikce)
                 if rmse_hodnota < nejlepsi_vysledek["rmse"]:
                     nejlepsi_vysledek["rmse"] = rmse_hodnota
@@ -120,14 +122,49 @@ else:
 
 plt.show()
 
-ar_vysledek = hledani_arima(trenovaci_data, testovaci_data, p=13, q=0, sezonnost=(0, 0, 0, 0))
-ma_vysledek =  hledani_arima(trenovaci_data, testovaci_data, p=0, q=13, sezonnost=(0, 0, 0, 0))
-arma_vysledek = hledani_arima(trenovaci_data, testovaci_data, p=9, q=9, sezonnost=(0, 0, 0, 0))
-ar_vysledek_sez = hledani_arima(trenovaci_data, testovaci_data, p=13, q=0, sezonnost=(1, 1, 1, 12))
-ma_vysledek_sez =  hledani_arima(trenovaci_data, testovaci_data, p=0, q=20, sezonnost=(1, 1, 1, 12))
-arma_vysledek_sez = hledani_arima(trenovaci_data, testovaci_data, p=9, q=9, sezonnost=(1, 1, 1, 12))
+# ar_vysledek = hledani_arima(trenovaci_data, testovaci_data, p=13, q=0, sezonnost=(0, 0, 0, 0))
+# ma_vysledek =  hledani_arima(trenovaci_data, testovaci_data, p=0, q=13, sezonnost=(0, 0, 0, 0))
+# arma_vysledek = hledani_arima(trenovaci_data, testovaci_data, p=9, q=9, sezonnost=(0, 0, 0, 0))
+# ar_vysledek_sez = hledani_arima(trenovaci_data, testovaci_data, p=13, q=0, sezonnost=(1, 1, 1, 12))
+# ma_vysledek_sez =  hledani_arima(trenovaci_data, testovaci_data, p=0, q=20, sezonnost=(1, 1, 1, 12))
+# arma_vysledek_sez = hledani_arima(trenovaci_data, testovaci_data, p=9, q=9, sezonnost=(1, 1, 1, 12))
+#
+# import pickle
+# with open("arma.pk", "wb") as f:
+#     pickle.dump([ar_vysledek, ma_vysledek, arma_vysledek, ar_vysledek_sez,
+#                ma_vysledek_sez, arma_vysledek_sez], f)
+
+# ARX, ARMAX, MAX,...
+# příprava exogenních prom.
+trenovaci_exo1 = data["Vepřová kýta bez kosti [1 kg]"][:trenovaci_velikost]
+testovaci_exo1 = data["Vepřová kýta bez kosti [1 kg]"][trenovaci_velikost:]
+trenovaci_exo2 = data["Vepřová krkovice [1 kg]"][:trenovaci_velikost]
+testovaci_exo2 = data[("Vepřová krkovice [1 kg]")][trenovaci_velikost:]
+exog_trenovaci_pd = pd.DataFrame({"Vepřová kýta bez kosti [1 kg]": trenovaci_exo1,
+                                 "Vepřová krkovice [1 kg]": trenovaci_exo2})
+exog_testovaci_pd = pd.DataFrame({"Vepřová kýta bez kosti [1 kg]": testovaci_exo1,
+                                 "Vepřová krkovice [1 kg]": testovaci_exo2})
+
+ar_vysledek = hledani_arima(trenovaci_data, testovaci_data, p=13, q=0, sezonnost=(0, 0, 0, 0),
+                            exogenni_trenovaci=exog_trenovaci_pd,
+                            exogenni_testovaci=exog_testovaci_pd)
+ma_vysledek =  hledani_arima(trenovaci_data, testovaci_data, p=0, q=13, sezonnost=(0, 0, 0, 0),
+                            exogenni_trenovaci=exog_trenovaci_pd,
+                            exogenni_testovaci=exog_testovaci_pd)
+arma_vysledek = hledani_arima(trenovaci_data, testovaci_data, p=9, q=9, sezonnost=(0, 0, 0, 0),
+                            exogenni_trenovaci=exog_trenovaci_pd,
+                            exogenni_testovaci=exog_testovaci_pd)
+ar_vysledek_sez = hledani_arima(trenovaci_data, testovaci_data, p=13, q=0, sezonnost=(1, 1, 1, 12),
+                            exogenni_trenovaci=exog_trenovaci_pd,
+                            exogenni_testovaci=exog_testovaci_pd)
+ma_vysledek_sez =  hledani_arima(trenovaci_data, testovaci_data, p=0, q=20, sezonnost=(1, 1, 1, 12),
+                            exogenni_trenovaci=exog_trenovaci_pd,
+                            exogenni_testovaci=exog_testovaci_pd)
+arma_vysledek_sez = hledani_arima(trenovaci_data, testovaci_data, p=9, q=9, sezonnost=(1, 1, 1, 12),
+                            exogenni_trenovaci=exog_trenovaci_pd,
+                            exogenni_testovaci=exog_testovaci_pd)
 
 import pickle
-with open("arma.pk", "wb") as f:
+with open("arma_exog.pk", "wb") as f:
     pickle.dump([ar_vysledek, ma_vysledek, arma_vysledek, ar_vysledek_sez,
                ma_vysledek_sez, arma_vysledek_sez], f)
