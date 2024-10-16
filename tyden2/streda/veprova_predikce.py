@@ -126,6 +126,7 @@ arma_vysledek = hledani_arima(trenovaci_data, testovaci_data, p=9, q=9, sezonnos
 ar_vysledek_sez = hledani_arima(trenovaci_data, testovaci_data, p=13, q=0, sezonnost=(1, 1, 1, 12))
 ma_vysledek_sez =  hledani_arima(trenovaci_data, testovaci_data, p=0, q=20, sezonnost=(1, 1, 1, 12))
 arma_vysledek_sez = hledani_arima(trenovaci_data, testovaci_data, p=9, q=9, sezonnost=(1, 1, 1, 12))
+
 import pickle
 with open("arma.pk", "wb") as f:
     pickle.dump([ar_vysledek, ma_vysledek, arma_vysledek, ar_vysledek_sez,
