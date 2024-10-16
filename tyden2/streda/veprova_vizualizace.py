@@ -2,7 +2,8 @@ import pickle
 import pandas as pd
 import numpy as np
 import dateparser
-
+from matplotlib import pyplot as plt
+import matplotlib.dates as mdates
 
 with open("arma.pk", "rb") as f:
     vysledek = pickle.load(f)
@@ -29,3 +30,15 @@ data.index = pd.DatetimeIndex(data.index).to_period("M")
 # připrava dat na trénvací a testovací
 trenovaci_velikost = int(len(data["Vepřová pečeně [1 kg]"]) * 0.9)
 testovaci_data = data["Vepřová pečeně [1 kg]"][trenovaci_velikost:]
+# příprava osy x
+x = range(0, len(testovaci_data), 1)
+popisky = [str(popisek) for popisek in testovaci_data.index]
+for vys in vysledek:
+    fig, ax = plt.subplots(1, 1)
+    ax.xaxis.set_major_locator(mdates.MonthLocator())
+    ax.plot(x, testovaci_data, label="Testovaci data")
+    ax.plot(x, vys["predikce"], label="Predikce")
+    fig.legend()
+    plt.title(vys["model"])
+    plt.xticks(ticks=x, labels=popisky)
+plt.show()
