@@ -121,12 +121,12 @@ else:
 plt.show()
 
 ar_vysledek = hledani_arima(trenovaci_data, testovaci_data, p=13, q=0, sezonnost=(0, 0, 0, 0))
-ma_vysledek =  hledani_arima(trenovaci_data, testovaci_data, p=0, q=20, sezonnost=(0, 0, 0, 0))
-arma_vysledek = hledani_arima(trenovaci_data, testovaci_data, p=13, q=13, sezonnost=(0, 0, 0, 0))
+ma_vysledek =  hledani_arima(trenovaci_data, testovaci_data, p=0, q=13, sezonnost=(0, 0, 0, 0))
+arma_vysledek = hledani_arima(trenovaci_data, testovaci_data, p=9, q=9, sezonnost=(0, 0, 0, 0))
 ar_vysledek_sez = hledani_arima(trenovaci_data, testovaci_data, p=13, q=0, sezonnost=(1, 1, 1, 12))
 ma_vysledek_sez =  hledani_arima(trenovaci_data, testovaci_data, p=0, q=20, sezonnost=(1, 1, 1, 12))
-arma_vysledek_sez = hledani_arima(trenovaci_data, testovaci_data, p=13, q=13, sezonnost=(1, 1, 1, 12))
-import json
-with open("arma.json", "w") as f:
-    json.dump([ar_vysledek, ma_vysledek, arma_vysledek, ar_vysledek_sez,
-               ma_vysledek_sez, arma_vysledek_sez])
+arma_vysledek_sez = hledani_arima(trenovaci_data, testovaci_data, p=9, q=9, sezonnost=(1, 1, 1, 12))
+import pickle
+with open("arma.pk", "wb") as f:
+    pickle.dump([ar_vysledek, ma_vysledek, arma_vysledek, ar_vysledek_sez,
+               ma_vysledek_sez, arma_vysledek_sez], f)
