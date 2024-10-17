@@ -44,3 +44,17 @@ print(f"-\tpocet vzorku tridy 1 (podezrele transakce): {data['Class'].value_coun
 print(f"-\tpocet vzorku tridy 0 (normalni transakce): {data['Class'].value_counts().loc[0]}")
 pomer_trid = data['Class'].value_counts().loc[1] / data['Class'].value_counts().loc[0]
 print(f"-\tpomer mezi tridami 1/0: {pomer_trid:.4%}")
+
+# # Korelacni matice
+# korelacni_matice = data.corr()
+# plt.figure(figsize=(30, 30))
+# sns.heatmap(korelacni_matice, annot=True, annot_kws={"size": 10}, cbar=False, fmt=".2f")
+# # plt.show()
+# # Boxploty
+# sloupce_priznaky = data.columns.tolist()
+# sloupce_priznaky.remove("Class")
+# for sloupec in sloupce_priznaky:
+#     plt.figure()
+#     sns.boxplot(data, x="Class", y=sloupec)
+#     plt.gca().set_title(f"Box plot pro sloupec {sloupec} vs. Class")
+# plt.show()
