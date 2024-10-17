@@ -190,7 +190,32 @@ vysledky = {
 
 # Iterace skrz jednotlive modely
 for nazev_modelu, model in modely.items():
-    pass
+    pipeline = Pipeline([
+        ("vzorkovac", NearMiss()),
+        ("skalovac", RobustScaler()),
+        (nazev_modelu, model)
+    ])
+    # Natrenovani modelu pro ruzna nastaveni parametru
+    grid_search = GridSearchCV(pipeline, parametry[nazev_modelu], cv=5, scoring=metriky,
+                               refit="UAR", n_jobs=-1)
+    grid_search.fit(X_train, y_train)
+    print(f"\n-----Testovany model: {nazev_modelu}-----")
+    print("Nejlepsi parametry:")
+    for nazev_parametru, hodnota_parametru in grid_search.best_params_.items():
+        print(f"-\t{nazev_parametru.split("__")[1]}: {hodnota_parametru}")
+
+    # Vypocteni metrik pro nejlepsi nastaveni modelu
+    vysledne_metriky = cross_validate(grid_search.best_estimator_, X_train, y_train,
+                                      scoring=metriky, cv=5, n_jobs=-1)
+    print("Vysledne metriky:")
+    for nazev_metriky in metriky.keys():
+        print(f"-\t{nazev_metriky}: {vysledne_metriky[f'test_{nazev_metriky}'].mean():.2%}")
+
+    vysledky[nazev_modelu] = {
+        "nastaveni_modelu": grid_search.best_estimator_,
+        "vysledne_metriky": vysledne_metriky
+    }
+
 
 # Ulozeni vysledku po natrenovani modelu
 with open("vysledky.pickle", "wb") as f:
