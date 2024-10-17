@@ -137,3 +137,46 @@ print("\nPodvzorkovani vede ke zmenseni datasetu tak, aby byly vyvazene pocty vz
 print(f"Velikost podvzorkovaneho datasetu: {X_podvzorkovane.shape}")
 pomer_trid_podvz = y_podvzorkovane.value_counts().loc[1] / y_podvzorkovane.value_counts().loc[0]
 print(f"Pomery poctu vzorku v tridach: {pomer_trid_podvz:.1%}")
+
+## Optimalizace nastaveni modelu na podvzorkovanem datasetu
+# Redefinice pouzitych modelu
+modely = {
+    "logisticka_regrese": LogisticRegression(max_iter=1000),
+    "SVC_poly": SVC(max_iter=1_000_000),
+    "SVC_linearni": SVC(max_iter=1_000_000),
+    "SVC_ostatni": SVC(max_iter=1_000_000),
+    "k_nejblizsich_sousedu": KNeighborsClassifier(),
+    "nahodny_les": RandomForestClassifier()
+}
+# Volba rozsahu parametru modelu
+parametry = {
+    "logisticka_regrese": {
+        "logisticka_regrese__penalty": ["l1", "l2"],
+        "logisticka_regrese__C": [0.001, 0.01, 0.1, 1, 10, 100, 1000],
+    },
+    "SVC_poly": {
+        "SVC_poly__C": [0.001, 0.1, 1, 10, 1000],
+        "SVC_poly__kernel": ["poly"],
+        "SVC_poly__gamma": [0.001, 0.1, 1, 10, 1000, "auto", "scale"],
+        "SVC_poly__degree": [2, 3, 4, 5, 6],
+    },
+    "SVC_linearni": {
+        "SVC_linearni__C": [0.001, 0.1, 1, 10, 1000],
+        "SVC_linearni__kernel":["linear"],
+    },
+    "SVC_ostatni": {
+        "SVC_ostatni__C": [0.001, 0.1, 1, 10, 1000],
+        "SVC_ostatni__kernel": ["rbf", "sigmoid"],
+        "SVC_ostatni__gamma": [0.001, 0.1, 1, 10, 1000, "auto", "scale"],
+    },
+    "k_nejblizsich_sousedu": {
+        "k_nejblizsich_sousedu__n_neighbors": list(range(3, 32, 2)),
+        "k_nejblizsich_sousedu__algorithm": ["auto", "ball_tree", "kd_tree", "brute"],
+    },
+    "nahodny_les": {
+        "nahodny_les__criterion": ["gini", "entropy"],
+        "nahodny_les__max_depth": list(range(2, 12, 2)),
+        "nahodny_les__min_samples_leaf": list(range(3, 13, 2)),
+        "nahodny_les__n_estimators": [15, 51, 101, 151]
+    }
+}
