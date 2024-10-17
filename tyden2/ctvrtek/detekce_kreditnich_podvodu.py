@@ -97,13 +97,13 @@ for rezim in ["nevybalancovana", "podvzorkovana", "prevzorkovana"]:
             ])
         elif rezim == "podvzorkovana":
             pipeline = Pipeline([
-                ("vzorkovac", NearMiss())
+                ("vzorkovac", NearMiss()),
                 ("skalovac", RobustScaler()),
                 (nazev_modelu, model)
             ])
         else:
             pipeline = Pipeline([
-                ("vzorkovac", SMOTE())
+                ("vzorkovac", SMOTE()),
                 ("skalovac", RobustScaler()),
                 (nazev_modelu, model)
             ])
@@ -117,7 +117,7 @@ for rezim in ["nevybalancovana", "podvzorkovana", "prevzorkovana"]:
             print(f"-\t{metrika}: {grid_search.cv_results_[f'mean_test_{metrika}'][0]:.2%}")
         vysledky_modelu[nazev_modelu] = grid_search.cv_results_
 
-    with open("vysledky_nebalancovana_data.pk", "wb") as f:
+    with open(f"vysledky_{rezim}_data.pk", "wb") as f:
         pickle.dump(vysledky_modelu, f)
 
 # Balancovani pomoci prevzorkovani (vytvoreni syntetickych vzorku minoritni tridy)
