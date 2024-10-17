@@ -86,39 +86,39 @@ metriky = {
     "SPE": make_scorer(specificita, greater_is_better=True)
 }
 
-# Natrenovani jednotlivych modelu (vcetne skalovani)
-for rezim in ["nevybalancovana", "podvzorkovana", "prevzorkovana"]:
-    vysledky_modelu = {}
-    for nazev_modelu, model in modely.items():
-        if rezim == "nevybalancovana":
-            pipeline = Pipeline([
-                ("skalovac", RobustScaler()),
-                (nazev_modelu, model)
-            ])
-        elif rezim == "podvzorkovana":
-            pipeline = Pipeline([
-                ("vzorkovac", NearMiss()),
-                ("skalovac", RobustScaler()),
-                (nazev_modelu, model)
-            ])
-        else:
-            pipeline = Pipeline([
-                ("vzorkovac", SMOTE()),
-                ("skalovac", RobustScaler()),
-                (nazev_modelu, model)
-            ])
-
-        grid_search = GridSearchCV(pipeline, {}, cv=5, scoring=metriky, refit="ACC",
-                                   n_jobs=-1)
-        grid_search.fit(X_train, y_train)
-        print(f"\n-----Testovany model: {nazev_modelu}-----")
-        print(f"Vysledne metriky:")
-        for metrika in metriky.keys():
-            print(f"-\t{metrika}: {grid_search.cv_results_[f'mean_test_{metrika}'][0]:.2%}")
-        vysledky_modelu[nazev_modelu] = grid_search.cv_results_
-
-    with open(f"vysledky_{rezim}_data.pk", "wb") as f:
-        pickle.dump(vysledky_modelu, f)
+# # Natrenovani jednotlivych modelu (vcetne skalovani)
+# for rezim in ["nevybalancovana", "podvzorkovana", "prevzorkovana"]:
+#     vysledky_modelu = {}
+#     for nazev_modelu, model in modely.items():
+#         if rezim == "nevybalancovana":
+#             pipeline = Pipeline([
+#                 ("skalovac", RobustScaler()),
+#                 (nazev_modelu, model)
+#             ])
+#         elif rezim == "podvzorkovana":
+#             pipeline = Pipeline([
+#                 ("vzorkovac", NearMiss()),
+#                 ("skalovac", RobustScaler()),
+#                 (nazev_modelu, model)
+#             ])
+#         else:
+#             pipeline = Pipeline([
+#                 ("vzorkovac", SMOTE()),
+#                 ("skalovac", RobustScaler()),
+#                 (nazev_modelu, model)
+#             ])
+#
+#         grid_search = GridSearchCV(pipeline, {}, cv=5, scoring=metriky, refit="ACC",
+#                                    n_jobs=-1)
+#         grid_search.fit(X_train, y_train)
+#         print(f"\n-----Testovany model: {nazev_modelu}-----")
+#         print(f"Vysledne metriky:")
+#         for metrika in metriky.keys():
+#             print(f"-\t{metrika}: {grid_search.cv_results_[f'mean_test_{metrika}'][0]:.2%}")
+#         vysledky_modelu[nazev_modelu] = grid_search.cv_results_
+#
+#     with open(f"vysledky_{rezim}_data.pk", "wb") as f:
+#         pickle.dump(vysledky_modelu, f)
 
 # Balancovani pomoci prevzorkovani (vytvoreni syntetickych vzorku minoritni tridy)
 prevzorkovac = SMOTE()
@@ -180,3 +180,20 @@ parametry = {
         "nahodny_les__n_estimators": [15, 51, 101, 151]
     }
 }
+
+## Hledani nejlepsich nastaveni parametru pro jednotlive modely
+# Ulozeni vysledku do slovniku
+vysledky = {
+    "X": X_test,
+    "y": y_test
+}
+
+# Iterace skrz jednotlive modely
+for nazev_modelu, model in modely.items():
+    pass
+
+# Ulozeni vysledku po natrenovani modelu
+with open("vysledky.pickle", "wb") as f:
+    pickle.dump(vysledky, f)
+
+
