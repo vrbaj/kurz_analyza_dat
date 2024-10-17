@@ -51,10 +51,52 @@ print(f"-\tpomer mezi tridami 1/0: {pomer_trid:.4%}")
 # sns.heatmap(korelacni_matice, annot=True, annot_kws={"size": 10}, cbar=False, fmt=".2f")
 # # plt.show()
 # # Boxploty
-# sloupce_priznaky = data.columns.tolist()
-# sloupce_priznaky.remove("Class")
+sloupce_priznaky = data.columns.tolist()
+sloupce_priznaky.remove("Class")
 # for sloupec in sloupce_priznaky:
 #     plt.figure()
 #     sns.boxplot(data, x="Class", y=sloupec)
 #     plt.gca().set_title(f"Box plot pro sloupec {sloupec} vs. Class")
 # plt.show()
+
+# Rozdeleni dat na trenovaci a testovaci
+X_train, X_test, y_train, y_test = train_test_split(data[sloupce_priznaky],
+                                                    data["Class"], random_state=42, test_size=0.2)
+print("\nPomery mezi tridami v rozdelenych datovych sadach:")
+print(f"-\ttrenovaci: {y_train.value_counts().loc[1] / y_train.value_counts().loc[0]:.4%}")
+print(f"-\ttestovaci: {y_test.value_counts().loc[1] / y_test.value_counts().loc[0]:.4%}")
+
+# Vyber modelu
+modely = {
+    "logisticka_regrese": LogisticRegression(max_iter=1000),
+    "SVC": SVC(max_iter=1000),
+    "k_nejblizsich_sousedu": KNeighborsClassifier(),
+    "rozhodovaci_strom": DecisionTreeClassifier()
+}
+
+# Vyber metrik pro hodnoceni kvality klasifikace
+# Metrika pro specificitu - mira uspesne klasifikace nulove tridy
+def specificita(y_test, y_pred):
+    return recall_score(y_test, y_pred, pos_label=0)
+metriky = {
+    "ACC": "accuracy",
+    "UAR": "balanced_accuracy",
+    "SEN": "recall",
+    # Vlastni metrika
+    "SPE": make_scorer(specificita, greater_is_better=True)
+}
+
+# Natrenovani jednotlivych modelu
+for nazev_modelu, model in modely.items():
+    pipeline = Pipeline([
+        ("skalovac", RobustScaler()),
+        (nazev_modelu, model)
+    ])
+
+    grid_search = GridSearchCV(pipeline, {}, cv=5, scoring=metriky, refit="ACC",
+                               n_jobs=-1)
+    grid_search.fit(X_train, y_train)
+    print(f"\n-----Testovany model: {nazev_modelu}-----")
+    print(f"Vysledne metriky:")
+    for metrika in metriky.keys():
+        print(f"-\t{metrika}: {grid_search.cv_results_[f'mean_test_{metrika}'][0]:.2%}")
