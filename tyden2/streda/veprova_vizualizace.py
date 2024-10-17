@@ -5,7 +5,7 @@ import dateparser
 from matplotlib import pyplot as plt
 import matplotlib.dates as mdates
 
-with open("arma.pk", "rb") as f:
+with open("arma_exog.pk", "rb") as f:
     vysledek = pickle.load(f)
 (ar_vysledek, ma_vysledek, arma_vysledek,
  ar_vysledek_s, ma_vysledek_s, arma_vysledek_s) = vysledek
