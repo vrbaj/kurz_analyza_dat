@@ -86,17 +86,27 @@ metriky = {
     "SPE": make_scorer(specificita, greater_is_better=True)
 }
 
-# Natrenovani jednotlivych modelu
-for nazev_modelu, model in modely.items():
-    pipeline = Pipeline([
-        ("skalovac", RobustScaler()),
-        (nazev_modelu, model)
-    ])
+# # Natrenovani jednotlivych modelu
+# for nazev_modelu, model in modely.items():
+#     pipeline = Pipeline([
+#         ("skalovac", RobustScaler()),
+#         (nazev_modelu, model)
+#     ])
+#
+#     grid_search = GridSearchCV(pipeline, {}, cv=5, scoring=metriky, refit="ACC",
+#                                n_jobs=-1)
+#     grid_search.fit(X_train, y_train)
+#     print(f"\n-----Testovany model: {nazev_modelu}-----")
+#     print(f"Vysledne metriky:")
+#     for metrika in metriky.keys():
+#         print(f"-\t{metrika}: {grid_search.cv_results_[f'mean_test_{metrika}'][0]:.2%}")
 
-    grid_search = GridSearchCV(pipeline, {}, cv=5, scoring=metriky, refit="ACC",
-                               n_jobs=-1)
-    grid_search.fit(X_train, y_train)
-    print(f"\n-----Testovany model: {nazev_modelu}-----")
-    print(f"Vysledne metriky:")
-    for metrika in metriky.keys():
-        print(f"-\t{metrika}: {grid_search.cv_results_[f'mean_test_{metrika}'][0]:.2%}")
+# Balancovani pomoci prevzorkovani (vytvoreni syntetickych vzorku minoritni tridy)
+prevzorkovac = SMOTE()
+X_prevzorkovane, y_prevzorkovane = prevzorkovac.fit_resample(X_train, y_train)
+print("\nPrevzorkovani vede ke zvetseni datasetu tak, aby byly vyvazene pocty vzorku"
+      " v jednotlivych tridach")
+print(f"Velikost prevzorkovaneho datasetu: {X_prevzorkovane.shape}")
+pomer_trid_prevzorkovane = y_prevzorkovane.value_counts().loc[1] / y_prevzorkovane.value_counts().loc[0]
+print(f"Pomery poctu vzorku v tridach: {pomer_trid_prevzorkovane:.1%}")
+
