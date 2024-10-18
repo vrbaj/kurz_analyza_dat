@@ -51,6 +51,8 @@ kontrolovane_vyrobky = ["271102", "290107", "271151", "271153"]
 seznam_subjektu = data_sloucena["id_entity"].unique().tolist()
 # Vypsani seznamu unikatnich subjektu
 print(f"Vsechny subjekty:\n-\t{('\n-\t').join(seznam_subjektu)}")
+# Mnozina, kam se ulozi problematicke subjekty
+problematicke_subjekty = set([])
 
 ## Vytvoreni rozdilu pro konkretni rok
 for rok in [2023, 2024]:
@@ -80,7 +82,7 @@ for rok in [2023, 2024]:
         data_subjekt.fillna(0, inplace=True)
         # U rozdilu chceme mit cele cislo
         data_subjekt["rozdil"] = data_subjekt["rozdil"].astype(int)
-        print(data_subjekt, end="\n\n")
+        # print(data_subjekt, end="\n\n")
 
         # Vykresleni dat
         sloupce = data_subjekt.plot(kind="bar", x="vyrobek_zkraceny", y="rozdil", color=barvy,
@@ -109,4 +111,19 @@ for rok in [2023, 2024]:
         plt.tight_layout()
         fig.savefig(f"{subjekt}_{rok}.png")
 
-plt.show()
+    ## Ulozeni subjektu, jez vykazuji vyssi produkce kontrolovanych vyrobku,
+    ## nez odpovida skutecnosti
+    podminka = (data_rozdil["rozdil"] > 0) & \
+               (data_rozdil["vyrobek_zkraceny"].isin(kontrolovane_vyrobky))
+    problematicke_subjekty = problematicke_subjekty.union(
+        set(data_rozdil[podminka]["id_entity"].tolist())
+    )
+
+# Ulozeni problematickych subjektu
+print(problematicke_subjekty)
+with open("problematicke_subjekty.json", "w") as f:
+    json.dump(list(problematicke_subjekty), f)
+# Ulozeni sloucenych tabulek
+data_sloucena.to_csv("data_sloucena.csv", index=False)
+
+# plt.show()
