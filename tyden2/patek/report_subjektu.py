@@ -28,15 +28,6 @@ def vytvor_uvodni_stranu(dokument):
     obsah_odstavce = odstavec.add_run()
     obsah_odstavce.add_picture("logo.jpg", width=Cm(4.5))
 
-# Vytvoreni objektu Document
-dokument = Document()
-# Vytvoreni titulni strany
-vytvor_uvodni_stranu(dokument)
-
-# Nacteni dat o podezrelych subjektech
-with open("problematicke_subjekty.json", "r") as f:
-    problematicke_subjekty = json.load(f)
-
 def pridej_stranku_se_subjektem(dokument, subjekt, tabulka_pro_report):
     # Pridani konce stranky
     dokument.add_page_break()
@@ -78,11 +69,22 @@ def pridej_stranku_se_subjektem(dokument, subjekt, tabulka_pro_report):
         for idx_j, hodnota in enumerate(radek):
             # Prirazeni hodnoty bunce
             radek_word[idx_j].text = str(hodnota)
+            # Zarovnani cisel v bunkach doprava
+            radek_word[idx_j].paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.RIGHT
+
+# Vytvoreni objektu Document
+dokument = Document()
+# Vytvoreni titulni strany
+vytvor_uvodni_stranu(dokument)
+# Nacteni dat o podezrelych subjektech
+with open("problematicke_subjekty.json", "r") as f:
+    problematicke_subjekty = json.load(f)
 # Nacteni sloucenych dat
 data = pd.read_csv("data_sloucena.csv")
 subjekt = "ID00093963"
 tabulka_pro_report = data[data["id_entity"] == subjekt][["vyrobek_zkraceny", "2023_skut",
                                                          "2023_vyk", "2024_skut", "2024_vyk"]]
+# Pridani stranky se subjektu
 pridej_stranku_se_subjektem(dokument, subjekt, tabulka_pro_report)
 # Ulozeni dokumentu
 dokument.save("report_podezrelych_subjektu.docx")
