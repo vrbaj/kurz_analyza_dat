@@ -81,10 +81,12 @@ with open("problematicke_subjekty.json", "r") as f:
     problematicke_subjekty = json.load(f)
 # Nacteni sloucenych dat
 data = pd.read_csv("data_sloucena.csv")
-subjekt = "ID00093963"
-tabulka_pro_report = data[data["id_entity"] == subjekt][["vyrobek_zkraceny", "2023_skut",
-                                                         "2023_vyk", "2024_skut", "2024_vyk"]]
-# Pridani stranky se subjektu
-pridej_stranku_se_subjektem(dokument, subjekt, tabulka_pro_report)
+# Iterace pres podezrele subjekty
+for subjekt in problematicke_subjekty:
+    # Filtrace tabulky podle subjektu
+    tabulka_pro_report = data[data["id_entity"] == subjekt][["vyrobek_zkraceny", "2023_skut",
+                                                             "2023_vyk", "2024_skut", "2024_vyk"]]
+    # Pridani stranky se subjektu
+    pridej_stranku_se_subjektem(dokument, subjekt, tabulka_pro_report)
 # Ulozeni dokumentu
 dokument.save("report_podezrelych_subjektu.docx")
