@@ -70,6 +70,14 @@ def pridej_stranku_se_subjektem(dokument, subjekt, tabulka_pro_report):
         # Do i-te bunky radku se prida i-ty sloupec
         hlavicka[idx].text = sloupec
 
+    # Iterace skrz radky tabulky
+    for idx, radek in tabulka_pro_report.iterrows():
+        # Pridani noveho radku tabulky
+        radek_word = tabulka.add_row().cells
+        # Iterace pres jednotlive hodnoty radku
+        for idx_j, hodnota in enumerate(radek):
+            # Prirazeni hodnoty bunce
+            radek_word[idx_j].text = str(hodnota)
 # Nacteni sloucenych dat
 data = pd.read_csv("data_sloucena.csv")
 subjekt = "ID00093963"
