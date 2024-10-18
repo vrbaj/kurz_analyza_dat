@@ -3,7 +3,7 @@ from docx.shared import Cm, Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_PARAGRAPH_ALIGNMENT
 import pandas as pd
 pd.set_option("display.width", 10000)
-pd.set_option("display.max_columnwidth", None)
+pd.set_option("display.max_colwidth", None)
 pd.set_option("display.max_columns", None)
 import json
 
@@ -32,5 +32,49 @@ def vytvor_uvodni_stranu(dokument):
 dokument = Document()
 # Vytvoreni titulni strany
 vytvor_uvodni_stranu(dokument)
+
+# Nacteni dat o podezrelych subjektech
+with open("problematicke_subjekty.json", "r") as f:
+    problematicke_subjekty = json.load(f)
+
+def pridej_stranku_se_subjektem(dokument, subjekt, tabulka_pro_report):
+    # Pridani konce stranky
+    dokument.add_page_break()
+
+    # Nadpis s nazvem subjektu
+    dokument.add_heading(f"Subjekt {subjekt}", level=0)
+
+    ## Vlozeni grafu s rozdily
+    # Nadpis nad grafy
+    dokument.add_heading("Rozdíl mezi vykázanou a skutečnou produkcí", level=1)
+    # Tabulka se dvema sloupci a jednim radkem pro vlozeni obou grafu vedle sebe
+    tabulka = dokument.add_table(rows=1, cols=2) # Nova tabulka
+    bunka_2023 = tabulka.cell(0, 0).paragraphs[0] # Pristup k prvni bunce a jejimu odstavci
+    # Vlozeni noveho obsahu v podobe obrazku
+    bunka_2023.add_run().add_picture(f"{subjekt}_2023.png", width=Cm(7.5))
+    bunka_2024 = tabulka.cell(0, 1).paragraphs[0] # Pristup k prvni bunce a jejimu odstavci
+    # Vlozeni noveho obsahu v podobe obrazku
+    bunka_2024.add_run().add_picture(f"{subjekt}_2024.png", width=Cm(7.5))
+
+    '''Tabulka s hodnotami produkce'''
+    # Nadpis
+    dokument.add_heading("Tabulka vykázaných produkcí", level=1)
+
+    # Vytvoreni tabulky
+    tabulka = dokument.add_table(rows=1, cols=tabulka_pro_report.shape[1])
+    tabulka.style = "Light List"
+
+    # Pridani textu hlavicky
+    hlavicka = tabulka.rows[0].cells # "seznam" bunek prvniho radku
+    for idx, sloupec in enumerate(tabulka_pro_report.columns):
+        # Do i-te bunky radku se prida i-ty sloupec
+        hlavicka[idx].text = sloupec
+
+# Nacteni sloucenych dat
+data = pd.read_csv("data_sloucena.csv")
+subjekt = "ID00093963"
+tabulka_pro_report = data[data["id_entity"] == subjekt][["vyrobek_zkraceny", "2023_skut",
+                                                         "2023_vyk", "2024_skut", "2024_vyk"]]
+pridej_stranku_se_subjektem(dokument, subjekt, tabulka_pro_report)
 # Ulozeni dokumentu
 dokument.save("report_podezrelych_subjektu.docx")
