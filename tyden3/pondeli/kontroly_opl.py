@@ -24,7 +24,21 @@ for sloupec in data.columns:
     if numericka_data or kalendarni_data:
         # Zobrazení histogramu hodnot
         sns.histplot(data, x=sloupec, ax=ax, bins=10)
-        ax.tick_params(axis="x", labelrotation=90)
         # Uložení názvu sloupce do nadpisu grafu
         ax.set_title(f"Histogram pro {sloupec}")
+    else:
+        # value_counts - četnost unikátních hodnot ve sloupci
+        # reset_index - převedení četností na tabulku
+        # sort_values - seřazení řádků dle četnosti
+        # head - prvních 10 řádků
+        data_sloupec = (data[sloupec].value_counts().reset_index()
+                        .sort_values("count", ascending=False))
+        data_sloupec = data_sloupec.head(10)
+        # Vykreslení sloupcového grafu
+        sns.barplot(data_sloupec, x=sloupec, y="count", ax=ax)
+        # Nadpis
+        ax.set_title(f"Nejčastější hodnoty pro {sloupec}")
+
+    ax.tick_params(axis="x", labelrotation=90)
+    plt.tight_layout()
 plt.show()
