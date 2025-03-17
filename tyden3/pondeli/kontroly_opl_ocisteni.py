@@ -23,4 +23,14 @@ print(data_ocistena.shape)
 data_ocistena["Rok_narozeni_porusitele"] = \
     data_ocistena["Rok_narozeni_porusitele"].apply(lambda rok: 1999 if rok == 2099 else rok)
 print(data_ocistena[data_ocistena["Rok_narozeni_porusitele"] == 2099].shape)
-# Odstranění řádků s prázdnými buňkami
+# Odstranění řádků s prázdnými buňkami - nebudeme dělat
+# data_ocistena.dropna(inplace=True)
+# Nalezeni radku, kde chybi narodnost, stat a druh vozidla
+# Součet prázdných buněk v každém řádku tabulky
+prazdne_bunky_radky = pd.isna(data_ocistena[["Druh_vozidla", "Stat", "Narodnost_Porusitele"]]).sum(axis=1)
+# Porovnání, kde počet prázdných buněk na řádku je roven 3
+maska = prazdne_bunky_radky == 3
+# Vrácení ID Kontroly pro tyto řádky
+print(data_ocistena[maska]["Kontrola_ID"])
+# Uložení problematických řádků do excelu
+data_ocistena[maska].to_csv("problematicke_id_kontroly.csv", index=False)
