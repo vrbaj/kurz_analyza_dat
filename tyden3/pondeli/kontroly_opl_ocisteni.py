@@ -68,5 +68,11 @@ print(data_zadrze.shape)
 data_zadrze_sloucene = data_zadrze.groupby(
     ["Celni_Urad", "Druh_OPL", "Mnoz_v_Porušení", "Merna_jednotka"])["Kontrola_ID"].count().reset_index()
 
-print(tabulate(data_zadrze_sloucene[data_zadrze_sloucene["Kontrola_ID"] > 1],
-               headers="keys"))
+# Vzetí pouze řádků, kde je více kontrol pro stejnou skupinu
+data_zadrze_sloucene = data_zadrze_sloucene[data_zadrze_sloucene["Kontrola_ID"] > 1]
+# Odfiltrování CÚ Ruzyně
+data_zadrze_sloucene = data_zadrze_sloucene[
+    data_zadrze_sloucene["Celni_Urad"] != "CÚ Praha Ruzyně"]
+# Uložení výsledku do Excelu
+data_zadrze_sloucene.to_excel("ruzne_kontroly_stejne_opl.xlsx", index=False)
+print(tabulate(data_zadrze_sloucene, headers="keys"))
