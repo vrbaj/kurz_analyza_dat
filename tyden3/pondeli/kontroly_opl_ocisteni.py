@@ -37,17 +37,36 @@ data_ocistena[maska].to_csv("problematicke_id_kontroly.csv", index=False)
 # Rozdělení dat podle druhu OPL
 druhy_opl = data_ocistena["Druh_OPL"].unique()
 print(druhy_opl)
-# Množství zadržených OPL
-fig, axs = plt.subplots(2, 7, figsize=(25, 10))
-axs = axs.reshape(-1)
+# # Množství zadržených OPL
+# fig, axs = plt.subplots(2, 7, figsize=(25, 10))
+# axs = axs.reshape(-1)
+#
+# for i, opl in enumerate(druhy_opl):
+#     # Filtrace daných OPL s nenulovým zadrženým množstvím
+#     data_pro_opl = data_ocistena[(data_ocistena["Druh_OPL"] == opl) &
+#                                  (data_ocistena["Mnoz_v_Porušení"] > 0)]
+#     # Zobrazení pomocí grafu
+#     sns.histplot(data_pro_opl, x="Mnoz_v_Porušení", ax=axs[i])
+#     axs[i].set_title(f"Histogram zadrženého množství pro {opl}")
+#
+# plt.tight_layout()
+# fig.savefig("opl.png")
+# plt.show()
 
-for i, opl in enumerate(druhy_opl):
-    # Filtrace daných OPL s nenulovým zadrženým množstvím
-    data_pro_opl = data_ocistena[(data_ocistena["Druh_OPL"] == opl) &
-                                 (data_ocistena["Mnoz_v_Porušení"] > 0)]
-    # Zobrazení pomocí grafu
-    sns.histplot(data_pro_opl, x="Mnoz_v_Porušení", ax=axs[i])
-    axs[i].set_title(f"Histogram zadrženého množství pro {opl}")
+# Vypsání kontrol s amfetaminem
+data_amfetamin = data_ocistena[data_ocistena["Druh_OPL"] == "Amfetamin"]
+data_amfetamin.sort_values("Mnoz_v_Porušení", ascending=False, inplace=True)
+print(tabulate(data_amfetamin, headers="keys"))
 
-plt.tight_layout()
-plt.show()
+# Očištění od duplicit
+data_zadrze = data_ocistena.drop_duplicates(
+    subset=["Kontrola_ID", "Druh_OPL", "Mnoz_v_Porušení", "Merna_jednotka"])
+print(tabulate(data_zadrze, headers="keys"))
+print(data_zadrze.shape)
+
+# Počet kontrol se stejným typem OPL, zadrženým množstvím a měrnou jednotkou
+data_zadrze_sloucene = data_zadrze.groupby(
+    ["Celni_Urad", "Druh_OPL", "Mnoz_v_Porušení", "Merna_jednotka"])["Kontrola_ID"].count().reset_index()
+
+print(tabulate(data_zadrze_sloucene[data_zadrze_sloucene["Kontrola_ID"] > 1],
+               headers="keys"))
