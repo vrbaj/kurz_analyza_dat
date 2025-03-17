@@ -23,3 +23,4 @@ print(data_ocistena.shape)
 data_ocistena["Rok_narozeni_porusitele"] = \
     data_ocistena["Rok_narozeni_porusitele"].apply(lambda rok: 1999 if rok == 2099 else rok)
 print(data_ocistena[data_ocistena["Rok_narozeni_porusitele"] == 2099].shape)
+# Odstranění řádků s prázdnými buňkami
