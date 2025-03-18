@@ -1,6 +1,7 @@
 # Importy
 import pandas as pd
 from tabulate import tabulate
+from wordcloud import WordCloud
 
 
 # Načtení dat - načítat excel trvá dlouho, proto jej serializujeme jako pickle
@@ -20,3 +21,5 @@ print("Počty unikátních hodnot pro každý sloupec:")
 for sloupec in data_kontroly.columns:
     print(f"\t-{sloupec}: {data_kontroly[sloupec].unique().shape[0]}")
 
+# Mapa výskytu slov
+seznam_hodnot = data_kontroly["Typ_Vozidla"].apply(lambda x: f"{x}".strip().replace(" ", "").lower())
