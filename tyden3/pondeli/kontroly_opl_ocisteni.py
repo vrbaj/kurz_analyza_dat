@@ -121,4 +121,12 @@ gdf_mapa = gdf_mapa.merge(data_cetnosti, left_on="id", right_on="Celni_Urad",
                           how="left")
 pd.set_option("display.max_columns", None)
 # Zobrazení počtu kontrol v mapě
+# fig, axs = plt.subplots(2, 7, figsize=(30, 15))
+# axs = axs.reshape(-1)
+for i, opl in enumerate(druhy_opl):
+    fig, ax = plt.subplots()
+    gdf_mapa.plot(column=opl, ax=ax)
+    ax.set_title(f"Mapa počtu kontrol pro {opl}")
+plt.show()
+
 
