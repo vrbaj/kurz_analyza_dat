@@ -12,6 +12,11 @@ data_kontroly = pd.read_pickle("Kontroly_VSCHT.pkl")
 # Data info - u několika sloupců se vyskytují prázdné buňky
 # data_kontroly.info()
 
-# Data describe
+# Data describe - rok narození obsahuje chyby, nebudeme uvažovat
 print(tabulate(data_kontroly.describe(), headers="keys"))
+
+# Počty unikátních hodnot v jednotlivých sloupcích
+print("Počty unikátních hodnot pro každý sloupec:")
+for sloupec in data_kontroly.columns:
+    print(f"\t-{sloupec}: {data_kontroly[sloupec].unique().shape[0]}")
 
