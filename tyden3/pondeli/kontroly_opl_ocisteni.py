@@ -22,7 +22,7 @@ data_ocistena = data_ocistena[data_ocistena["Pohlavi_porusitele"] != "nezjiště
 # Nahrazení roku narození 2099 za 1999
 data_ocistena["Rok_narozeni_porusitele"] = \
     data_ocistena["Rok_narozeni_porusitele"].apply(lambda rok: 1999 if rok == 2099 else rok)
-print(data_ocistena[data_ocistena["Rok_narozeni_porusitele"] == 2099].shape)
+# print(data_ocistena[data_ocistena["Rok_narozeni_porusitele"] == 2099].shape)
 # Odstranění řádků s prázdnými buňkami - nebudeme dělat
 # data_ocistena.dropna(inplace=True)
 # Nalezeni radku, kde chybi narodnost, stat a druh vozidla
@@ -36,7 +36,7 @@ maska = prazdne_bunky_radky == 3
 data_ocistena[maska].to_csv("problematicke_id_kontroly.csv", index=False)
 # Rozdělení dat podle druhu OPL
 druhy_opl = data_ocistena["Druh_OPL"].unique()
-print(druhy_opl)
+# print(druhy_opl)
 # # Množství zadržených OPL
 # fig, axs = plt.subplots(2, 7, figsize=(25, 10))
 # axs = axs.reshape(-1)
@@ -56,13 +56,13 @@ print(druhy_opl)
 # Vypsání kontrol s amfetaminem
 data_amfetamin = data_ocistena[data_ocistena["Druh_OPL"] == "Amfetamin"]
 data_amfetamin.sort_values("Mnoz_v_Porušení", ascending=False, inplace=True)
-print(tabulate(data_amfetamin, headers="keys"))
+# print(tabulate(data_amfetamin, headers="keys"))
 
 # Očištění od duplicit
 data_zadrze = data_ocistena.drop_duplicates(
     subset=["Kontrola_ID", "Druh_OPL", "Mnoz_v_Porušení", "Merna_jednotka"])
-print(tabulate(data_zadrze, headers="keys"))
-print(data_zadrze.shape)
+# print(tabulate(data_zadrze, headers="keys"))
+# print(data_zadrze.shape)
 
 # Počet kontrol se stejným typem OPL, zadrženým množstvím a měrnou jednotkou
 data_zadrze_sloucene = data_zadrze.groupby(
@@ -75,4 +75,10 @@ data_zadrze_sloucene = data_zadrze_sloucene[
     data_zadrze_sloucene["Celni_Urad"] != "CÚ Praha Ruzyně"]
 # Uložení výsledku do Excelu
 data_zadrze_sloucene.to_excel("ruzne_kontroly_stejne_opl.xlsx", index=False)
-print(tabulate(data_zadrze_sloucene, headers="keys"))
+# print(tabulate(data_zadrze_sloucene, headers="keys"))
+
+## Vykreslení počtů výskytů nalezených OPL pro jednotlivé celní úřady
+# Seskupení dat podle CÚ a podle typu OPL
+data_cetnosti = data_zadrze.groupby(["Celni_Urad", "Druh_OPL"])["Druh_OPL"].count()
+print(data_cetnosti.head())
+
