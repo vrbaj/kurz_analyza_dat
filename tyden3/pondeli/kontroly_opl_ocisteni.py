@@ -97,8 +97,8 @@ kraje = {
     "CZ0630000000": "CÚ pro Kraj Vysočina",
     "CZ0640000000": "CÚ pro Jihomoravský kraj",
     "CZ0710000000": "CÚ pro Olomoucký kraj",
-    "CZ0800000000": "CÚ pro Zlínský kraj",
-    "CZ0720000000": "CÚ pro Moravskoslezský kraj"
+    "CZ0720000000": "CÚ pro Zlínský kraj",
+    "CZ0800000000": "CÚ pro Moravskoslezský kraj"
 
 
 
