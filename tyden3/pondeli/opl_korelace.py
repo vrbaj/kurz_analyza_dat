@@ -22,4 +22,11 @@ data_cetnosti = data_cetnosti[data_cetnosti["Celni_Urad"] != "CÚ Praha Ruzyně"
 data_cetnosti["Celni_Urad"] = data_cetnosti["Celni_Urad"].apply(lambda x: x.replace("CÚ pro ", ""))
 # Nahrazení Hl. město Prahu za Hlavní město Praha
 data_cetnosti["Celni_Urad"] = data_cetnosti["Celni_Urad"].apply(lambda x: x.replace("Hl. město Prahu", "Hlavní město Praha"))
-print(data_cetnosti["Celni_Urad"].unique())
+
+# Sloučení tabulek s počty kontrol a s indexem soc. vyloučení
+data_sloucena = data_index.merge(data_cetnosti, left_on="kraj", right_on="Celni_Urad",
+                                 how="left")
+# Odstranění sloupce Celni_Urad
+data_sloucena.drop(columns=["Celni_Urad"], inplace=True)
+pd.set_option("display.max_columns", None)
+print(data_sloucena)
