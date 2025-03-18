@@ -57,3 +57,13 @@ print(data_rozdily[data_rozdily["Narodnost_Porusitele"] == "CZE"])
 data_kontroly.drop(columns=["Narodnost_Porusitele"], inplace=True)
 # Nahrazení chybějících hodnot ve sloupci Stat
 data_kontroly["Stat"] = data_kontroly["Stat"].fillna("neni")
+# Zpracování informace o datu a čase
+# Vzetí celé hodiny z času
+data_kontroly["Cas_Zjisteni"] = data_kontroly["Cas_Zjisteni"].astype(str).apply(lambda x: int(x[:2]))
+# Vzetí měsíce v roce a dne v týdnu
+data_kontroly["datum_mesic"] = data_kontroly["Datum_Zjisteni"].dt.month
+data_kontroly["datum_den_tydne"] = data_kontroly["Datum_Zjisteni"].dt.dayofweek
+# Odstranění sloupce Datum_Zjisteni
+data_kontroly.drop(columns=["Datum_Zjisteni"], inplace=True)
+
+print(data_kontroly["datum_den_tydne"].value_counts())
