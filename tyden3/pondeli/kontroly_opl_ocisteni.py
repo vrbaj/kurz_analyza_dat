@@ -112,7 +112,7 @@ ruzyne_polygon = Polygon(
 )
 gdf_mapa.loc[gdf_mapa.shape[0], :] = ["CÚ Praha Ruzyně", ruzyne_polygon]
 # Seřazení tabulky podle CÚ
-gdf_mapa.sort_values("id", ascending=True, inplace=True)
+gdf_mapa.sort_values("id", ascending=False, inplace=True)
 # Převedení tabulky počtu kontrol do širokého formátu
 data_cetnosti = data_cetnosti.pivot(index=["Celni_Urad"], columns=["Druh_OPL"],
                                     values="cetnost").reset_index().fillna(0)
@@ -123,9 +123,12 @@ pd.set_option("display.max_columns", None)
 # Zobrazení počtu kontrol v mapě
 # fig, axs = plt.subplots(2, 7, figsize=(30, 15))
 # axs = axs.reshape(-1)
+# Iterace přes jednotlivé OPL
 for i, opl in enumerate(druhy_opl):
+    # Vytvoření objektu s obrázkem
     fig, ax = plt.subplots()
-    gdf_mapa.plot(column=opl, ax=ax)
+    # Zobrazení počtu kontrol pro danou OPL
+    gdf_mapa.plot(column=opl, ax=ax, legend=True)
     ax.set_title(f"Mapa počtu kontrol pro {opl}")
 plt.show()
 
