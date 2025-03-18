@@ -11,4 +11,7 @@ data_index = data_index[["Název kraj",
                          "Index soc. vyloučení 2023 (0-30 bodů)"]]
 # Přejmenování sloupců pro praktičtější práci
 data_index.columns = ["kraj", "pocet_obyvatel", "index"]
-print(data_index.head())
+# Seskupení dat podle krajů a spočtení váženého průměru indexu sociálního vyloučení
+lambda_funkce = lambda x: (x["index"] * x["pocet_obyvatel"]).sum() / x["pocet_obyvatel"].sum()
+data_index = data_index.groupby("kraj").apply(lambda_funkce)
+print(data_index.sort_values())
