@@ -18,5 +18,6 @@ data_index = data_index.reset_index()
 data_index.columns = ["kraj", "vazeny_index"]
 # Odstranění dat pro CÚ Praha Ruzyně
 data_cetnosti = data_cetnosti[data_cetnosti["Celni_Urad"] != "CÚ Praha Ruzyně"]
-#
+# Odstranění CÚ pro ve sloupci Celni_Urad
+data_cetnosti["Celni_Urad"] = data_cetnosti["Celni_Urad"].apply(lambda x: x.replace("CÚ pro ", ""))
 print(data_cetnosti["Celni_Urad"].unique())
