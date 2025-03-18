@@ -24,10 +24,23 @@ for celni_urad in celni_urady:
     cetnost_kc = cetnost_kc.reset_index()
     # Vyfiltrování top 20 KČ
     top_cetnost_kc = cetnost_kc[cetnost_kc["Kontrolni_Cinnost"].isin(top_kc)]
+    # Seřazení hodnot sestupně podle četnosti
+    # top_cetnost_kc.sort_values("cetnost", ascending=False, inplace=True)
     # Graf s činnostmi
-    fig, ax = plt.subplots()
-    sns.barplot(top_cetnost_kc, x="Kontrolni_Cinnost", y="cetnost", hue="Poruseni", ax=ax)
-    ax.tick_params(axis="x", labelrotation=90)
+    fig, ax = plt.subplots(figsize=(16, 8))
+    sns.barplot(top_cetnost_kc, y="Kontrolni_Cinnost", x="cetnost", hue="Poruseni", ax=ax)
+    # Přidání anotací k sloupcům
+    for sloupec in ax.containers:
+        ax.bar_label(sloupec)
+    # Otočení popisků os
+    # ax.tick_params(axis="x", labelrotation=90)
+    # Doplnění celního úřadu do nadpisu
     ax.set_title(celni_urad)
+    # Nastavení logaritmického měřítka
+    ax.set_xscale("log")
     plt.tight_layout()
+    # Uložení grafu
+    fig.savefig(f"graf_kc_{celni_urad}.png")
+    # Uložení dat s četnostmi porušení pro CÚ podle KČ
+    cetnost_kc.to_csv(f"cetnosti_kc_{celni_urad}.csv")
 plt.show()
