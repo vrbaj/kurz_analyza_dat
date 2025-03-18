@@ -66,5 +66,8 @@ data_kontroly["datum_mesic"] = data_kontroly["Datum_Zjisteni"].dt.month
 data_kontroly["datum_den_tydne"] = data_kontroly["Datum_Zjisteni"].dt.dayofweek
 # Odstranění sloupce Datum_Zjisteni
 data_kontroly.drop(columns=["Datum_Zjisteni"], inplace=True)
+# Pohlaví - nahrazení chybějících hodnot za nezjištěno
+data_kontroly["Pohlavi_porusitele"] = data_kontroly["Pohlavi_porusitele"].fillna("nezjištěno")
 
-print(data_kontroly.columns)
+# Uložení dat do souboru
+data_kontroly.to_pickle("kontroly_ocistene.pkl")
