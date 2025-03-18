@@ -99,10 +99,16 @@ kraje = {
     "CZ0710000000": "CÚ pro Olomoucký kraj",
     "CZ0720000000": "CÚ pro Zlínský kraj",
     "CZ0800000000": "CÚ pro Moravskoslezský kraj"
-
-
-
 }
-print(gdf_mapa)
+# Nahrazení ID kraje příslušným CÚ
+gdf_mapa["id"] = gdf_mapa["id"].map(kraje)
+# Vytvoření polygonu pro CÚ Praha Ruzyně
+ruzyne_polygon = Polygon(
+    ((14.1686228, 50.1324061),
+     (14.2250992, 50.1282039),
+     (14.2441536, 50.1282769),
+     (14.2438103, 50.1230461),
+     (14.2269875, 50.1171539))
+)
 # print(data_cetnosti.head())
 
