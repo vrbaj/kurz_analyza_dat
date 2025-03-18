@@ -128,13 +128,16 @@ for i, opl in enumerate(druhy_opl):
     # Vytvoření objektu s obrázkem
     fig, ax = plt.subplots(1, 2)
     # Zobrazení počtu kontrol pro danou OPL
-    gdf_mapa.plot(column=opl, ax=ax[0], legend=True, cmap="Wistia")
+    gdf_mapa.plot(column=opl, ax=ax[0], legend=True, cmap="Wistia", edgecolor="black")
     ax[0].set_title(f"Mapa počtu kontrol pro {opl}")
     # Zobrazení sloupcového grafu s počty kontrol pro kraje
     sns.barplot(gdf_mapa, x="id", y=opl, ax=ax[1])
     ax[1].set_title("Sloupcový graf s četností")
     ax[1].tick_params(axis="x", labelrotation=90)
     plt.tight_layout()
-plt.show()
+
+# Uložení dat s četnostmi
+data_cetnosti.to_csv("cetnosti_dle_opl.csv", index=False)
+# plt.show()
 
 
