@@ -39,5 +39,10 @@ data_konopi = data_sloucena["Konopí (živé rostliny)"] + \
               data_sloucena["Konopí (sušina - marihuana)"]
 print(f"Pro sloučené konopí: {pearsonr(data_sloucena['vazeny_index'], data_konopi)}.")
 
+# Sloučení všech typů drog pro korelaci mezi počtem kontrol a indexem soc. vyloučení
+kontroly_celkem = data_sloucena.iloc[:, 2:].sum(axis=1)
+koeficient, phodnota = pearsonr(data_sloucena["vazeny_index"], kontroly_celkem)
+print(f"Pro celkové počty kontrol: korelační koef. {koeficient:.4f}, p-hodnota {phodnota:.4f}.")
+
 # pd.set_option("display.max_columns", None)
 # print(data_sloucena)
