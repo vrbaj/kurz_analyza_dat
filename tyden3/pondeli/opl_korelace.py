@@ -14,4 +14,9 @@ data_index.columns = ["kraj", "pocet_obyvatel", "index"]
 # Seskupení dat podle krajů a spočtení váženého průměru indexu sociálního vyloučení
 lambda_funkce = lambda x: (x["index"] * x["pocet_obyvatel"]).sum() / x["pocet_obyvatel"].sum()
 data_index = data_index.groupby("kraj").apply(lambda_funkce)
-print(data_index.sort_values())
+data_index = data_index.reset_index()
+data_index.columns = ["kraj", "vazeny_index"]
+# Odstranění dat pro CÚ Praha Ruzyně
+data_cetnosti = data_cetnosti[data_cetnosti["Celni_Urad"] != "CÚ Praha Ruzyně"]
+#
+print(data_cetnosti["Celni_Urad"].unique())
