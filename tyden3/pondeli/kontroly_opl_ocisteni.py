@@ -126,10 +126,15 @@ pd.set_option("display.max_columns", None)
 # Iterace přes jednotlivé OPL
 for i, opl in enumerate(druhy_opl):
     # Vytvoření objektu s obrázkem
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(1, 2)
     # Zobrazení počtu kontrol pro danou OPL
-    gdf_mapa.plot(column=opl, ax=ax, legend=True)
-    ax.set_title(f"Mapa počtu kontrol pro {opl}")
+    gdf_mapa.plot(column=opl, ax=ax[0], legend=True, cmap="Wistia")
+    ax[0].set_title(f"Mapa počtu kontrol pro {opl}")
+    # Zobrazení sloupcového grafu s počty kontrol pro kraje
+    sns.barplot(gdf_mapa, x="id", y=opl, ax=ax[1])
+    ax[1].set_title("Sloupcový graf s četností")
+    ax[1].tick_params(axis="x", labelrotation=90)
+    plt.tight_layout()
 plt.show()
 
 
