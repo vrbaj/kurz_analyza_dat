@@ -20,4 +20,6 @@ data_index.columns = ["kraj", "vazeny_index"]
 data_cetnosti = data_cetnosti[data_cetnosti["Celni_Urad"] != "CÚ Praha Ruzyně"]
 # Odstranění CÚ pro ve sloupci Celni_Urad
 data_cetnosti["Celni_Urad"] = data_cetnosti["Celni_Urad"].apply(lambda x: x.replace("CÚ pro ", ""))
+# Nahrazení Hl. město Prahu za Hlavní město Praha
+data_cetnosti["Celni_Urad"] = data_cetnosti["Celni_Urad"].apply(lambda x: x.replace("Hl. město Prahu", "Hlavní město Praha"))
 print(data_cetnosti["Celni_Urad"].unique())
