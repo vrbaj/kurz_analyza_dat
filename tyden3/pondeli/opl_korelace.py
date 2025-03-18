@@ -28,5 +28,16 @@ data_sloucena = data_index.merge(data_cetnosti, left_on="kraj", right_on="Celni_
                                  how="left")
 # Odstranění sloupce Celni_Urad
 data_sloucena.drop(columns=["Celni_Urad"], inplace=True)
-pd.set_option("display.max_columns", None)
-print(data_sloucena)
+
+# Iterace skrz typy OPL
+for opl in data_sloucena.columns[2:]:
+    koeficient, phodnota = pearsonr(data_sloucena["vazeny_index"], data_sloucena[opl])
+    print(f"Pro {opl}: korelační koeficient {koeficient:.4f}, p-hodnota {phodnota:.4f}.")
+
+# Sloučení Konopí sušiny a živých rostlin a spočtení korelace
+data_konopi = data_sloucena["Konopí (živé rostliny)"] + \
+              data_sloucena["Konopí (sušina - marihuana)"]
+print(f"Pro sloučené konopí: {pearsonr(data_sloucena['vazeny_index'], data_konopi)}.")
+
+# pd.set_option("display.max_columns", None)
+# print(data_sloucena)
