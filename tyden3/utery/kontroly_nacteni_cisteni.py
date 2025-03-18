@@ -32,4 +32,18 @@ wordcloud = WordCloud(collocations=False).generate(", ".join(seznam_hodnot))
 plt.figure()
 plt.imshow(wordcloud, interpolation="bilinear")
 plt.axis("off")
-plt.show()
+# plt.show()
+
+# Zobrazení okresů
+#print(data_kontroly["Okres"].unique())
+
+# Odstranění sloupců s nevyhovujícími hodnotami
+sloupce_k_odstraneni = ["Mesto", "Typ_Vozidla", "Rok_narozeni_porusitele", "Okres"]
+data_kontroly.drop(columns=sloupce_k_odstraneni, inplace=True)
+
+# Smazání řádků, kde duplicita je ANO
+data_kontroly = data_kontroly[data_kontroly["Duplicita"] != "ANO"]
+# Smazání sloupce Duplicita - vyskytuje se v něm pouze 1 hodnota
+data_kontroly.drop(columns=["Duplicita"], inplace=True)
+print(data_kontroly.shape)
+
