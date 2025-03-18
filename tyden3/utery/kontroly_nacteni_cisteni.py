@@ -47,3 +47,13 @@ data_kontroly = data_kontroly[data_kontroly["Duplicita"] != "ANO"]
 data_kontroly.drop(columns=["Duplicita"], inplace=True)
 print(data_kontroly.shape)
 
+# Rozdíly mezi sloupci Stat, Narodnost_Porusitele
+data_rozdily = data_kontroly.groupby(["Stat", "Narodnost_Porusitele"]).count()
+data_rozdily = data_rozdily.reset_index()
+print(data_rozdily[data_rozdily["Narodnost_Porusitele"] == "CZE"])
+# Zdá se, že národnost porušitele souhlasí se značkou vozidla
+# Pro účely modelování není Národnost podstatná, protože není známá předem
+# Odstranění sloupce Nardonost_Porusitele
+data_kontroly.drop(columns=["Narodnost_Porusitele"], inplace=True)
+# Nahrazení chybějících hodnot ve sloupci Stat
+data_kontroly["Stat"] = data_kontroly["Stat"].fillna("neni")
