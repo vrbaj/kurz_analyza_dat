@@ -83,6 +83,26 @@ data_cetnosti = data_zadrze.groupby(["Celni_Urad", "Druh_OPL"])["Druh_OPL"].coun
 data_cetnosti.name = "cetnost"
 data_cetnosti = data_cetnosti.reset_index()
 # Nahrání mapových podkladů
+gdf_mapa = gpd.read_file("kraje.json")
+kraje = {
+    "CZ0100000000": "CÚ pro Hl. město Prahu",
+    "CZ0200000000": "CÚ pro Středočeský kraj",
+    "CZ0310000000": "CÚ pro Jihočeský kraj",
+    "CZ0320000000": "CÚ pro Plzeňský kraj",
+    "CZ0410000000": "CÚ pro Karlovarský kraj",
+    "CZ0420000000": "CÚ pro Ústecký kraj",
+    "CZ0510000000": "CÚ pro Liberecký kraj",
+    "CZ0520000000": "CÚ pro Královéhradecký kraj",
+    "CZ0530000000": "CÚ pro Pardubický kraj",
+    "CZ0630000000": "CÚ pro Kraj Vysočina",
+    "CZ0640000000": "CÚ pro Jihomoravský kraj",
+    "CZ0710000000": "CÚ pro Olomoucký kraj",
+    "CZ0800000000": "CÚ pro Zlínský kraj",
+    "CZ0720000000": "CÚ pro Moravskoslezský kraj"
 
+
+
+}
+print(gdf_mapa)
 # print(data_cetnosti.head())
 
