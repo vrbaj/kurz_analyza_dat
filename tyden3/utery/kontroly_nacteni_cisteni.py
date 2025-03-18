@@ -38,7 +38,8 @@ plt.axis("off")
 #print(data_kontroly["Okres"].unique())
 
 # Odstranění sloupců s nevyhovujícími hodnotami
-sloupce_k_odstraneni = ["Mesto", "Typ_Vozidla", "Rok_narozeni_porusitele", "Okres"]
+sloupce_k_odstraneni = ["Mesto", "Typ_Vozidla", "Rok_narozeni_porusitele", "Okres",
+                        "Kontrola_ID", "Rozkaz_ID"]
 data_kontroly.drop(columns=sloupce_k_odstraneni, inplace=True)
 
 # Smazání řádků, kde duplicita je ANO
@@ -66,4 +67,4 @@ data_kontroly["datum_den_tydne"] = data_kontroly["Datum_Zjisteni"].dt.dayofweek
 # Odstranění sloupce Datum_Zjisteni
 data_kontroly.drop(columns=["Datum_Zjisteni"], inplace=True)
 
-print(data_kontroly["datum_den_tydne"].value_counts())
+print(data_kontroly.columns)
