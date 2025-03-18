@@ -2,7 +2,8 @@
 import pandas as pd
 from tabulate import tabulate
 from wordcloud import WordCloud
-
+from matplotlib import pyplot as plt
+from unidecode import unidecode
 
 # Načtení dat - načítat excel trvá dlouho, proto jej serializujeme jako pickle
 # data_kontroly = pd.read_excel("Kontroly_VSCHT.xlsx")
@@ -22,4 +23,13 @@ for sloupec in data_kontroly.columns:
     print(f"\t-{sloupec}: {data_kontroly[sloupec].unique().shape[0]}")
 
 # Mapa výskytu slov
-seznam_hodnot = data_kontroly["Typ_Vozidla"].apply(lambda x: f"{x}".strip().replace(" ", "").lower())
+# Odstranění bílých znaků a mezer a převedení na malá písmena
+seznam_hodnot = data_kontroly["Typ_Vozidla"].apply(
+    lambda x: unidecode(f"{x}".strip().replace(" ", "").lower())
+    )
+seznam_hodnot = list(seznam_hodnot)
+wordcloud = WordCloud(collocations=False).generate(", ".join(seznam_hodnot))
+plt.figure()
+plt.imshow(wordcloud, interpolation="bilinear")
+plt.axis("off")
+plt.show()
