@@ -115,7 +115,7 @@ gdf_mapa.loc[gdf_mapa.shape[0], :] = ["CÚ Praha Ruzyně", ruzyne_polygon]
 gdf_mapa.sort_values("id", ascending=True, inplace=True)
 # Převedení tabulky počtu kontrol do širokého formátu
 data_cetnosti = data_cetnosti.pivot(index=["Celni_Urad"], columns=["Druh_OPL"],
-                                    values="cetnost").reset_index()
+                                    values="cetnost").reset_index().fillna(0)
 print(data_cetnosti.head())
 # Sloučení tabulek s počty kontrol a se souřadnicemi krajů
 # gdf_mapa
