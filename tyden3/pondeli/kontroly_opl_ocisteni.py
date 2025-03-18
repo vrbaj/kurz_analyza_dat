@@ -80,5 +80,9 @@ data_zadrze_sloucene.to_excel("ruzne_kontroly_stejne_opl.xlsx", index=False)
 ## Vykreslení počtů výskytů nalezených OPL pro jednotlivé celní úřady
 # Seskupení dat podle CÚ a podle typu OPL
 data_cetnosti = data_zadrze.groupby(["Celni_Urad", "Druh_OPL"])["Druh_OPL"].count()
-print(data_cetnosti.head())
+data_cetnosti.name = "cetnost"
+data_cetnosti = data_cetnosti.reset_index()
+# Nahrání mapových podkladů
+
+# print(data_cetnosti.head())
 
