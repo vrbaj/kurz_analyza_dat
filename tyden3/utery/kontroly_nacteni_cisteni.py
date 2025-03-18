@@ -38,8 +38,7 @@ plt.axis("off")
 #print(data_kontroly["Okres"].unique())
 
 # Odstranění sloupců s nevyhovujícími hodnotami
-sloupce_k_odstraneni = ["Mesto", "Typ_Vozidla", "Rok_narozeni_porusitele", "Okres",
-                        "Kontrolni_Cinnost"]
+sloupce_k_odstraneni = ["Mesto", "Typ_Vozidla", "Rok_narozeni_porusitele", "Okres"]
 data_kontroly.drop(columns=sloupce_k_odstraneni, inplace=True)
 
 # Smazání řádků, kde duplicita je ANO
