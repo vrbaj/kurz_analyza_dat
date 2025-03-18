@@ -28,4 +28,6 @@ for celni_urad in celni_urady:
     fig, ax = plt.subplots()
     sns.barplot(top_cetnost_kc, x="Kontrolni_Cinnost", y="cetnost", hue="Poruseni", ax=ax)
     ax.tick_params(axis="x", labelrotation=90)
+    ax.set_title(celni_urad)
+    plt.tight_layout()
 plt.show()
