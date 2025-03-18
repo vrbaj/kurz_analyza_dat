@@ -22,3 +22,10 @@ for celni_urad in celni_urady:
     cetnost_kc = data_cu.groupby(["Kontrolni_Cinnost", "Poruseni"])["Poruseni"].count()
     cetnost_kc.name = "cetnost"
     cetnost_kc = cetnost_kc.reset_index()
+    # Vyfiltrování top 20 KČ
+    top_cetnost_kc = cetnost_kc[cetnost_kc["Kontrolni_Cinnost"].isin(top_kc)]
+    # Graf s činnostmi
+    fig, ax = plt.subplots()
+    sns.barplot(top_cetnost_kc, x="Kontrolni_Cinnost", y="cetnost", hue="Poruseni", ax=ax)
+    ax.tick_params(axis="x", labelrotation=90)
+plt.show()
