@@ -110,5 +110,13 @@ ruzyne_polygon = Polygon(
      (14.2438103, 50.1230461),
      (14.2269875, 50.1171539))
 )
-# print(data_cetnosti.head())
+gdf_mapa.loc[gdf_mapa.shape[0], :] = ["CÚ Praha Ruzyně", ruzyne_polygon]
+# Seřazení tabulky podle CÚ
+gdf_mapa.sort_values("id", ascending=True, inplace=True)
+# Převedení tabulky počtu kontrol do širokého formátu
+data_cetnosti = data_cetnosti.pivot(index=["Celni_Urad"], columns=["Druh_OPL"],
+                                    values="cetnost").reset_index()
+print(data_cetnosti.head())
+# Sloučení tabulek s počty kontrol a se souřadnicemi krajů
+# gdf_mapa
 
