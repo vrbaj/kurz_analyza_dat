@@ -63,3 +63,15 @@ vystup_kc = vystup[data["Kontrolni_Cinnost"] == cinnost]
 # Rozdělení dat na trénovací a testovací
 X_train, X_test, y_train, y_test = train_test_split(priznaky_kc, vystup_kc,
                                                     test_size=0.2, random_state=42)
+
+# Trénování a nalezení nejlepšího nastavení modelu
+grid_search = GridSearchCV(model, parametry, cv=5, scoring="balanced_accuracy")
+grid_search.fit(X_train, y_train)
+nejlepsi_model = grid_search.best_estimator_
+
+# Vyhodnocení přesnosti klasifikace na testovacích datech
+y_pred = nejlepsi_model.predict(X_test)
+uar = balanced_accuracy_score(y_test, y_pred)
+print(f"{cinnost} - Nejlepši nastavení: {grid_search.best_params_}")
+print(f"Report výsledků:\n{classification_report(y_test, y_pred)}")
+print(f"Výsledek UAR: {uar:.2%}")
