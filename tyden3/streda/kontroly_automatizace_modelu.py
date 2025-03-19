@@ -113,3 +113,17 @@ for utvar in utvary:
             uar = balanced_accuracy_score(y_test, y_pred)
             print(f"{nazev} - Report výsledků:\n{classification_report(y_test, y_pred)}")
             print(f"UAR: {uar:.2%}")
+
+            # Uložení výsledků
+            nejlepsi_parametry.append({
+                "Utvar": utvar,
+                "Kontrolni_Cinnost": cinnost,
+                "Model": nazev,
+                "Nejlepší parametry": grid_search.best_params_
+            })
+
+# Uložení nejlepších parametrů pro každý útvar, kontrolní činnost a model do tabulky
+parametry_df = pd.DataFrame(nejlepsi_parametry)
+
+# Uložení tabulky do CSV
+parametry_df.to_csv("nejlepsi_parametry.csv", index=False)
