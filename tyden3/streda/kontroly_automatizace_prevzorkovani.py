@@ -105,8 +105,15 @@ for utvar in utvary:
                                                             test_size=0.2)
         # Iterace přes zvolené modely
         for nazev, model in modely.items():
+            # Vytvoření pipeline
+            pipeline_kroky = [("model", model)]
+            if prevzorkovat:
+                pipeline_kroky.insert(0, ("smote", SMOTE()))
+
+            pipeline = Pipeline(pipeline_kroky)
+
             # Nastavení grid search pro parametry daného modelu
-            grid_search = GridSearchCV(model, parametry[nazev], cv=5,
+            grid_search = GridSearchCV(pipeline, parametry[nazev], cv=5,
                                        scoring="balanced_accuracy", n_jobs=-1)
             # Natrénování všech modelů
             grid_search.fit(X_train, y_train)
