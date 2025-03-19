@@ -85,9 +85,9 @@ for cinnost in kontrolni_cinnosti:
     else:
         print(f"{cinnost} obsahuje dostatek dat, trénuji model.")
 
-# Rozdělení dat na trénovací a testovací
-X_train, X_test, y_train, y_test = train_test_split(priznaky_kc, vystup_kc,
-                                                    test_size=0.2, random_state=42)
+    # Rozdělení dat na trénovací a testovací
+    X_train, X_test, y_train, y_test = train_test_split(priznaky_kc, vystup_kc,
+                                                        test_size=0.2, random_state=42)
 
     # Trénování a nalezení nejlepšího nastavení modelu
     grid_search = GridSearchCV(model, parametry, cv=5, scoring="balanced_accuracy")
