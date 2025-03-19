@@ -18,6 +18,9 @@ data["Druh_vozidla"] = data["Druh_vozidla"].fillna("nezjištěno")
 # Zákódování porušení
 data["Poruseni"] = data["Poruseni"].map({"ANO": 1, "NE": 0})
 
+# Možnost zapnutí převzorkování
+prevzorkovat = True
+
 # Definice parametrů jednotlivých modelů pro grid search
 parametry = {
     "Logistická regrese": {"C": [0.001, 0.01, 0.1, 1, 10, 100, 1000]},
@@ -37,10 +40,12 @@ parametry = {
 # print(parametry["Náhodný les"])
 
 # Inicializace modelů
+balancovani_modelu = None if prevzorkovat else "balanced"
 modely = {
-    "Logistická regrese": LogisticRegression(max_iter=1000, class_weight="balanced"),
-    "Rozhodovací strom": DecisionTreeClassifier(class_weight="balanced"),
-    # "Náhodný les": RandomForestClassifier(class_weight="balanced")
+    "Logistická regrese": LogisticRegression(max_iter=1000,
+                                             class_weight=balancovani_modelu),
+    "Rozhodovací strom": DecisionTreeClassifier(class_weight=balancovani_modelu),
+    # "Náhodný les": RandomForestClassifier(class_weight=balancovani_modelu)
 }
 
 # Uložení nejlepších parametrů
