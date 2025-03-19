@@ -54,6 +54,9 @@ mazane_sloupce = ["Celni_Urad", "Poruseni", "Kontrolni_Cinnost",
                   "Misto_kontoly", "Druh_vozidla", "Stat", "Pohlavi_porusitele"
                   "Utvar"]
 
+# Sloupce zakódované pomocí frekvenčního kódování
+kategoricke_sloupce = ["Celni_Urad", "Misto_kontoly", "Druh_vozidla", "Stat"]
+
 for utvar in utvary:
     # Iterace skrz kontrolní činnosti
     # Unikátní hodnoty kontrolní činnosti pro data daného útvaru
@@ -79,3 +82,6 @@ for utvar in utvary:
 
         # One-hot encoding pro pohlaví
         kodovane_pohlavi = pd.get_dummies(subset[["Pohlavi_porusitele"]]).astype(int)
+        priznaky = pd.concat([priznaky, kodovane_pohlavi], axis=1)
+
+        # Frekvenční kódování
