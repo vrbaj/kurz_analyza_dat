@@ -55,3 +55,11 @@ parametry = {"C": [0.001, 0.01, 0.1, 1, 10, 100, 1000]}
 # Trénování modelu a vyhodnocení přesnosti klasifikace
 # Filtrace příznaků a výstupu podle konkrétní kontrolní činností
 cinnost = 'VV - tabák a tabákové výrobky'
+
+# Filtrace příznaků podle zvolené činnosti
+priznaky_kc = priznaky[data["Kontrolni_Cinnost"] == cinnost]
+vystup_kc = vystup[data["Kontrolni_Cinnost"] == cinnost]
+
+# Rozdělení dat na trénovací a testovací
+X_train, X_test, y_train, y_test = train_test_split(priznaky_kc, vystup_kc,
+                                                    test_size=0.2, random_state=42)
