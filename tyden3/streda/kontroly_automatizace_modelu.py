@@ -31,3 +31,14 @@ parametry = {
                     "max_samples": [0.4, 0.6, 0.8, 1]
                         },
 }
+# Vypsání klíčů slovníku
+# print(parametry.keys())
+# Vypsání parametrů konkrétního modelu
+# print(parametry["Náhodný les"])
+
+# Inicializace modelů
+modely = {
+    "Logistická regrese": LogisticRegression(max_iter=1000, class_weight="balanced"),
+    "Rozhodovací strom": DecisionTreeClassifier(class_weight="balanced"),
+    "Náhodný les": RandomForestClassifier(class_weight="balanced")
+}
