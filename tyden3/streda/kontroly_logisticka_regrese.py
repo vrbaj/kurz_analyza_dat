@@ -34,4 +34,6 @@ kodovane_pohlavi = pd.get_dummies(data[["Pohlavi_porusitele"]]).astype(int)
 
 # Sloučení tabulek příznaky a kódované pohlaví
 priznaky = pd.concat([priznaky, kodovane_pohlavi], axis=1)
-print(tabulate(priznaky.head(), headers="keys"))
+
+# Frekvenční kódování (frequency encoding) zbývajících sloupců
+kodovane_sloupce = ["Celni_Urad", "Misto_kontoly", "Druh_vozidla", "Stat"]
