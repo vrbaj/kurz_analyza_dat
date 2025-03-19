@@ -24,12 +24,12 @@ parametry = {
     "Rozhodovací strom": {"max_depth": [5, 10, 20, None],
                           "min_samples_split": [2, 5, 10, 20],
                           "max_features": ["sqrt", "log2", None]},
-    "Náhodný les": {"max_depth": [5, 10, 20, None],
-                    "min_samples_split": [2, 5, 10, 20],
-                    "max_features": ["sqrt", "log2", None],
-                    "n_estimators": [5, 11, 21],
-                    "max_samples": [0.4, 0.6, 0.8, 1]
-                        },
+    # "Náhodný les": {"max_depth": [5, 10, 20, None],
+    #                 "min_samples_split": [2, 5, 10, 20],
+    #                 "max_features": ["sqrt", "log2", None],
+    #                 "n_estimators": [5, 11, 21],
+    #                 "max_samples": [0.4, 0.6, 0.8, 1]
+    #                     },
 }
 # Vypsání klíčů slovníku
 # print(parametry.keys())
@@ -40,7 +40,7 @@ parametry = {
 modely = {
     "Logistická regrese": LogisticRegression(max_iter=1000, class_weight="balanced"),
     "Rozhodovací strom": DecisionTreeClassifier(class_weight="balanced"),
-    "Náhodný les": RandomForestClassifier(class_weight="balanced")
+    # "Náhodný les": RandomForestClassifier(class_weight="balanced")
 }
 
 # Uložení nejlepších parametrů
@@ -119,7 +119,8 @@ for utvar in utvary:
                 "Utvar": utvar,
                 "Kontrolni_Cinnost": cinnost,
                 "Model": nazev,
-                "Nejlepší parametry": grid_search.best_params_
+                "Nejlepší parametry": grid_search.best_params_,
+                "UAR": uar
             })
 
 # Uložení nejlepších parametrů pro každý útvar, kontrolní činnost a model do tabulky
