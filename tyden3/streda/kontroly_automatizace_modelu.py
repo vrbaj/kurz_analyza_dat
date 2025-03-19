@@ -102,7 +102,7 @@ for utvar in utvary:
         for nazev, model in modely.items():
             # Nastavení grid search pro parametry daného modelu
             grid_search = GridSearchCV(model, parametry[nazev], cv=5,
-                                       scoring="balanced_accuracy")
+                                       scoring="balanced_accuracy", n_jobs=-1)
             # Natrénování všech modelů
             grid_search.fit(X_train, y_train)
             # Nalezení nejlepšího modelu
