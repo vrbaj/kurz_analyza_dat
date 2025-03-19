@@ -81,5 +81,30 @@ for cinnost in kontrolni_cinnosti:
     # Podmínka pro přeskočení tréningu
     if (pocet_poruseni < 100) or (pocet_ok < 100):
         print(f"{cinnost} neobsahuje dostatek dat, přeskakuji...")
-        continue
+        continue # přeruší běh současné iterace a pokračuje další činností
+    else:
+        print(f"{cinnost} obsahuje dostatek dat, trénuji model.")
+
+# Rozdělení dat na trénovací a testovací
+X_train, X_test, y_train, y_test = train_test_split(priznaky_kc, vystup_kc,
+                                                    test_size=0.2, random_state=42)
+
+    # Trénování a nalezení nejlepšího nastavení modelu
+    grid_search = GridSearchCV(model, parametry, cv=5, scoring="balanced_accuracy")
+    grid_search.fit(X_train, y_train)
+    nejlepsi_model = grid_search.best_estimator_
+
+    # Vyhodnocení přesnosti klasifikace na testovacích datech
+    # Predikce na neznámých datech
+    y_pred = nejlepsi_model.predict(X_test)
+    # Unweighted Average Recall
+    uar = balanced_accuracy_score(y_test, y_pred)
+    # Vypsání výsledků klasifikace
+    print(f"{cinnost} - Nejlepši nastavení: {grid_search.best_params_}")
+    print(f"Report výsledků:\n{classification_report(y_test, y_pred)}")
+    print(f"Výsledek UAR: {uar:.2%}")
+
+    # Feature importance - zobrazení vah jednotlivých příznaků
+    feature_importance = pd.Series(nejlepsi_model.coef_[0], index=priznaky_kc.columns)
+    feature_importance = feature_importance.sort_values(ascending=True)
 
