@@ -4,8 +4,9 @@ from tabulate import tabulate
 from matplotlib import pyplot as plt
 import numpy as np
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, balanced_accuracy_score
+from sklearn.inspection import permutation_importance
 
 
 # Nastavení seedu pro sjednocené generování náhodných hodnot
@@ -58,8 +59,11 @@ for sloupec in kodovane_sloupce:
 vystup = data["Poruseni"]
 
 # Inicializace modelu logistické regrese
-model = LogisticRegression(max_iter=1000, class_weight="balanced")
-parametry = {"C": [0.001, 0.01, 0.1, 1, 10, 100, 1000]}
+model = DecisionTreeClassifier(random_state=42, class_weight="balanced")
+parametry = {"max_depth": [5, 10, 20, None],
+             "min_samples_split": [2, 5, 10, 20],
+             "max_features": ["sqrt", "log2", None]
+             }
 
 # Trénování modelu a vyhodnocení přesnosti klasifikace
 # Filtrace příznaků a výstupu podle konkrétní kontrolní činností
