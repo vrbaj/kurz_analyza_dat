@@ -71,4 +71,10 @@ for cinnost in kontrolni_cinnosti:
     priznaky_kc = priznaky[data["Kontrolni_Cinnost"] == cinnost]
     vystup_kc = vystup[data["Kontrolni_Cinnost"] == cinnost]
 
+    # Zjištění počtu vzorků úspěšných a neúspěšných kontrol pro danou činnost
+    # Pro příliš malé počty nebude model fungovat dobře
+    # Metoda get vrátí hodnotu pod zadaným indexem, pokud nenajde index, vrátí
+    # hodnotu uvedenou jako druhý argument
+    pocet_poruseni = vystup_kc.value_counts().get(1, 0)
+    pocet_ok = vystup_kc.value_counts().get(0, 0)
 
