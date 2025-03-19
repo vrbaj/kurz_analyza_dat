@@ -13,7 +13,6 @@ data = pd.read_pickle("../utery/kontroly_ocistene.pkl")
 data = data[['Celni_Urad', 'Poruseni', 'Kontrolni_Cinnost', 'Misto_kontoly',
        'Cas_Zjisteni', 'Druh_vozidla', 'Stat', 'Pohlavi_porusitele', 'Utvar',
        'datum_mesic', 'datum_den_tydne']]
-print(data.columns)
 
 # Problém s druhem vozidla - chybějící hodnoty
 data["Druh_vozidla"] = data["Druh_vozidla"].fillna("nezjištěno")
@@ -26,5 +25,10 @@ data["Poruseni"] = data["Poruseni"].map({"ANO": 1, "NE": 0})
 
 # Tabulka příznaků
 mazane_sloupce = ["Poruseni", "Kontrolni_Cinnost", "Utvar",
-                  "Pohlavi_porusitele", "Stat"]
+                  "Pohlavi_porusitele", "Stat", "Celni_Urad",
+                  "Misto_kontoly", "Druh_vozidla"]
 priznaky = data.drop(columns=mazane_sloupce)
+
+# one-hot encoding pro Pohlaví
+kodovane_pohlavi = pd.get_dummies(data[["Pohlavi_porusitele"]])
+print(tabulate(kodovane_pohlavi.head(), headers="keys"))
