@@ -23,6 +23,12 @@ data["Druh_vozidla"] = data["Druh_vozidla"].fillna("nezjištěno")
 # Volba mobilního dohledu
 data = data[data["Utvar"] == "Mobilní dohled"]
 
+# Odfiltrování vybraných celních úřadů (Liberec, Moravskoslezský kraj)
+# print(data.shape)
+# data = data[(data["Celni_Urad"] != "CÚ pro Liberecký kraj") &
+#             (data["Celni_Urad"] != "CÚ pro Moravskoslezský kraj")]
+# print(data.shape)
+
 # Zakódování sloupce Poruseni
 data["Poruseni"] = data["Poruseni"].map({"ANO": 1, "NE": 0})
 
