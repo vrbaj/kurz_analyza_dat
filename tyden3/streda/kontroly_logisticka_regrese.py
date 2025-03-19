@@ -44,3 +44,5 @@ for sloupec in kodovane_sloupce:
     # Namapování četností na jednotlivé hodnoty v daném sloupci a uložení jako
     # nového sloucpce do tabulky s příznaky
     priznaky[sloupec] = data[sloupec].map(frekvencni_kodovani)
+
+print(tabulate(priznaky.tail(5), headers="keys"))
