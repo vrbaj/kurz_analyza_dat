@@ -58,10 +58,12 @@ for sloupec in kodovane_sloupce:
 vystup = data["Poruseni"]
 
 # Inicializace modelu rozhodovacího stromu
-model = DecisionTreeClassifier(random_state=42, class_weight="balanced")
+model = RandomForestClassifier(random_state=42, class_weight="balanced")
 parametry = {"max_depth": [5, 10, 20, None],
              "min_samples_split": [2, 5, 10, 20],
-             "max_features": ["sqrt", "log2", None]
+             "max_features": ["sqrt", "log2", None],
+             "n_estimators": [101, 51, 11],
+             "max_samples": [0.4, 0.6, 0.8, 1]
              }
 
 # Trénování modelu a vyhodnocení přesnosti klasifikace
@@ -108,17 +110,16 @@ for cinnost in kontrolni_cinnosti:
     print(f"Výsledek UAR: {uar:.2%}")
 
     # Feature importance - spočtení permutation importance jednotlivých příznaků
-    vysledek_pi = permutation_importance(nejlepsi_model, X_test, y_test, n_repeats=10,
-                                         random_state=42)
-    feature_importance = pd.Series(vysledek_pi.importances_mean, index=priznaky_kc.columns)
+    feature_importance = pd.Series(nejlepsi_model.feature_importances_,
+                                   index=priznaky_kc.columns)
     feature_importance = feature_importance.sort_values(ascending=True)
 
     # Vykreslení feature importance
     fig, ax = plt.subplots(figsize=(10, 6))
     feature_importance.plot(kind="barh", ax=ax)
-    ax.set_title(f"Feature importance logistické regrese pro {cinnost}")
+    ax.set_title(f"Feature importance náhodného lesa pro {cinnost}")
     ax.set_xlabel("Hodnota koeficientu")
     ax.set_ylabel("Příznak")
     plt.tight_layout()
-    fig.savefig(f"rozhodovaci_strom/feature_importance_{cinnost}.png")
+    fig.savefig(f"nahodny_les/feature_importance_{cinnost}.png")
 
