@@ -10,4 +10,6 @@ from sklearn.metrics import classification_report, balanced_accuracy_score
 # Načtení dat
 # Dvě tečky pro přístup do složky o úroveň výše
 data = pd.read_pickle("../utery/kontroly_ocistene.pkl")
-print(tabulate(data.head(), headers="keys"))
+# Problém s druhem vozidla - chybějící hodnoty
+data["Druh_vozidla"] = data["Druh_vozidla"].fillna("nezjištěno")
+print(data[pd.isna(data["Druh_vozidla"])].shape)
