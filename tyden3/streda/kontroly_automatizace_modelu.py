@@ -49,6 +49,11 @@ nejlepsi_parametry = []
 # Iterace skrz jednotlivé útvary
 utvary = data["Utvar"].unique()
 
+# Sloupce mazané při tvorbě příznaků (jelikož nejsou číselné)
+mazane_sloupce = ["Celni_Urad", "Poruseni", "Kontrolni_Cinnost",
+                  "Misto_kontoly", "Druh_vozidla", "Stat", "Pohlavi_porusitele"
+                  "Utvar"]
+
 for utvar in utvary:
     # Iterace skrz kontrolní činnosti
     # Unikátní hodnoty kontrolní činnosti pro data daného útvaru
@@ -62,3 +67,14 @@ for utvar in utvary:
         # hodnotu uvededenou v druhém argumentu, pokud index chybí
         pocet_poruseni = subset["Poruseni"].value_counts().get(1, 0)
         pocet_ok = subset["Poruseni"].value_counts().get(0, 0)
+        # Porovnání počtu porušení a počtu kontrol bez porušení a eliminace subsetů
+        # s nízkým počtem dat
+        if (pocet_poruseni < 100) or (pocet_ok < 100):
+            print(f"Přeskakuji {utvar} - {cinnost} (nedostatek dat)")
+            continue
+
+        # Předzpracování dat
+        # Tabulka s příznaky
+        priznaky = subset.drop(mazane_sloupce)
+        # One-hot encoding pro pohlaví
+
