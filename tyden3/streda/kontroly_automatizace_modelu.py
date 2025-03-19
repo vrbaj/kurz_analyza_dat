@@ -119,7 +119,7 @@ for utvar in utvary:
                 "Utvar": utvar,
                 "Kontrolni_Cinnost": cinnost,
                 "Model": nazev,
-                "Nejlepší parametry": grid_search.best_params_,
+                "Nejlepsi_parametry": grid_search.best_params_,
                 "UAR": uar
             })
 
