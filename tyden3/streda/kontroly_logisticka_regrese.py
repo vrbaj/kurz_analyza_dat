@@ -30,5 +30,8 @@ mazane_sloupce = ["Poruseni", "Kontrolni_Cinnost", "Utvar",
 priznaky = data.drop(columns=mazane_sloupce)
 
 # one-hot encoding pro Pohlaví
-kodovane_pohlavi = pd.get_dummies(data[["Pohlavi_porusitele"]])
-print(tabulate(kodovane_pohlavi.head(), headers="keys"))
+kodovane_pohlavi = pd.get_dummies(data[["Pohlavi_porusitele"]]).astype(int)
+
+# Sloučení tabulek příznaky a kódované pohlaví
+priznaky = pd.concat([priznaky, kodovane_pohlavi], axis=1)
+print(tabulate(priznaky.head(), headers="keys"))
