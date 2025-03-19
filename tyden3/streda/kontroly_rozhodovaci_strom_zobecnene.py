@@ -58,7 +58,7 @@ for sloupec in kodovane_sloupce:
 # Definice výstupu
 vystup = data["Poruseni"]
 
-# Inicializace modelu logistické regrese
+# Inicializace modelu rozhodovacího stromu
 model = DecisionTreeClassifier(random_state=42, class_weight="balanced")
 parametry = {"max_depth": [5, 10, 20, None],
              "min_samples_split": [2, 5, 10, 20],
@@ -108,8 +108,10 @@ for cinnost in kontrolni_cinnosti:
     print(f"Report výsledků:\n{classification_report(y_test, y_pred)}")
     print(f"Výsledek UAR: {uar:.2%}")
 
-    # Feature importance - zobrazení vah jednotlivých příznaků
-    feature_importance = pd.Series(nejlepsi_model.coef_[0], index=priznaky_kc.columns)
+    # Feature importance - spočtení permutation importance jednotlivých příznaků
+    vysledek_pi = permutation_importance(nejlepsi_model, X_test, y_test, n_repeats=10,
+                                         random_state=42)
+    feature_importance = pd.Series(vysledek_pi.importances_mean, index=priznaky_kc.columns)
     feature_importance = feature_importance.sort_values(ascending=True)
 
     # Vykreslení feature importance
