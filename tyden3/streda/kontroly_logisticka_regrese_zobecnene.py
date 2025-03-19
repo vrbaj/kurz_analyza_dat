@@ -78,3 +78,8 @@ for cinnost in kontrolni_cinnosti:
     pocet_poruseni = vystup_kc.value_counts().get(1, 0)
     pocet_ok = vystup_kc.value_counts().get(0, 0)
 
+    # Podmínka pro přeskočení tréningu
+    if (pocet_poruseni < 100) or (pocet_ok < 100):
+        print(f"{cinnost} neobsahuje dostatek dat, přeskakuji...")
+        continue
+
