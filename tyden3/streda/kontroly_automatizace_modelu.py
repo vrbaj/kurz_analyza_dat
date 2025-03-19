@@ -126,5 +126,7 @@ for utvar in utvary:
 # Uložení nejlepších parametrů pro každý útvar, kontrolní činnost a model do tabulky
 parametry_df = pd.DataFrame(nejlepsi_parametry)
 
-# Uložení tabulky do CSV
+# Uložení tabulky do CSV a do Excelu
 parametry_df.to_csv("nejlepsi_parametry.csv", index=False)
+parametry_df["UAR"] = parametry_df["UAR"].apply(lambda x: str(x).replace(".", ","))
+parametry_df.to_excel("nejlepsi_parametry.xlsx", index=False)
