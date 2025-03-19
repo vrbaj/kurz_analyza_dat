@@ -45,4 +45,13 @@ for sloupec in kodovane_sloupce:
     # nového sloucpce do tabulky s příznaky
     priznaky[sloupec] = data[sloupec].map(frekvencni_kodovani)
 
-print(tabulate(priznaky.tail(5), headers="keys"))
+# Definice výstupu
+vystup = data["Poruseni"]
+
+# Inicializace modelu logistické regrese
+model = LogisticRegression(max_iter=1000, class_weight="balanced")
+parametry = {"C": [0.001, 0.01, 0.1, 1, 10, 100, 1000]}
+
+# Trénování modelu a vyhodnocení přesnosti klasifikace
+# Filtrace příznaků a výstupu podle konkrétní kontrolní činností
+cinnost = 'VV - tabák a tabákové výrobky'
