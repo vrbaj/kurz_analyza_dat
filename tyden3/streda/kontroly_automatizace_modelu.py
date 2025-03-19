@@ -63,6 +63,7 @@ for utvar in utvary:
     cinnosti = data[data["Utvar"] == utvar]["Kontrolni_Cinnost"].unique()
 
     for cinnost in cinnosti:
+        print(f"===== {utvar} - {cinnost} =====")
         # Počet porušení a počet kontrol bez porušení
         subset = data[(data["Utvar"] == utvar) &
                       (data["Kontrolni_Cinnost"] == cinnost)]
@@ -97,6 +98,18 @@ for utvar in utvary:
         # Rozdělení dat na trénovací a testovací
         X_train, X_test, y_train, y_test = train_test_split(priznaky, vystup,
                                                             test_size=0.2)
-
+        # Iterace přes zvolené modely
         for nazev, model in modely.items():
-            print(f"{utvar} - {cinnost} - {nazev}")
+            # Nastavení grid search pro parametry daného modelu
+            grid_search = GridSearchCV(model, parametry[nazev], cv=5,
+                                       scoring="balanced_accuracy")
+            # Natrénování všech modelů
+            grid_search.fit(X_train, y_train)
+            # Nalezení nejlepšího modelu
+            nejlepsi_model = grid_search.best_estimator_
+
+            # Vyhodnocení klasifikace na neznámých datech
+            y_pred = nejlepsi_model.predict(X_test)
+            uar = balanced_accuracy_score(y_test, y_pred)
+            print(f"{nazev} - Report výsledků:\n{classification_report(y_test, y_pred)}")
+            print(f"UAR: {uar:.2%}")
