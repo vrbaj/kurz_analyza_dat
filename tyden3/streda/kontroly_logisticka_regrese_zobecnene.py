@@ -108,3 +108,12 @@ for cinnost in kontrolni_cinnosti:
     feature_importance = pd.Series(nejlepsi_model.coef_[0], index=priznaky_kc.columns)
     feature_importance = feature_importance.sort_values(ascending=True)
 
+    # Vykreslení feature importance
+    fig, ax = plt.subplots(figsize=(10, 6))
+    feature_importance.plot(kind="barh", ax=ax)
+    ax.set_title(f"Feature importance logistické regrese pro {cinnost}")
+    ax.set_xlabel("Hodnota koeficientu")
+    ax.set_ylabel("Příznak")
+    plt.tight_layout()
+    fig.savefig(f"logisticka_regrese/feature_importance_{cinnost}.png")
+
