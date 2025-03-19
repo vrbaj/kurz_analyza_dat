@@ -37,3 +37,10 @@ priznaky = pd.concat([priznaky, kodovane_pohlavi], axis=1)
 
 # Frekvenční kódování (frequency encoding) zbývajících sloupců
 kodovane_sloupce = ["Celni_Urad", "Misto_kontoly", "Druh_vozidla", "Stat"]
+# Iterace skrz kategorické sloupce
+for sloupec in kodovane_sloupce:
+    # Vytvoření relativních četností pro jednotlivé sloupce a uložení do slovníku
+    frekvencni_kodovani = data[sloupec].value_counts(normalize=True).to_dict()
+    # Namapování četností na jednotlivé hodnoty v daném sloupci a uložení jako
+    # nového sloucpce do tabulky s příznaky
+    priznaky[sloupec] = data[sloupec].map(frekvencni_kodovani)
