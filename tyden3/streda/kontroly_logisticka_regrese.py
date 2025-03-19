@@ -7,6 +7,9 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, balanced_accuracy_score
 
+
+# Nastavení seedu pro sjednocené generování náhodných hodnot
+np.random.seed(42)
 # Načtení dat
 # Dvě tečky pro přístup do složky o úroveň výše
 data = pd.read_pickle("../utery/kontroly_ocistene.pkl")
@@ -70,8 +73,24 @@ grid_search.fit(X_train, y_train)
 nejlepsi_model = grid_search.best_estimator_
 
 # Vyhodnocení přesnosti klasifikace na testovacích datech
+# Predikce na neznámých datech
 y_pred = nejlepsi_model.predict(X_test)
+# Unweighted Average Recall
 uar = balanced_accuracy_score(y_test, y_pred)
+# Vypsání výsledků klasifikace
 print(f"{cinnost} - Nejlepši nastavení: {grid_search.best_params_}")
 print(f"Report výsledků:\n{classification_report(y_test, y_pred)}")
 print(f"Výsledek UAR: {uar:.2%}")
+
+# Feature importance - zobrazení vah jednotlivých příznaků
+feature_importance = pd.Series(nejlepsi_model.coef_[0], index=priznaky_kc.columns)
+feature_importance = feature_importance.sort_values(ascending=True)
+
+# Graf s feature importance
+fig, ax = plt.subplots(figsize=(10, 6))
+feature_importance.plot(kind="barh", ax=ax)
+ax.set_title(f"Feature importance logistické regrese pro {cinnost}")
+ax.set_xlabel("Hodnota koeficientu")
+ax.set_ylabel("Příznak")
+plt.tight_layout()
+plt.show()
