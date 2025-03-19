@@ -76,5 +76,6 @@ for utvar in utvary:
         # Předzpracování dat
         # Tabulka s příznaky
         priznaky = subset.drop(mazane_sloupce)
-        # One-hot encoding pro pohlaví
 
+        # One-hot encoding pro pohlaví
+        kodovane_pohlavi = pd.get_dummies(subset[["Pohlavi_porusitele"]]).astype(int)
