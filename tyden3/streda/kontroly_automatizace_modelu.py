@@ -51,7 +51,7 @@ utvary = data["Utvar"].unique()
 
 # Sloupce mazané při tvorbě příznaků (jelikož nejsou číselné)
 mazane_sloupce = ["Celni_Urad", "Poruseni", "Kontrolni_Cinnost",
-                  "Misto_kontoly", "Druh_vozidla", "Stat", "Pohlavi_porusitele"
+                  "Misto_kontoly", "Druh_vozidla", "Stat", "Pohlavi_porusitele",
                   "Utvar"]
 
 # Sloupce zakódované pomocí frekvenčního kódování
@@ -78,7 +78,7 @@ for utvar in utvary:
 
         # Předzpracování dat
         # Tabulka s příznaky
-        priznaky = subset.drop(mazane_sloupce)
+        priznaky = subset.drop(columns=mazane_sloupce)
 
         # One-hot encoding pro pohlaví
         kodovane_pohlavi = pd.get_dummies(subset[["Pohlavi_porusitele"]]).astype(int)
