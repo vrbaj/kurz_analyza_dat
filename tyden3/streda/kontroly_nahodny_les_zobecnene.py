@@ -57,7 +57,7 @@ for sloupec in kodovane_sloupce:
 # Definice výstupu
 vystup = data["Poruseni"]
 
-# Inicializace modelu rozhodovacího stromu
+# Inicializace modelu náhodného lesa
 model = RandomForestClassifier(random_state=42, class_weight="balanced")
 parametry = {"max_depth": [5, 10, 20, None],
              "min_samples_split": [2, 5, 10, 20],
@@ -95,7 +95,9 @@ for cinnost in kontrolni_cinnosti:
                                                         test_size=0.2, random_state=42)
 
     # Trénování a nalezení nejlepšího nastavení modelu
-    grid_search = GridSearchCV(model, parametry, cv=5, scoring="balanced_accuracy")
+    # n_jobs=-1 pro využití všech vláken procesoru
+    grid_search = GridSearchCV(model, parametry, cv=5, scoring="balanced_accuracy",
+                               n_jobs=-1)
     grid_search.fit(X_train, y_train)
     nejlepsi_model = grid_search.best_estimator_
 
