@@ -121,5 +121,5 @@ for cinnost in kontrolni_cinnosti:
     ax.set_xlabel("Hodnota koeficientu")
     ax.set_ylabel("Příznak")
     plt.tight_layout()
-    fig.savefig(f"logisticka_regrese/feature_importance_{cinnost}.png")
+    fig.savefig(f"rozhodovaci_strom/feature_importance_{cinnost}.png")
 
