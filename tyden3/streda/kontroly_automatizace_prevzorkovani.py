@@ -23,15 +23,15 @@ prevzorkovat = True
 
 # Definice parametrů jednotlivých modelů pro grid search
 parametry = {
-    "Logistická regrese": {"C": [0.001, 0.01, 0.1, 1, 10, 100, 1000]},
-    "Rozhodovací strom": {"max_depth": [5, 10, 20, None],
-                          "min_samples_split": [2, 5, 10, 20],
-                          "max_features": ["sqrt", "log2", None]},
-    # "Náhodný les": {"max_depth": [5, 10, 20, None],
-    #                 "min_samples_split": [2, 5, 10, 20],
-    #                 "max_features": ["sqrt", "log2", None],
-    #                 "n_estimators": [5, 11, 21],
-    #                 "max_samples": [0.4, 0.6, 0.8, 1]
+    "Logistická regrese": {"model__C": [0.001, 0.01, 0.1, 1, 10, 100, 1000]},
+    "Rozhodovací strom": {"model__max_depth": [5, 10, 20, None],
+                          "model__min_samples_split": [2, 5, 10, 20],
+                          "model__max_features": ["sqrt", "log2", None]},
+    # "Náhodný les": {"model__max_depth": [5, 10, 20, None],
+    #                 "model__min_samples_split": [2, 5, 10, 20],
+    #                 "model__max_features": ["sqrt", "log2", None],
+    #                 "model__n_estimators": [5, 11, 21],
+    #                 "model__max_samples": [0.4, 0.6, 0.8, 1]
     #                     },
 }
 # Vypsání klíčů slovníku
@@ -132,7 +132,8 @@ for utvar in utvary:
                 "Kontrolni_Cinnost": cinnost,
                 "Model": nazev,
                 "Nejlepsi_parametry": grid_search.best_params_,
-                "UAR": uar
+                "UAR": uar,
+                "Prevzorkovani": prevzorkovat
             })
 
 # Uložení nejlepších parametrů pro každý útvar, kontrolní činnost a model do tabulky
