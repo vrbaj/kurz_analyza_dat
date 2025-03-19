@@ -63,4 +63,12 @@ parametry = {"C": [0.001, 0.01, 0.1, 1, 10, 100, 1000]}
 
 # Trénování modelu a vyhodnocení přesnosti klasifikace
 # Filtrace příznaků a výstupu podle konkrétní kontrolní činností
-cinnost = 'VV - tabák a tabákové výrobky'
+kontrolni_cinnosti = data["Kontrolni_Cinnost"].unique()
+
+# Iterace skrz jednotlivé kontrolní činnosti
+for cinnost in kontrolni_cinnosti:
+    # Filtrace podle dané činnosti
+    priznaky_kc = priznaky[data["Kontrolni_Cinnost"] == cinnost]
+    vystup_kc = vystup[data["Kontrolni_Cinnost"] == cinnost]
+
+
