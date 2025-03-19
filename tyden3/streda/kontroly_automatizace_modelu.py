@@ -42,3 +42,23 @@ modely = {
     "Rozhodovací strom": DecisionTreeClassifier(class_weight="balanced"),
     "Náhodný les": RandomForestClassifier(class_weight="balanced")
 }
+
+# Uložení nejlepších parametrů
+nejlepsi_parametry = []
+
+# Iterace skrz jednotlivé útvary
+utvary = data["Utvar"].unique()
+
+for utvar in utvary:
+    # Iterace skrz kontrolní činnosti
+    # Unikátní hodnoty kontrolní činnosti pro data daného útvaru
+    cinnosti = data[data["Utvar"] == utvar]["Kontrolni_Cinnost"].unique()
+
+    for cinnost in cinnosti:
+        # Počet porušení a počet kontrol bez porušení
+        subset = data[(data["Utvar"] == utvar) &
+                      (data["Kontrolni_Cinnost"] == cinnost)]
+        # metoda get vrací hodnotu pro daný index, nebo
+        # hodnotu uvededenou v druhém argumentu, pokud index chybí
+        pocet_poruseni = subset["Poruseni"].value_counts().get(1, 0)
+        pocet_ok = subset["Poruseni"].value_counts().get(0, 0)
