@@ -85,3 +85,18 @@ for utvar in utvary:
         priznaky = pd.concat([priznaky, kodovane_pohlavi], axis=1)
 
         # Frekvenční kódování
+        for sloupec in kategoricke_sloupce:
+            # Spočtení relativních četností pro hodnoty ve sloupci
+            frekvence = subset[sloupec].value_counts(normalize=True).to_dict()
+            # Namapování četností podle hodnoty ve sloupci
+            priznaky[sloupec] = subset[sloupec].map(frekvence)
+
+        # Definice výstupu
+        vystup = subset["Poruseni"]
+
+        # Rozdělení dat na trénovací a testovací
+        X_train, X_test, y_train, y_test = train_test_split(priznaky, vystup,
+                                                            test_size=0.2)
+
+        for nazev, model in modely.items():
+            print(f"{utvar} - {cinnost} - {nazev}")
