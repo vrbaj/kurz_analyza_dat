@@ -120,3 +120,6 @@ datum_od = datum_od.apply(lambda x: x["Datum_Od"].replace("00:00:00", x["Cas_Vyk
 datum_od = pd.to_datetime(datum_od)
 # Uložení sloupce do tabulky nařízených kontrol
 data_narizene["datum_od"] = datum_od
+
+# Vypsání slupců tabulky nařízených kontrol s datovými typy
+data_narizene.info()
