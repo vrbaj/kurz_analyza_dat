@@ -170,3 +170,5 @@ data_provedene.columns = ["rozkaz", "provedena_cinnost", "okres", "datum_provede
 # data_provedene.info()
 
 # Sloučení obou tabulek
+slouceni = data_narizene.merge(data_provedene, on=["rozkaz", "okres"], how="inner")
+print("Velikost sloučené tabulky: ", slouceni.shape)
