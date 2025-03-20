@@ -58,3 +58,11 @@ data_narizene = data_narizene[data_narizene["Rozkaz_ID"].isin(rozkazy_s_poruseni
 # Velikost tabulek po odfiltrování rozkazů, jež nevedou na porušení
 print("Velikost tabulek po odfiltrování rozkazů bez porušení: ", data_narizene.shape,
       data_provedene.shape)
+
+# Četnost kombinací Rozkaz ID - Nařízená KČ ID
+# print("\nTabulka s četnostmi kombinací Rozkaz_ID a NarizenaKC_ID")
+# print(data_narizene[["Rozkaz_ID", "NarizenaKC_ID"]].value_counts().sort_index())
+
+# Zobrazení řádků, kde je četnost kombinace vyšší než 1
+print(data_narizene[(data_narizene["Rozkaz_ID"] == 733689) &
+                    (data_narizene["NarizenaKC_ID"] == 1562285)])
