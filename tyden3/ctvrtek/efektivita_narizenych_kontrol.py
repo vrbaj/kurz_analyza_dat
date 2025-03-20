@@ -182,3 +182,20 @@ slouceni = slouceni[(slouceni["datum_od"] < slouceni["datum_provedeni"]) &
                     (slouceni["datum_provedeni"] < slouceni["datum_do"])]
 print("Velikost sloučené tabulky po odstranění kontrol s nesouhlasícím časem provedení: ",
       slouceni.shape)
+
+# Rozdělení tabulky na data, kde souhlasí kontrolní činnosti
+# > nařízená činnost vedla k porušení
+souhlasne_kontroly = slouceni[slouceni["narizena_cinnost"] == slouceni["provedena_cinnost"]]
+print("Velikost tabulky, kde souhlasí nařízená a provedená činnost: ",
+      souhlasne_kontroly.shape)
+
+# Získání ID rozkazů, kde bylo odhaleno porušení u nařízené kontrolní činnosti
+souhlasne_rozkazy = set(souhlasne_kontroly["rozkaz"].tolist())
+vsechny_rozkazy = set(slouceni["rozkaz"].tolist())
+# Získání ID rozkazů, kde byl odhaleno porušení vždy u jiné než nařízené kontrolní činnosti
+nesouhlasne_rozkazy = vsechny_rozkazy - souhlasne_rozkazy
+
+# Uložení ID rozkazů
+pd.DataFrame(souhlasne_rozkazy, columns=["Rozkaz_ID"]).to_excel("souhlasne_rozkazy.xlsx")
+pd.DataFrame(nesouhlasne_rozkazy, columns=["Rozkaz_ID"]).to_excel("nesouhlasne_rozkazy.xlsx")
+
