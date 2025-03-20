@@ -48,10 +48,17 @@ df["Stat"] = df["Stat"].fillna("Neznamy")
 top_staty = df["Stat"].value_counts()
 top_staty = top_staty[top_staty>20].index
 print(top_staty)
-df[~df["Stat"].isin(top_staty)]["Stat"] = "Ostatni"
+df.loc[~df["Stat"].isin(top_staty),"Stat"] = "Ostatni"
 print(df["Stat"].unique())
 
 print(df.columns)
 print(df["Misto_kontoly"].value_counts())
-df[df["Misto_kontoly"]=="domovní prohlídka"]["Misto_kontoly"] = "ostatní"
-df[df["Misto_kontoly"]=="stánek"]["Misto_kontoly"] = "provozovna"
+df.loc[df["Misto_kontoly"]=="stánek",["Misto_kontoly"]] = "provozovna"
+df.loc[df["Misto_kontoly"]=="domovní prohlídka", "Misto_kontoly"] = "ostatní" 
+print(df["Misto_kontoly"].value_counts())
+
+
+# Zabava s tim jak jsou zapisovana mnozstvi
+for druh in df["Druh_OPL"].unique():
+    jednotky = df[df["Druh_OPL"]==druh]["Merna_jednotka"].unique()
+    print(druh,": ", jednotky)
