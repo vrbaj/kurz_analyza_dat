@@ -150,3 +150,14 @@ data_narizene.drop_duplicates(["rozkaz", "narizena_cinnost", "okres", "datum_od"
 print("Velikost tabulky po odstranění duplicit: ", data_narizene.shape)
 # Duplicity jsou možná způsobeny tím, že v rámci jednoho rozkazu, nařízené činnost
 # a časového rozmezí byla činnost prováděna na více místech ve stejném okrese
+
+# Tabulka provedených kontrol - sloučení data a času provedení kontroly
+datum_provedeni = data_provedene[["Datum_Zjisteni", "Cas_Zjisteni"]].astype(str)
+# Sloučení data a časového údaje
+datum_provedeni = datum_provedeni.apply(
+                        lambda x: f"{x['Datum_Zjisteni']} {x['Cas_Zjisteni']}", axis=1)
+# Konverze sloupce na časový datový typ a uložení sloupce do tabulky
+data_provedene["datum_provedeni"] = pd.to_datetime(datum_provedeni)
+
+# Vypsání sloupců tabulky provedených kontrol
+data_provedene.info()
