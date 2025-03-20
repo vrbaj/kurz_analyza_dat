@@ -45,7 +45,7 @@ print(training_data.columns)
 print(training_data.describe())
 
 # KMeans
-kmeans = KMeans(n_clusters=5, random_state=42)
+kmeans = KMeans(n_clusters=9, random_state=42)
 data["cislo_klastru"] = kmeans.fit_predict(training_data)
 print(data["cislo_klastru"].value_counts())
 
@@ -54,8 +54,8 @@ gdf_data = (gpd.read_file("kraje.json")
                .sort_values("id",ascending=False))
 ax = gdf_data.plot(color="lightgray", edgecolor="black")
 ax.set_title("Mapa")
-sns.scatterplot(data,x="OsaY",y="OsaX", hue="cislo_klastru", palette="bright",
-                s=15, alpha=0.6, ax=ax, legend=False)
+#sns.scatterplot(data,x="OsaY",y="OsaX", hue="cislo_klastru", palette="bright",
+#                s=15, alpha=0.6, ax=ax, legend=False)
 
 klastry = pd.DataFrame(columns = ["X","Y","polomer"])
 for n_klastru in list(data["cislo_klastru"].unique()):
@@ -68,4 +68,8 @@ for n_klastru in list(data["cislo_klastru"].unique()):
   
   klastry.loc[n_klastru,:] = (x,y,polomer)
 print(klastry)
+
+print(data[data["cislo_klastru"]==1])
+sns.scatterplot(data[data["cislo_klastru"]==1],x="OsaY",y="OsaX", hue="cislo_klastru", palette="bright",
+                s=15, alpha=0.6, ax=ax, legend=False)
 plt.show()
