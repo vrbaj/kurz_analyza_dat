@@ -36,3 +36,25 @@ data_provedene = data_provedene[
 # Velikost tabulek po odstranění zvolených kontrolních činností
 print("Velikost tabulek po odstranění zvolených KČ: ",
       data_narizene.shape, data_provedene.shape)
+
+# Filtrování podle útvaru, budeme pracovat pouze s daty mobilního dohledu
+data_narizene = data_narizene[data_narizene["Utvar"] == "Mobilní dohled"]
+data_provedene = data_provedene[data_provedene["Utvar"] == "Mobilní dohled"]
+
+# Velikost tabulek po odfiltrování kontrol, kde není mobilní dohled jako útvar
+print("Velikost tabulek po filtrování pouze mobilního dohledu: ", data_narizene.shape,
+      data_provedene.shape)
+
+# Omezení rozkazů na ty, u nichž provedená kontrola vedla na porušení
+rozkazy_s_porusenim = data_provedene[data_provedene["Poruseni"] == "ANO"]
+rozkazy_s_porusenim = rozkazy_s_porusenim["Rozkaz_ID"].unique().tolist()
+print("Počet ID rozkazů, jejichž kontrolní činnost vede na porušení: ",
+      len(rozkazy_s_porusenim))
+
+# Filtrace řádků v obou tabulkách, jejichž rozkazy vedou na porušení
+data_provedene = data_provedene[data_provedene["Rozkaz_ID"].isin(rozkazy_s_porusenim)]
+data_narizene = data_narizene[data_narizene["Rozkaz_ID"].isin(rozkazy_s_porusenim)]
+
+# Velikost tabulek po odfiltrování rozkazů, jež nevedou na porušení
+print("Velikost tabulek po odfiltrování rozkazů bez porušení: ", data_narizene.shape,
+      data_provedene.shape)
