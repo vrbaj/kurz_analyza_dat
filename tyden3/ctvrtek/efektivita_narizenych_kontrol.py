@@ -172,3 +172,13 @@ data_provedene.columns = ["rozkaz", "provedena_cinnost", "okres", "datum_provede
 # Sloučení obou tabulek
 slouceni = data_narizene.merge(data_provedene, on=["rozkaz", "okres"], how="inner")
 print("Velikost sloučené tabulky: ", slouceni.shape)
+
+# Odstranění řádků, kde provedená kontrola nevedla na porušení
+slouceni = slouceni[slouceni["poruseni"] == "ANO"]
+print("Velikost sloucečené tabulky po odstranění kontrol bez porušení: ", slouceni.shape)
+
+# Odstranění řádků, kde čas provedení neodpovídá časovému rozmezí rozkazu
+slouceni = slouceni[(slouceni["datum_od"] < slouceni["datum_provedeni"]) &
+                    (slouceni["datum_provedeni"] < slouceni["datum_do"])]
+print("Velikost sloučené tabulky po odstranění kontrol s nesouhlasícím časem provedení: ",
+      slouceni.shape)
