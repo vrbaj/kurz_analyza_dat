@@ -53,7 +53,7 @@ print(df["Stat"].unique())
 
 print(df.columns)
 print(df["Misto_kontoly"].value_counts())
-df.loc[df["Misto_kontoly"]=="stánek",["Misto_kontoly"]] = "provozovna"
+df.loc[df["Misto_kontoly"]=="stánek","Misto_kontoly"] = "provozovna"
 df.loc[df["Misto_kontoly"]=="domovní prohlídka", "Misto_kontoly"] = "ostatní" 
 print(df["Misto_kontoly"].value_counts())
 
@@ -62,3 +62,14 @@ print(df["Misto_kontoly"].value_counts())
 for druh in df["Druh_OPL"].unique():
     jednotky = df[df["Druh_OPL"]==druh]["Merna_jednotka"].unique()
     print(druh,": ", jednotky)
+    fig, axs = plt.subplots(1,jednotky.shape[0])
+    if jednotky.shape[0] == 1:
+        axs = [axs]
+    for i, jednotka in enumerate(jednotky):
+        aktualni = df[(df["Druh_OPL"]==druh) & 
+                      (df["Merna_jednotka"]==jednotka)]
+        sns.histplot(aktualni, x="Mnoz_v_Porušení", ax=axs[i])
+        axs[i].set_title(jednotka)
+    fig.suptitle(druh)
+    plt.tight_layout()
+plt.show()
