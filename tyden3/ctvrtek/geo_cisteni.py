@@ -31,10 +31,20 @@ for col in df.columns:
 # sns.histplot(df_pracovni, x="Rok_narozeni_porusitele")
 # plt.show()
 
-df = df.drop(columns=["Rok_narozeni_porusitele","OsaX_txt","OsaY_txt"])
-
 # print("Jsou OsaX a OsaX_txt stejne?")
 # print(df.shape)
 # print(df[df["OsaX"]!= df["OsaX_txt"]].shape)
 # print(df[df["OsaY"]!= df["OsaY_txt"]].shape)
 
+df = df.drop(columns=["Rok_narozeni_porusitele","OsaX_txt","OsaY_txt"])
+
+# Zbavime se Ruzyně
+df = df[df["Celni_Urad"]!= "CÚ Praha Ruzyně"]
+df = df.drop(columns=["Celni_Urad"])
+
+# Abychom neměli příliš dimenzionální data, tak zjistíme, 
+# které státy jsou nejčastější a ostatní přejmenujeme na "Ostatní"
+top_staty = df["Stat"].value_counts()
+top_staty = top_staty[top_staty>20].index
+print(top_staty)
+df[~df["Stat"].isin(top_staty)] = "Ostatni"
