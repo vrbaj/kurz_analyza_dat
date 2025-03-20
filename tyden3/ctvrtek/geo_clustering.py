@@ -22,4 +22,8 @@ for jednotka in data["Merna_jednotka"].unique():
         aktualni_vysek
           .apply(lambda x: math.log(x-aktualni_vysek.min()+1))
       )
+    data.loc[
+      (data["Druh_OPL"]==opl) &
+      (data["Merna_jednotka"]==jednotka), 
+      "Mnoz_v_Porušení"] = aktualni_vysek
 print(data["Mnoz_v_Porušení"].describe())
