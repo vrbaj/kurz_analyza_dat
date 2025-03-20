@@ -131,5 +131,22 @@ datum_do = pd.to_datetime(datum_do)
 # Uložení sloupce do tabulky nařízených kontrol
 data_narizene["datum_do"] = datum_do
 
+# Zachování dat, ID rozkazů, kontrolních činností a okresů
+data_narizene = data_narizene[["Rozkaz_ID", "Narizena_Kontrolni_Cinnost", "Okres_kontroly",
+                               "datum_od", "datum_do"]]
+# Přejmenování sloupců
+data_narizene.columns = ["rozkaz", "narizena_cinnost", "okres", "datum_od", "datum_do"]
+# data_narizene.rename(columns={"Rozkaz_ID": "rozkaz",
+#                               "Narizena_Kontrolni_Cinnost": "narizena_cinnost",
+#                               "Okres_kontroly": "okres"}, inplace=True)
+
 # Vypsání slupců tabulky nařízených kontrol s datovými typy
-data_narizene.info()
+# data_narizene.info()
+
+# Kontrola toho, jestli výsledná tabulka nařízených kontrol obsahuje duplicity
+print("Velikost tabulky před odstraněním duplicit: ", data_narizene.shape)
+data_narizene.drop_duplicates(["rozkaz", "narizena_cinnost", "okres", "datum_od",
+                                     "datum_do"], inplace=True)
+print("Velikost tabulky po odstranění duplicit: ", data_narizene.shape)
+# Duplicity jsou možná způsobeny tím, že v rámci jednoho rozkazu, nařízené činnost
+# a časového rozmezí byla činnost prováděna na více místech ve stejném okrese
