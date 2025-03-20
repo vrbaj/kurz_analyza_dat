@@ -59,17 +59,44 @@ print(df["Misto_kontoly"].value_counts())
 
 
 # Zabava s tim jak jsou zapisovana mnozstvi
-for druh in df["Druh_OPL"].unique():
-    jednotky = df[df["Druh_OPL"]==druh]["Merna_jednotka"].unique()
-    print(druh,": ", jednotky)
-    fig, axs = plt.subplots(1,jednotky.shape[0])
-    if jednotky.shape[0] == 1:
-        axs = [axs]
-    for i, jednotka in enumerate(jednotky):
-        aktualni = df[(df["Druh_OPL"]==druh) & 
-                      (df["Merna_jednotka"]==jednotka)]
-        sns.histplot(aktualni, x="Mnoz_v_Porušení", ax=axs[i])
-        axs[i].set_title(jednotka)
-    fig.suptitle(druh)
-    plt.tight_layout()
-plt.show()
+# for druh in df["Druh_OPL"].unique():
+#     jednotky = df[df["Druh_OPL"]==druh]["Merna_jednotka"].unique()
+#     #print(druh,": ", jednotky)
+#     fig, axs = plt.subplots(1,jednotky.shape[0])
+#     if jednotky.shape[0] == 1:
+#         axs = [axs]
+#     for i, jednotka in enumerate(jednotky):
+#         aktualni = df[(df["Druh_OPL"]==druh) & 
+#                       (df["Merna_jednotka"]==jednotka)]
+#         sns.histplot(aktualni, x="Mnoz_v_Porušení", ax=axs[i])
+#         axs[i].set_title(jednotka)
+#     fig.suptitle(druh)
+#     plt.tight_layout()
+# plt.show()
+
+print(df[(df["Druh_OPL"]=="Konopí (sušina - marihuana)")& (df["Merna_jednotka"])=="l" ])
+
+print(df.columns)
+
+# Datum_Zjisteni -> den v tydnu
+df["den_v_tydnu"] = df["Datum_Zjisteni"].dt.dayofweek
+df = df.drop(columns=["Datum_Zjisteni"])
+
+# Druh_vozidla
+df["Druh_vozidla"] = df["Druh_vozidla"].fillna("není")
+
+# Cas_Zjisteni
+df["Cas_Zjisteni"] = df["Cas_Zjisteni"].apply(lambda x: int(str(x)[:2]))
+
+
+# Pohlavi_porusitele
+df["Pohlavi_porusitele"] = df["Pohlavi_porusitele"].fillna("nezjištěno")
+
+for col in df.columns:
+    # nebudeme zobrazovat nasledujici sloupce
+    if col in ["OsaX", "OsaY","Mnoz_v_Porušení"]:
+        continue
+    print("#"*50) # oddelovac
+    print(col, ": ", df[col].unique())
+
+df.to_csv("ciste_opl.csv", index = False)
