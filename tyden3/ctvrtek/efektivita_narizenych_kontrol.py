@@ -159,5 +159,12 @@ datum_provedeni = datum_provedeni.apply(
 # Konverze sloupce na časový datový typ a uložení sloupce do tabulky
 data_provedene["datum_provedeni"] = pd.to_datetime(datum_provedeni)
 
+# Zachování sloupců potřebných pro porovnání
+data_provedene = data_provedene[["Rozkaz_ID", "Kontrolni_Cinnost", "Okres",
+                                 "datum_provedeni", "Celni_Urad", "Poruseni"]]
+# Přejmenování sloupců
+data_provedene.columns = ["rozkaz", "provedena_cinnost", "okres", "datum_provedeni",
+                          "urad", "poruseni"]
+
 # Vypsání sloupců tabulky provedených kontrol
 data_provedene.info()
