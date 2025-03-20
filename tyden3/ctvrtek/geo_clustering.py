@@ -27,3 +27,17 @@ for jednotka in data["Merna_jednotka"].unique():
       (data["Merna_jednotka"]==jednotka), 
       "Mnoz_v_Porušení"] = aktualni_vysek
 print(data["Mnoz_v_Porušení"].describe())
+
+training_data = data[["Cas_Zjisteni","Mesic", "Mnoz_v_Porušení","den_v_tydnu"]]
+for col in training_data.columns:
+  training_data[col] = minmax_scale(training_data[col])
+
+for col in ["Misto_kontoly","Druh_vozidla","Stat","Pohlavi_porusitele",
+            "Merna_jednotka","Druh_OPL"]:
+  training_data = pd.concat([training_data,
+                             pd.get_dummies(data[col]).astype(int)],
+                             axis = 1)
+
+print("#"*50)
+print(training_data.shape)
+print(training_data.columns)
