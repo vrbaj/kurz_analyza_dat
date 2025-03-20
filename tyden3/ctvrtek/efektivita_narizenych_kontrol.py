@@ -199,3 +199,16 @@ nesouhlasne_rozkazy = vsechny_rozkazy - souhlasne_rozkazy
 pd.DataFrame(souhlasne_rozkazy, columns=["Rozkaz_ID"]).to_excel("souhlasne_rozkazy.xlsx")
 pd.DataFrame(nesouhlasne_rozkazy, columns=["Rozkaz_ID"]).to_excel("nesouhlasne_rozkazy.xlsx")
 
+# Zobrazení rozkazu s ID 841732
+# print(tabulate(slouceni[slouceni["rozkaz"] == 841732], headers="keys"))
+
+# Vypsání shody pro konkrétní ID rozkazu
+# print(tabulate(souhlasne_kontroly[souhlasne_kontroly["rozkaz"] == list(souhlasne_rozkazy)[0]],
+#                headers="keys"))
+
+print(tabulate(
+    souhlasne_kontroly.groupby(["okres", "narizena_cinnost"])["datum_od"]
+                      .count()
+                      .reset_index()
+                      .sort_values("datum_od", ascending=False),
+    headers="keys"))
