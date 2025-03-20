@@ -1,6 +1,6 @@
 import math
 import pandas as pd
-import geopandas
+import geopandas as gpd
 import seaborn as sns
 import matplotlib
 from matplotlib import pyplot as plt
@@ -41,3 +41,16 @@ for col in ["Misto_kontoly","Druh_vozidla","Stat","Pohlavi_porusitele",
 print("#"*50)
 print(training_data.shape)
 print(training_data.columns)
+
+print(training_data.describe())
+
+# KMeans
+kmeans = KMeans(n_clusters=12, random_state=42)
+data["cislo_klastru"] = kmeans.fit_predict(training_data)
+print(data["cislo_klastru"].value_counts())
+
+# Zobrazení podle souřadnic
+gdf_data = (gpd.read_file("kraje.json")
+               .sort_values("id",ascending=False))
+ax = gdf_data.plot(color="lightgray", edgecolor="black")
+plt.show()
