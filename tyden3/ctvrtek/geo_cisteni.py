@@ -44,7 +44,14 @@ df = df.drop(columns=["Celni_Urad"])
 
 # Abychom neměli příliš dimenzionální data, tak zjistíme, 
 # které státy jsou nejčastější a ostatní přejmenujeme na "Ostatní"
+df["Stat"] = df["Stat"].fillna("Neznamy")
 top_staty = df["Stat"].value_counts()
 top_staty = top_staty[top_staty>20].index
 print(top_staty)
-df[~df["Stat"].isin(top_staty)] = "Ostatni"
+df[~df["Stat"].isin(top_staty)]["Stat"] = "Ostatni"
+print(df["Stat"].unique())
+
+print(df.columns)
+print(df["Misto_kontoly"].value_counts())
+df[df["Misto_kontoly"]=="domovní prohlídka"]["Misto_kontoly"] = "ostatní"
+df[df["Misto_kontoly"]=="stánek"]["Misto_kontoly"] = "provozovna"
