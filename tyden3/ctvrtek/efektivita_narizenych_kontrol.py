@@ -17,8 +17,19 @@ data_provedene = pd.read_pickle("Kontroly_VSCHT.pkl")
 print(data_narizene.columns)
 print(data_provedene.columns)
 
-# Odstranění KČ, jimiž se nechceme zabývat
+# KČ, jimiž se nechceme zabývat
 kc_k_odstraneni = ["Ostatní činnosti", "Převoz FH a KP", "Asistenční činnost", 24,
                    "Ostatní kompetence (361/2000)", "Kontrola stáčišť", "CRMS", "IZS",
                    "Přepravní povolení", "Metodický dohled GŘC", "Činnost odd. 033",
                    "Obecná bezpečnost výrobků", "ADR", "Zákon o obalech"]
+
+# Velikost tabulky před odstraněním zvolených činností
+print(data_narizene.shape, data_provedene.shape)
+
+# Odstranění zvolených KČ z obou tabulek
+data_narizene = data_narizene[
+                    ~data_narizene["Kontrolni_Cinnost"].isin(kc_k_odstraneni)
+                ]
+data_provedene = data_provedene[
+                    ~data_provedene["Kontrolni_Cinnost"].isin(kc_k_odstraneni)
+                 ]
