@@ -64,6 +64,11 @@ print("Velikost tabulek po odfiltrování rozkazů bez porušení: ", data_nariz
 # print(data_narizene[["Rozkaz_ID", "NarizenaKC_ID"]].value_counts().sort_index())
 
 # Zobrazení řádků, kde je četnost kombinace vyšší než 1
-print("\nÚdaje pro rozkaz 733689 a KČ ID 1562285")
-print(tabulate(data_narizene[(data_narizene["Rozkaz_ID"] == 733689) &
-                    (data_narizene["NarizenaKC_ID"] == 1562285)], headers="keys"))
+# print("\nÚdaje pro rozkaz 733689 a KČ ID 1562285")
+# print(tabulate(data_narizene[(data_narizene["Rozkaz_ID"] == 733689) &
+#                     (data_narizene["NarizenaKC_ID"] == 1562285)], headers="keys"))
+
+# Četnost kombinací Rozkaz ID - Nařízená kontrolní činnost
+print("\nČetnosti kombinací Rozkaz_ID a Narizena_Kontrolni_Cinnost")
+print(data_narizene[["Rozkaz_ID", "Narizena_Kontrolni_Cinnost"]].value_counts()
+        .sort_values(ascending=False))
