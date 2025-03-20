@@ -56,4 +56,16 @@ ax = gdf_data.plot(color="lightgray", edgecolor="black")
 ax.set_title("Mapa")
 sns.scatterplot(data,x="OsaY",y="OsaX", hue="cislo_klastru", palette="bright",
                 s=15, alpha=0.6, ax=ax, legend=False)
+
+klastry = pd.DataFrame(columns = ["X","Y","polomer"])
+for n_klastru in list(data["cislo_klastru"].unique()):
+  aktualni = data[data["cislo_klastru"]==n_klastru]
+  x,y = aktualni[["OsaX","OsaY"]].mean()
+  polomer = ((aktualni[["OsaX","OsaY"]]-(x,y))
+             .apply(lambda x: 
+              math.sqrt(x["OsaX"]**2 + x["OsaY"]**2),
+             axis = 1)).mean()
+  
+  klastry.loc[n_klastru,:] = (x,y,polomer)
+print(klastry)
 plt.show()
