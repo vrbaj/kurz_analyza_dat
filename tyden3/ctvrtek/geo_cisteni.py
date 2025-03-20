@@ -17,15 +17,24 @@ df = df.drop(columns=["Kraj_zjisteni_poruseni","Okres_zjisteni_poruseni",
 
 # Zobrazime unikatni hodnoty
 for col in df.columns:
+    # nebudeme zobrazovat nasledujici sloupce
     if col in ["Cas_Zjisteni","OsaX", "OsaY","OsaX_txt","OsaY_txt"]:
         continue
-    print("#"*50)
+    print("#"*50) # oddelovac
     print(col, ": ", df[col].unique())
 
-#Rok_narozeni_porusitele
-df_pracovni = df[df["Rok_narozeni_porusitele"]>1900]
-df_pracovni["Rok_narozeni_porusitele"] = \
-    df_pracovni["Rok_narozeni_porusitele"].apply(
-        lambda x: 1999 if x == 2099 else x)
-sns.histplot(df_pracovni, x="Rok_narozeni_porusitele")
-plt.show()
+# #Rok_narozeni_porusitele
+# df_pracovni = df[df["Rok_narozeni_porusitele"]>1900]
+# df_pracovni["Rok_narozeni_porusitele"] = \
+#     df_pracovni["Rok_narozeni_porusitele"].apply(
+#         lambda x: 1999 if x == 2099 else x)
+# sns.histplot(df_pracovni, x="Rok_narozeni_porusitele")
+# plt.show()
+
+df = df.drop(columns=["Rok_narozeni_porusitele","OsaX_txt","OsaY_txt"])
+
+# print("Jsou OsaX a OsaX_txt stejne?")
+# print(df.shape)
+# print(df[df["OsaX"]!= df["OsaX_txt"]].shape)
+# print(df[df["OsaY"]!= df["OsaY_txt"]].shape)
+
