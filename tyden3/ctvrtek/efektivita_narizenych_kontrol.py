@@ -24,12 +24,15 @@ kc_k_odstraneni = ["Ostatní činnosti", "Převoz FH a KP", "Asistenční činno
                    "Obecná bezpečnost výrobků", "ADR", "Zákon o obalech"]
 
 # Velikost tabulky před odstraněním zvolených činností
-print(data_narizene.shape, data_provedene.shape)
+print("Velikost načtených tabulek: ", data_narizene.shape, data_provedene.shape)
 
 # Odstranění zvolených KČ z obou tabulek
 data_narizene = data_narizene[
-                    ~data_narizene["Kontrolni_Cinnost"].isin(kc_k_odstraneni)
+                    ~data_narizene["Narizena_Kontrolni_Cinnost"].isin(kc_k_odstraneni)
                 ]
 data_provedene = data_provedene[
                     ~data_provedene["Kontrolni_Cinnost"].isin(kc_k_odstraneni)
                  ]
+# Velikost tabulek po odstranění zvolených kontrolních činností
+print("Velikost tabulek po odstranění zvolených KČ: ",
+      data_narizene.shape, data_provedene.shape)
