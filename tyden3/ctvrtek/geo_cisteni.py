@@ -26,6 +26,6 @@ for col in df.columns:
 df_pracovni = df[df["Rok_narozeni_porusitele"]>1900]
 df_pracovni["Rok_narozeni_porusitele"] = \
     df_pracovni["Rok_narozeni_porusitele"].apply(
-        lambda x: 1999 if x == 2099 else: x)
+        lambda x: 1999 if x == 2099 else x)
 sns.histplot(df_pracovni, x="Rok_narozeni_porusitele")
 plt.show()
