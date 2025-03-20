@@ -167,4 +167,6 @@ data_provedene.columns = ["rozkaz", "provedena_cinnost", "okres", "datum_provede
                           "urad", "poruseni"]
 
 # Vypsání sloupců tabulky provedených kontrol
-data_provedene.info()
+# data_provedene.info()
+
+# Sloučení obou tabulek
