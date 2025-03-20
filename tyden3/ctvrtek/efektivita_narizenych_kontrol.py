@@ -69,6 +69,43 @@ print("Velikost tabulek po odfiltrování rozkazů bez porušení: ", data_nariz
 #                     (data_narizene["NarizenaKC_ID"] == 1562285)], headers="keys"))
 
 # Četnost kombinací Rozkaz ID - Nařízená kontrolní činnost
-print("\nČetnosti kombinací Rozkaz_ID a Narizena_Kontrolni_Cinnost")
-print(data_narizene[["Rozkaz_ID", "Narizena_Kontrolni_Cinnost"]].value_counts()
-        .sort_values(ascending=False))
+# print("\nČetnosti kombinací Rozkaz_ID a Narizena_Kontrolni_Cinnost")
+# print(data_narizene[["Rozkaz_ID", "Narizena_Kontrolni_Cinnost"]].value_counts()
+#         .sort_values(ascending=False))
+
+# Zobrazení řádků s Rozkaz_ID 788003 a Narizena_Kontrolni_Cinnost VV - minerální oleje
+print("\nŘádky s Rozkaz_ID 788003 a Narizena_Kontrolni_Cinnost VV - minerální oleje")
+print(tabulate(data_narizene[(data_narizene["Rozkaz_ID"] == 788003) &
+                             (data_narizene["Narizena_Kontrolni_Cinnost"] == "VV - minerální oleje")]
+                    .sort_values("NarizenaKC_ID"),
+               headers="keys"))
+
+# Zobrazení dat k Rozkaz_ID 788003
+print("\n Zobrazení všech dat k rozkazu 788003")
+print(tabulate(data_narizene[data_narizene["Rozkaz_ID"] == 788003].sort_values("NarizenaKC_ID"),
+               headers="keys"))
+
+"""
+Co je hotovo
+1) Odstranění dat, jež nejsou k mobilnímu dohledu
+2) Odstranění činností, jež nechceme hodnotit
+3) Zachování pouze ID rozkazů, jejichž provedené kontroly vedly k porušení
+
+Úprava dat pro porovnávání nařízených a provedených kontrol
+1) Tabulka nařízené kontroly
+1.a) sloučit Datum_Od s Cas_Vykonu_Od a Datum_Do s Cas_Vykonu_Do pro získání časového rámce nařízení
+1.b) zachovat informaci o datech nařízení, o ID rozkazu, o nařízené KČ a o okresu 
+2) Tabulka provedené kontroly
+2.a) sloučit Datum_Zjisteni s Cas_Zjisteni
+2.b) zachovat informaci o datu provedení kontroly, ID rozkazu, provedené KČ a okresu kontroly
+
+Sloučení a porovnání tabulek
+1) sloučení podle ID rozkazu a okresu => vzniknou duplicity, protože součástí nařízení je několik
+   kontrolních činností na stejném místě v rámci stejného rozkazu
+2) sloučenou tabulku je třeba filtrovat porovnáním časů tak, že datum/čas provedení musí být 
+   v rozmezí daném rozkazem
+2.a) zbývající řádky jsou rozkazy, které vedou na porušení > nemusí sedět nařízená a provedená 
+     kontrolní činnost
+2.b) řádky, kde nesedí provedená kontrolní činnost s nařízenou lze odfiltrovat porovnáním obou 
+     činností > zachovat chceme obě tabulky 
+"""
