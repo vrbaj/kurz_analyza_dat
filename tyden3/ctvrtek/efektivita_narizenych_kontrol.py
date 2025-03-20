@@ -64,5 +64,6 @@ print("Velikost tabulek po odfiltrování rozkazů bez porušení: ", data_nariz
 # print(data_narizene[["Rozkaz_ID", "NarizenaKC_ID"]].value_counts().sort_index())
 
 # Zobrazení řádků, kde je četnost kombinace vyšší než 1
-print(data_narizene[(data_narizene["Rozkaz_ID"] == 733689) &
-                    (data_narizene["NarizenaKC_ID"] == 1562285)])
+print("\nÚdaje pro rozkaz 733689 a KČ ID 1562285")
+print(tabulate(data_narizene[(data_narizene["Rozkaz_ID"] == 733689) &
+                    (data_narizene["NarizenaKC_ID"] == 1562285)], headers="keys"))
