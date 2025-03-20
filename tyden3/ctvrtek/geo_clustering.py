@@ -6,7 +6,7 @@ import matplotlib
 from matplotlib import pyplot as plt
 from sklearn.cluster import KMeans, DBSCAN, SpectralClustering
 from sklearn.preprocessing import minmax_scale
-
+from tabulate import tabulate
 data = pd.read_csv("ciste_opl.csv")
 
 
@@ -69,7 +69,7 @@ for n_klastru in list(data["cislo_klastru"].unique()):
   klastry.loc[n_klastru,:] = (x,y,polomer)
 print(klastry)
 
-print(data[data["cislo_klastru"]==1])
+print(tabulate(data[data["cislo_klastru"]==1],headers="keys"))
 sns.scatterplot(data[data["cislo_klastru"]==1],x="OsaY",y="OsaX", hue="cislo_klastru", palette="bright",
-                s=15, alpha=0.6, ax=ax, legend=False)
+                s=45, alpha=0.6, ax=ax, legend=False)
 plt.show()
