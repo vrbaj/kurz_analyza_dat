@@ -74,16 +74,16 @@ print("Velikost tabulek po odfiltrování rozkazů bez porušení: ", data_nariz
 #         .sort_values(ascending=False))
 
 # Zobrazení řádků s Rozkaz_ID 788003 a Narizena_Kontrolni_Cinnost VV - minerální oleje
-print("\nŘádky s Rozkaz_ID 788003 a Narizena_Kontrolni_Cinnost VV - minerální oleje")
-print(tabulate(data_narizene[(data_narizene["Rozkaz_ID"] == 788003) &
-                             (data_narizene["Narizena_Kontrolni_Cinnost"] == "VV - minerální oleje")]
-                    .sort_values("NarizenaKC_ID"),
-               headers="keys"))
+# print("\nŘádky s Rozkaz_ID 788003 a Narizena_Kontrolni_Cinnost VV - minerální oleje")
+# print(tabulate(data_narizene[(data_narizene["Rozkaz_ID"] == 788003) &
+#                              (data_narizene["Narizena_Kontrolni_Cinnost"] == "VV - minerální oleje")]
+#                     .sort_values("NarizenaKC_ID"),
+#                headers="keys"))
 
 # Zobrazení dat k Rozkaz_ID 788003
-print("\n Zobrazení všech dat k rozkazu 788003")
-print(tabulate(data_narizene[data_narizene["Rozkaz_ID"] == 788003].sort_values("NarizenaKC_ID"),
-               headers="keys"))
+# print("\n Zobrazení všech dat k rozkazu 788003")
+# print(tabulate(data_narizene[data_narizene["Rozkaz_ID"] == 788003].sort_values("NarizenaKC_ID"),
+#                headers="keys"))
 
 """
 Co je hotovo
@@ -109,3 +109,14 @@ Sloučení a porovnání tabulek
 2.b) řádky, kde nesedí provedená kontrolní činnost s nařízenou lze odfiltrovat porovnáním obou 
      činností > zachovat chceme obě tabulky 
 """
+
+# Sloučení data a času v tabulce nařízených kontrol
+# Převedení hodnot ve sloupcích Datum_Od a Cas_Vykonu_Od na textové řetězce
+datum_od = data_narizene[["Datum_Od", "Cas_Vykonu_Od"]].astype(str)
+# Nahrazení času 00:00:00 v datu skutečným časem
+datum_od = datum_od.apply(lambda x: x["Datum_Od"].replace("00:00:00", x["Cas_Vykonu_Od"]),
+                          axis=1)
+# Konvertování hodnot ve výsledném sloupci na časovou hodnotu
+datum_od = pd.to_datetime(datum_od)
+# Uložení sloupce do tabulky nařízených kontrol
+data_narizene["datum_od"] = datum_od
