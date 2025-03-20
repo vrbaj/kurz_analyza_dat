@@ -121,5 +121,15 @@ datum_od = pd.to_datetime(datum_od)
 # Uložení sloupce do tabulky nařízených kontrol
 data_narizene["datum_od"] = datum_od
 
+#  Převedení hodnot ve sloupcích Datum_Do a Cas_Vykonu_Do na textové hodnoty
+datum_do = data_narizene[["Datum_Do", "Cas_Vykonu_Do"]].astype(str)
+# Převedení času 00:00:00 na skutečný čas výkonu
+datum_do = datum_do.apply(lambda x: x["Datum_Do"].replace("00:00:00", x["Cas_Vykonu_Do"]),
+                          axis=1)
+# Konverze sloupce datum_do do časového formátu
+datum_do = pd.to_datetime(datum_do)
+# Uložení sloupce do tabulky nařízených kontrol
+data_narizene["datum_do"] = datum_do
+
 # Vypsání slupců tabulky nařízených kontrol s datovými typy
 data_narizene.info()
