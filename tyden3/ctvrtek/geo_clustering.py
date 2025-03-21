@@ -73,7 +73,7 @@ print(tabulate(data[data["cislo_klastru"]==1],headers="keys"))
 #sns.scatterplot(data[data["cislo_klastru"]==1],x="OsaY",y="OsaX", hue="cislo_klastru", palette="bright",
 #                s=45, alpha=0.6, ax=ax, legend=False)
 
-klastry = klastry.sort_values("polomer",ascending=False)[:3]
+klastry = klastry.sort_values("polomer",ascending=True)[:3]
 for _,row in klastry.iterrows():
   kruh = matplotlib.patches.Circle(
     xy=(row["Y"],row["X"]),
