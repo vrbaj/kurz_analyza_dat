@@ -119,10 +119,13 @@ for cinnost in kontrolni_cinnosti:
     print(f"Report výsledků:\n{classification_report(y_test, y_pred)}")
     print(f"Výsledek UAR: {uar:.2%}")
     nazev_modelu = odstraneni_diakritiky(cinnost).replace(" ", "_")
-    novy_radek = pd.DataFrame([cinnost, grid_search.best_params_,
-                                                 uar,
-                                                 nazev_modelu], columns=tabulka_vysledku.columns)
+    novy_radek = pd.DataFrame([[cinnost, grid_search.best_params_, uar, nazev_modelu]], columns=tabulka_vysledku.columns)
     tabulka_vysledku = pd.concat([novy_radek, tabulka_vysledku], ignore_index=True)
+    k_ulozeni = {"model": nejlepsi_model,
+                 "data_x": X_test,
+                 "data_y": y_test,
+                 "features": priznaky_kc.columns}
+    joblib.dump(k_ulozeni, f"modely/{nazev_modelu}.joblib")
     # Feature importance - spočtení permutation importance jednotlivých příznaků
     feature_importance = pd.Series(nejlepsi_model.feature_importances_,
                                    index=priznaky_kc.columns)
@@ -137,3 +140,5 @@ for cinnost in kontrolni_cinnosti:
     plt.tight_layout()
     fig.savefig(f"nahodny_les/feature_importance_{cinnost}.png")
 
+tabulka_vysledku.sort_values(by="Soubor_s_modelem", ascending=False, inplace=True)
+tabulka_vysledku.to_csv("tabulka_vysledku.csv", index=False)
