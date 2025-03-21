@@ -45,8 +45,13 @@ print(training_data.columns)
 print(training_data.describe())
 
 # KMeans
-kmeans = KMeans(n_clusters=9, random_state=42)
-data["cislo_klastru"] = kmeans.fit_predict(training_data)
+#kmeans = KMeans(n_clusters=9, random_state=42)
+#data["cislo_klastru"] = kmeans.fit_predict(training_data)
+#print(data["cislo_klastru"].value_counts())
+
+# DBSCAN
+dbscan = DBSCAN(eps=0.1, min_samples=5)
+data["cislo_klastru"] = dbscan.fit_predict(training_data)
 print(data["cislo_klastru"].value_counts())
 
 # Zobrazení podle souřadnic
@@ -69,7 +74,7 @@ for n_klastru in list(data["cislo_klastru"].unique()):
   klastry.loc[n_klastru,:] = (x,y,polomer)
 print(klastry)
 
-print(tabulate(data[data["cislo_klastru"]==1],headers="keys"))
+#print(tabulate(data[data["cislo_klastru"]==1],headers="keys"))
 #sns.scatterplot(data[data["cislo_klastru"]==1],x="OsaY",y="OsaX", hue="cislo_klastru", palette="bright",
 #                s=45, alpha=0.6, ax=ax, legend=False)
 
