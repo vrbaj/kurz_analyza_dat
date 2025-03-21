@@ -9,7 +9,7 @@ from sklearn.preprocessing import minmax_scale
 from tabulate import tabulate
 data = pd.read_csv("ciste_opl.csv")
 
-
+# Převedení jednotek na nějaké rozumné měřítko
 for jednotka in data["Merna_jednotka"].unique():
   for opl in data[data["Merna_jednotka"]==jednotka][
                   "Druh_OPL"].unique():
@@ -54,8 +54,8 @@ gdf_data = (gpd.read_file("kraje.json")
                .sort_values("id",ascending=False))
 ax = gdf_data.plot(color="lightgray", edgecolor="black")
 ax.set_title("Mapa")
-#sns.scatterplot(data,x="OsaY",y="OsaX", hue="cislo_klastru", palette="bright",
-#                s=15, alpha=0.6, ax=ax, legend=False)
+sns.scatterplot(data,x="OsaY",y="OsaX", hue="cislo_klastru", palette="bright",
+                s=15, alpha=0.6, ax=ax, legend=False)
 
 klastry = pd.DataFrame(columns = ["X","Y","polomer"])
 for n_klastru in list(data["cislo_klastru"].unique()):
@@ -70,6 +70,20 @@ for n_klastru in list(data["cislo_klastru"].unique()):
 print(klastry)
 
 print(tabulate(data[data["cislo_klastru"]==1],headers="keys"))
-sns.scatterplot(data[data["cislo_klastru"]==1],x="OsaY",y="OsaX", hue="cislo_klastru", palette="bright",
-                s=45, alpha=0.6, ax=ax, legend=False)
+#sns.scatterplot(data[data["cislo_klastru"]==1],x="OsaY",y="OsaX", hue="cislo_klastru", palette="bright",
+#                s=45, alpha=0.6, ax=ax, legend=False)
+
+klastry = klastry.sort_values("polomer",ascending=False)[:3]
+for _,row in klastry.iterrows():
+  kruh = matplotlib.patches.Circle(
+    xy=(row["Y"],row["X"]),
+    radius=row["polomer"],
+    fill = False,
+    edgecolor = "gray",
+    alpha = 0.5,
+    lw = 2,
+  )
+  ax.add_patch(kruh)
+
+data.to_csv("naklastrovana_data.csv",index=False)
 plt.show()
