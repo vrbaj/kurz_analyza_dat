@@ -6,8 +6,13 @@ import numpy as np
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, balanced_accuracy_score
+import joblib
+import unicodedata
 
-
+def odstraneni_diakritiky(text):
+    normalizace = unicodedata.normalize("NFKD", text)
+    ascii_text = normalizace.encode("ASCII", "ignore")
+    return ascii_text.decode("ASCII")
 
 # Nastavení seedu pro sjednocené generování náhodných hodnot
 np.random.seed(42)
@@ -60,11 +65,11 @@ vystup = data["Poruseni"]
 
 # Inicializace modelu náhodného lesa
 model = RandomForestClassifier(random_state=42, class_weight="balanced")
-parametry = {"max_depth": [5, 10, 20, None],
-             "min_samples_split": [2, 5, 10, 20],
-             "max_features": ["sqrt", "log2", None],
-             "n_estimators": [101, 51, 11],
-             "max_samples": [0.4, 0.6, 0.8, 1]
+parametry = {"max_depth": [5],
+             "min_samples_split": [2],
+             "max_features": ["sqrt"],
+             "n_estimators": [11],
+             "max_samples": [1]
              }
 
 # Trénování modelu a vyhodnocení přesnosti klasifikace
@@ -72,6 +77,8 @@ parametry = {"max_depth": [5, 10, 20, None],
 kontrolni_cinnosti = data["Kontrolni_Cinnost"].unique()
 
 # Iterace skrz jednotlivé kontrolní činnosti
+tabulka_vysledku = pd.DataFrame(columns=["Cinnost", "Nastaveni_modelu",
+                                         "UAR", "Soubor_s_modelem"])
 for cinnost in kontrolni_cinnosti:
     # Filtrace podle dané činnosti
     priznaky_kc = priznaky[data["Kontrolni_Cinnost"] == cinnost]
@@ -111,7 +118,11 @@ for cinnost in kontrolni_cinnosti:
     print(f"{cinnost} - Nejlepši nastavení: {grid_search.best_params_}")
     print(f"Report výsledků:\n{classification_report(y_test, y_pred)}")
     print(f"Výsledek UAR: {uar:.2%}")
-
+    nazev_modelu = odstraneni_diakritiky(cinnost).replace(" ", "_")
+    novy_radek = pd.DataFrame([cinnost, grid_search.best_params_,
+                                                 uar,
+                                                 nazev_modelu], columns=tabulka_vysledku.columns)
+    tabulka_vysledku = pd.concat([novy_radek, tabulka_vysledku], ignore_index=True)
     # Feature importance - spočtení permutation importance jednotlivých příznaků
     feature_importance = pd.Series(nejlepsi_model.feature_importances_,
                                    index=priznaky_kc.columns)
