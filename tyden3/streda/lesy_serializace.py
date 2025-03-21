@@ -65,11 +65,11 @@ vystup = data["Poruseni"]
 
 # Inicializace modelu náhodného lesa
 model = RandomForestClassifier(random_state=42, class_weight="balanced")
-parametry = {"max_depth": [5],
-             "min_samples_split": [2],
+parametry = {"max_depth": [5, 10],
+             "min_samples_split": [2, 5],
              "max_features": ["sqrt"],
-             "n_estimators": [11],
-             "max_samples": [1]
+             "n_estimators": [51],
+             "max_samples": [0.8]
              }
 
 # Trénování modelu a vyhodnocení přesnosti klasifikace
@@ -105,7 +105,7 @@ for cinnost in kontrolni_cinnosti:
     # Trénování a nalezení nejlepšího nastavení modelu
     # n_jobs=-1 pro využití všech vláken procesoru
     grid_search = GridSearchCV(model, parametry, cv=5, scoring="balanced_accuracy",
-                               n_jobs=-1)
+                               n_jobs=-1, verbose=10)
     grid_search.fit(X_train, y_train)
     nejlepsi_model = grid_search.best_estimator_
 
@@ -119,7 +119,8 @@ for cinnost in kontrolni_cinnosti:
     print(f"Report výsledků:\n{classification_report(y_test, y_pred)}")
     print(f"Výsledek UAR: {uar:.2%}")
     nazev_modelu = odstraneni_diakritiky(cinnost).replace(" ", "_")
-    novy_radek = pd.DataFrame([[cinnost, grid_search.best_params_, uar, nazev_modelu]], columns=tabulka_vysledku.columns)
+    novy_radek = pd.DataFrame([[cinnost, grid_search.best_params_,
+                                uar, nazev_modelu]], columns=tabulka_vysledku.columns)
     tabulka_vysledku = pd.concat([novy_radek, tabulka_vysledku], ignore_index=True)
     k_ulozeni = {"model": nejlepsi_model,
                  "data_x": X_test,
