@@ -35,10 +35,37 @@ url_vybery = "https://data.csu.gov.cz/api/dotaz/v1/data/vybery/"
 url_harmonizovany_index = url_vybery + kod_sady
 print(url_harmonizovany_index)
 
-r_hi = requests.get(url_harmonizovany_index)
-if r_hi.status_code == 200:
-    print(f"Request harmonizoný index odpověď: {r_hi.status_code}")
-    with open("harmonizovany_index.json", "w") as f:
-        json.dump(r_hi.json(), f)
-else:
-    print(f"Request harmonizovaný index selhal: {r_hi.status_code}")
+# r_hi = requests.get(url_harmonizovany_index)
+# if r_hi.status_code == 200:
+#     print(f"Request harmonizoný index odpověď: {r_hi.status_code}")
+#     with open("harmonizovany_index.json", "w") as f:
+#         json.dump(r_hi.json(), f)
+# else:
+#     print(f"Request harmonizovaný index selhal: {r_hi.status_code}")
+with open("harmonizovany_index.json") as f:
+    json_hi = json.load(f)
+print(json_hi)
+print(json_hi.keys())
+print(json_hi["value"])
+print("--------Posledních 5 položek VALUE--------")
+print(json_hi["value"][-5:])
+print("---------Počet hodnot v jsonu-----------")
+print(len(json_hi["value"]))
+print(len(json_hi["value"]) / 302)
+# label, source, note, updated, id, size, role, dimension, extension
+print("------ Label ----------")
+print(json_hi["label"])  # název výběru
+print("------ Source ------")
+print(json_hi["source"])
+print("--------- Note ----------")
+print(json_hi["note"])
+print("-------- Updated ---------")
+print(json_hi["updated"])  # čas requestu
+print("---------- ID ----------")
+print(json_hi["id"])
+print("------------ Size -----------")
+print(json_hi["size"])  # velikost tabulky
+print("------------ Role ------------")
+print(json_hi["role"])
+print("------------ Dimension -----------")
+print(json_hi["dimension"])
