@@ -53,3 +53,9 @@ for klic, hodnota in json_phm.items():
 data_phm = np.array(json_phm["value"])
 # hodnota -1 nastaví druhou dimenzi tak, aby se všechna data vešla do 453 řádků
 data_phm = data_phm.reshape(453, -1)
+print("-------------------------")
+print(data_phm.shape)
+
+# Uložení indexů řádků (týdny)
+print(json_phm["dimension"]["CASTPHM"]["category"]["index"].keys())
+
