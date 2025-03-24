@@ -22,6 +22,19 @@ vysledky.reset_index(drop=True, inplace=True)
 vysledky_puvodni = pd.read_csv("tabulka_vysledku.csv")
 vysledky_puvodni.sort_values(by="Soubor_s_modelem", ascending=False, inplace=True)
 vysledky_puvodni.reset_index(drop=True, inplace=True)
-
+# porovnání UAR deserializované modely vs modely trénované a testované ve smyčce
 print(vysledky["UAR"].compare(vysledky_puvodni["UAR"]))
 print(vysledky["UAR"].equals(vysledky_puvodni["UAR"]))
+print("Chyba v UAR --------------------")
+print(max(vysledky["UAR"] - vysledky_puvodni["UAR"]))
+
+
+strom = model.estimators_[0]
+plot_tree(strom, proportion=True, feature_names=deserializovane_data["features"])
+plt.title("1. strom")
+plt.savefig("strom1.png", dpi=1200)
+
+print(model.feature_importances_)
+print(deserializovane_data["features"])
+for idx, feature in enumerate(model.feature_importances_):
+    print(f'{deserializovane_data["features"][idx]} - {feature}')
