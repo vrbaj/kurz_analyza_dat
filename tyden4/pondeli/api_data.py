@@ -101,3 +101,18 @@ kategorie = pd.DataFrame({"kategorie":list(kategorie)})
 print(kategorie)
 tabulka_ihc = pd.concat([kategorie, df], axis=1)
 print(tabulka_ihc.head())
+
+# čtení csv
+# url_csv = url_vybery + kod_sady + "?format=CSV"
+# csv_response = requests.get(url_csv)
+# if csv_response.status_code == 200:
+#     print(f"csv response OK: {csv_response.status_code}")
+#     with open("hisc_csv.csv", "wb") as f:
+#         f.write(csv_response.content)
+# else:
+#     print(f"csv request selhal: {csv_response.status_code}")
+hisc_pandas = pd.read_csv("hisc_csv.csv")
+print(hisc_pandas.head())
+print(hisc_pandas.columns)
+print(hisc_pandas["CZ-COICOP"].unique())
+print(hisc_pandas[["CZ-COICOP", "Měsíce", "Hodnota"]])
