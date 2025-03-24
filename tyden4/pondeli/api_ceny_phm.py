@@ -57,5 +57,5 @@ print("-------------------------")
 print(data_phm.shape)
 
 # Uložení indexů řádků (týdny)
-print(json_phm["dimension"]["CASTPHM"]["category"]["index"].keys())
+indexy_radky = list(json_phm["dimension"]["CASTPHM"]["category"]["index"].keys())
 
