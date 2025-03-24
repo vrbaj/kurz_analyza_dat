@@ -36,3 +36,20 @@ if not soubor_existuje:
         print(f"Request selhal: {r_phm.status_code}")
 else:
     print("Soubor již existuje, přeskakuji request.")
+
+# Načtení dat z JSON souboru
+with open(CESTA_K_PHM, "r") as f:
+    json_phm = json.load(f)
+# Jedná se o slovník, projdeme klíče
+print("---------- Informace o stažených datech ----------")
+for klic, hodnota in json_phm.items():
+    print(f"{klic}: {hodnota}")
+# Dimenze tabulky je 453 týdnů × 2 typy indexů (cena a index)
+# × 3 typy PHM (benzin, nafta, LPG)
+# Samotné hodnoty jsou pod klíčem value
+# Popisky sloupců a řádků jsou pod klíčem dimension
+
+# Změna dimenzí dat do formátu stejného jako v DataStatu (453 řádků a n sloupců)
+data_phm = np.array(json_phm["value"])
+# hodnota -1 nastaví druhou dimenzi tak, aby se všechna data vešla do 453 řádků
+data_phm = data_phm.reshape(453, -1)
