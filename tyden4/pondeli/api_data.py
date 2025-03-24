@@ -26,6 +26,19 @@ print(json_katalog[0]["vyber"])
 print("--------------------------------------------")
 print(json_katalog[0]["sada"])
 for datova_sada in json_katalog:
-    if "spotřebitelských cen" in datova_sada["vyber"]["nazev"]:
+    if "Harmonizovaný index spotřebitelských cen (HICP) - měsíční" in datova_sada["vyber"]["nazev"]:
         print(f"{datova_sada['vyber']['nazev']} -"
               f" kód sady: {datova_sada['vyber']['kod']}")
+        kod_sady = datova_sada["vyber"]["kod"]
+        break
+url_vybery = "https://data.csu.gov.cz/api/dotaz/v1/data/vybery/"
+url_harmonizovany_index = url_vybery + kod_sady
+print(url_harmonizovany_index)
+
+r_hi = requests.get(url_harmonizovany_index)
+if r_hi.status_code == 200:
+    print(f"Request harmonizoný index odpověď: {r_hi.status_code}")
+    with open("harmonizovany_index.json", "w") as f:
+        json.dump(r_hi.json(), f)
+else:
+    print(f"Request harmonizovaný index selhal: {r_hi.status_code}")
