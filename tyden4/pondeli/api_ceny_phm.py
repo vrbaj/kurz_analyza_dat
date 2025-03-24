@@ -86,4 +86,18 @@ df_phm.index = "1-" + df_phm.index
 # %w - reprezentuje číslo dne v týdnu, %Y reprezentuje rok, %U reprezentuje číslo týdne v roce
 df_phm.index = pd.to_datetime(df_phm.index, format="%w-%Y-W%U")
 
-print(tabulate(df_phm.head(), headers="keys"))
+# Vykreslení části tabulky
+# print(tabulate(df_phm.head(), headers="keys"))
+
+# Uložení dat
+df_phm.to_excel("ceny_phm.xlsx")
+
+# Vykreslení dat
+# Obrázek se dvěma grafy
+fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+fig.suptitle("Vývoj cen PHM")
+# Vykreslení průměrné ceny pro všechny typy PHM
+df_phm.xs("Průměrná cena pohonných hmot (Kč/litr)", axis=1).plot(ax=axs[0])
+# Vykreslení indexu pro všechny typy PHM
+df_phm.xs("Index cen pohonných hmot (%)", axis=1).plot(ax=axs[1])
+plt.show()
