@@ -153,8 +153,32 @@ val = delta_data.loc["2023-03-01":"2023-12-01"] # pro výběr řádu
 test = delta_data.loc["2024-03-01":"2024-12-01"] # pro predikci
 print(train.shape,val.shape,test.shape)
 
-# VAR model
+############ VAR model
+model = VAR(train, freq="QS-DEC")
+# výběr řádu modelu
+best_mse = 1e10
 
+# vybíráme z maximálních řádů 1-10 a z trendů "n","c","ct"
+for order, trend in tqdm(list(
+                         product(range(1,8),
+                                 ["n","c","ct"]))):
+  # fit modelu
+  model_results = model.fit(order, trend=trend, ic="fpe")
+  # predikce 4 následujících hodnot
+  predikce = model_results.forecast(y=train.to_numpy(), steps=4)
+  # spočtení chyby predikce
+  mse = np.mean((val.to_numpy()-predikce)**2)
+  # nejlepší model uložíme
+  if mse < best_mse:
+    best_mse = mse
+    best_order = order
+    best_trend = trend
+    best_results = model_results
+    best_predikce = predikce
 
+# vypíšeme model
+print(f"Nejlepší model: {best_order} {best_trend}")
+print(f"MSE: {best_mse:.4f}")
+print(best_results.summary())
 
 plt.show()
