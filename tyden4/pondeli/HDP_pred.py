@@ -197,4 +197,17 @@ sns.lineplot(data=pd.DataFrame(best_predikce, columns=val.columns,
                                index=val.index), x=val.index, y=col,
                                label="predikce val")
 
+vysledny_df = pd.concat([train_val,predikce])
+vysledny_df.loc[vysledny_df.index[0]-pd.tseries.offsets.QuarterBegin(1),
+                :] = data_pro_rek
+vysledny_df = vysledny_df.sort_index()
+vysledny_df = vysledny_df.cumsum()
+predikce_yy = vysledny_df[col].loc["2024-12-01"]
+predikce_q4_2024 = hdp_q4_2023*(1+predikce_yy)
+
+print("-"*50)
+print(f"Predikce pro Q4 2024")
+print("Má vyjít:", hdp_q4_2024)
+print("Predikce:", predikce_q4_2024)
+print(f"Meziroční změna: {predikce_yy:.2%}")
 plt.show()
