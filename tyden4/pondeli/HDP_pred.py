@@ -114,6 +114,7 @@ delta_data = data.copy(deep=True)
 cols = ["HDP_cz","HDP_eu","Inflace","trh_prace_cz"]
 delta_data[cols] = delta_data[cols].pct_change(periods=4, freq="QS-DEC")
 delta_data = delta_data.dropna()
+delta_data.plot(subplots=True)
 
 # uložím první řádek pro pozdější rekonstrukci
 data_pro_rek = delta_data.iloc[0]
@@ -127,9 +128,18 @@ delta_data.plot(subplots=True)
 hdp_q4_2024 = data["HDP_cz"].loc["2024-12-01"]
 hdp_q4_2023 = data["HDP_cz"].loc["2023-12-01"]
 
+# Ukázka že jsem schopen rekonstruovat původní data z diferencí
+hdp_rec = delta_data["HDP_cz"]
+hdp_rec[hdp_rec.index[0]-pd.tseries.offsets.QuarterBegin(1)] = \
+  data_pro_rek["HDP_cz"]
+hdp_rec = hdp_rec.sort_index()
+hdp_rec = hdp_rec.cumsum()
+print(hdp_q4_2024)
+print(hdp_q4_2023*(1+hdp_rec.loc["2024-12-01"]))
+
 # Test na stacionaritu
 for col in delta_data.columns:
   series = delta_data[col]
   test = adfuller(series)
   print(f"{col+':':{' '}<16}pval: {test[1]:.4f}")
-#plt.show()
+plt.show()
