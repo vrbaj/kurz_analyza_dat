@@ -12,6 +12,9 @@ import seaborn as sns
 
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.stattools import adfuller
+from statsmodels.tsa.vector_ar.var_model import VAR
+from statsmodels.tsa.vector_ar.vecm import VECM
+from statsmodels.tsa.statespace.varmax import VARMAX
 
 # Stažení dat z ČSÚ o inflaci
 if not Path("inflace.csv").exists():
@@ -142,4 +145,16 @@ for col in delta_data.columns:
   series = delta_data[col]
   test = adfuller(series)
   print(f"{col+':':{' '}<16}pval: {test[1]:.4f}")
+
+
+# Rozdělení dat train-val-test
+train = delta_data.loc[:"2022-12-01"] # pro trénování modelu
+val = delta_data.loc["2023-03-01":"2023-12-01"] # pro výběr řádu
+test = delta_data.loc["2024-03-01":"2024-12-01"] # pro predikci
+print(train.shape,val.shape,test.shape)
+
+# VAR model
+
+
+
 plt.show()
