@@ -17,4 +17,7 @@ r = requests.get(base_url+kod_sady+"?format=JSON_STAT")
 slovnik_inflace = r.json()
 nazvy_sloupcu = list(slovnik_inflace["dimension"]["CasM"]
                                     ["category"]["index"].keys())
-print(nazvy_sloupcu)
+
+df_inflace = pd.DataFrame(np.array(slovnik_inflace["value"].reshape(-1,len(nazvy_sloupcu))),
+                  columns=nazvy_sloupcu, 
+                  index = slovnik_inflace["dimension"]["CZCOICOP"]["category"]["label"].values())
