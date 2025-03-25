@@ -304,38 +304,69 @@ predikce_val = pd.DataFrame(best_predikce, columns = val_int.columns,
 zobrazeni_predikce_2024(predikce, val, test, train, predikce_val)
 
 
-###### VARMAX model
-print("#"*50)
-print("VARMAX")
+# ###### VARMAX model
+# print("#"*50)
+# print("VARMAX")
 
-best_mse = 1e10
-for p, q, trend in tqdm(list(
-  product(range(1,6), range(1,6), ["n","c","ct"])
-)):
-  model = VARMAX(train_int, exog=ext_data.loc[train_int.index],
-                 freq="QS-DEC",order = (p,q), trend=trend)
-  results = model.fit(maxiter=10,
-                      method="newton")
-  predikce = results.forecast(steps=4, exog=ext_data.loc[val.index])
-  mse = np.mean((predikce-val_int.to_numpy())**2)
-  if mse < best_mse:
-    best_mse = mse
-    best_results = results
-    bestorder = (p,q)
-    besttrend = trend
-    best_predikce = predikce
+# best_mse = 1e10
+# for p, q, trend in tqdm(list(
+#   product(range(1,6), range(1,6), ["n","c","ct"])
+# )):
+#   try:
+#     model = VARMAX(train_int, exog=ext_data.loc[train_int.index],
+#                   freq="QS-DEC",order = (p,q), trend=trend)
+#     results = model.fit(maxiter=10,
+#                         method="newton")
+#     predikce = results.forecast(steps=4, exog=ext_data.loc[val.index])
+#     mse = np.mean((predikce-val_int.to_numpy())**2)
+#     if mse < best_mse:
+#       best_mse = mse
+#       best_results = results
+#       bestorder = (p,q)
+#       besttrend = trend
+#       best_predikce = predikce
+#   except:
+#     print("Něco se pokazilo, pokračuji dál...")
 
-print("Nejlepší model:",bestorder, besttrend)
-print(f"MSE: {best_mse:.4f}")
+# print("Nejlepší model:",bestorder, besttrend)
+# print(f"MSE: {best_mse:.4f}")
 
-model = VARMAX(train_val_int, exog=ext_data.loc[train_val_int.index],
-               order = bestorder, trend=besttrend, freq="QS-DEC")
-results = model.fit()
-predikce = results.forecast(steps=4, exog=ext_data.loc[test.index])
-predikce = pd.DataFrame(predikce, columns=train_int.columns, 
-                        index= test.index)
-predikce_val = pd.DataFrame(best_predikce, columns=val_int.columns,
-                            index=val_int.index)
-zobrazeni_predikce_2024(predikce, val,test, train, predikce_val)
+# model = VARMAX(train_val_int, exog=ext_data.loc[train_val_int.index],
+#                order = bestorder, trend=besttrend, freq="QS-DEC")
+# results = model.fit()
+# predikce = results.forecast(steps=4, exog=ext_data.loc[test.index])
+# predikce = pd.DataFrame(predikce, columns=train_int.columns, 
+#                         index= test.index)
+# predikce_val = pd.DataFrame(best_predikce, columns=val_int.columns,
+#                             index=val_int.index)
+# zobrazeni_predikce_2024(predikce, val,test, train, predikce_val)
+
+########################
+# VAR predikce pro 2025
+model = VAR(delta_data, freq="QS-DEC")
+results = model.fit(1,trend="n")
+predikce, spodni, horni = results.forecast_interval(y=delta_data.to_numpy(),
+                                                    steps=4,
+                                                    alpha=0.5)
+predikce = pd.DataFrame(predikce, columns=test.columns,
+                        index=pd.to_datetime(
+                        ["2025-03-01","2025-06-01",
+                         "2025-09-01","2025-12-01"]))
+spodni = pd.DataFrame(spodni, columns=test.columns,
+                      index = pd.to_datetime(
+                        ["2025-03-01","2025-06-01",
+                         "2025-09-01","2025-12-01"]))
+horni = pd.DataFrame(horni, columns=test.columns,
+                     index = pd.to_datetime(
+                       ["2025-03-01","2025-06-01",
+                        "2025-09-01","2025-12-01"]))
+
+predikce = pd.concat([delta_data,predikce])
+predikce.loc[predikce.index[0]-pd.tseries.offsets.QuarterBegin(1)] \
+  = data_pro_rek
+predikce.sort_index(inplace=True)
+predikce_yy = predikce.cumsum()
+print(predikce.iloc[-4:,:])
+
 
 plt.show()
