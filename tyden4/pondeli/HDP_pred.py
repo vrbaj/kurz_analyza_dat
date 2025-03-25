@@ -51,4 +51,39 @@ df_sazba.index = pd.to_datetime(df_sazba["Období"])
 df_sazba = df_sazba.resample("QS-DEC").first()
 df_sazba = df_sazba.drop(["Období","Unnamed: 2"] ,axis=1)
 df_sazba.columns = ["sazba"]
+#print(df_sazba)
 
+# Pro sloučení dat na stejný časový index
+def kvartal_na_datum(q: str):
+  rok, cislo = q.split("-Q")
+  mesic = int(cislo)*3
+  return pd.to_datetime(f"{rok}-{mesic:02d}-01")
+
+# priprava hdp pro slouceni
+df_hdp.columns = [kvartal_na_datum(q) for q in df_hdp.columns]
+df_hdp.index = ["HDP_cz","HDP_eu"]
+df_hdp = df_hdp.T
+#print(df_hdp)
+
+# priprava prace pro slouceni
+df_prace.columns = [kvartal_na_datum(q) for q in df_prace.columns]
+df_prace.index = ["trh_prace_cz"]
+df_prace = df_prace.T
+#print(df_prace)
+
+# priprava inflace pro slouceni
+df_inflace = df_inflace.set_index(df_inflace.columns[0])
+df_inflace = df_inflace.T
+df_inflace.index = pd.to_datetime(df_inflace.index)
+df_inflace.columns = ["Inflace"]
+#print(df_inflace)
+
+# priprava sazby pro slouceni
+df_sazba = df_sazba/100
+#print(df_sazba)
+
+# sloučení dat
+data = pd.concat([df_hdp,df_prace,df_inflace,df_sazba],axis=1)
+data = data.dropna(axis=0)
+data.plot(subplots=True)
+plt.show()
