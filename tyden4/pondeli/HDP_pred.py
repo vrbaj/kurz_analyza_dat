@@ -245,7 +245,45 @@ for order in tqdm(range(1,10)):
 print("Nejlepší model:", best_order)
 print(f"MSE: {best_mse:.4f}")
 
+# Vypočtení predikce
+model = VECM(train_val, freq="QS-DEC",
+             deterministic="ci",
+             k_ar_diff=best_order,
+             seasons=4)
+results = model.fit()
+predikce = results.predict(steps=4)
+predikce = pd.DataFrame(predikce, columns=test.columns,
+                        index=test.index)
+# Zobrazení VECM predikce
+zobrazeni_predikce_2024(predikce, val, test, train)
 
+# VAR s externim
+print("#"*50)
+print("VAR - s externimi promennymi")
+
+# pripravim data
+train_int = train[["HDP_cz","HDP_eu","Inflace","trh_prace_cz"]]
+val_int = val[["HDP_cz","HDP_eu","Inflace","trh_prace_cz"]]
+ext_data = data[["sazba"]]
+
+# hledam nejlepsi model
+model = VAR(train_int, exog=ext_data.loc[train.index], freq="QS-DEC")
+best_mse = 1e10
+for order, trend in tqdm(product(range(1,8),["n","c","ct"])):
+  results = model.fit(order, trend=trend)
+  predikce = results.forecast(y=train_int.to_numpy(),
+                              steps=4,
+                              exog_future=ext_data.loc[val.index])
+  mse = np.mean((val_int.to_numpy() - predikce)**2)
+  if mse < best_mse:
+    best_mse = mse
+    best_order = order
+    best_trend = trend
+    best_results = results
+    best_predikce = predikce
+
+print(f"Nejlepší model: {best_order} {best_trend}")
+print(f"MSE: {best_mse:.4f}")
 
 
 
