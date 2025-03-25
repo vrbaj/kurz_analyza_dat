@@ -10,6 +10,8 @@ from tqdm import tqdm
 from matplotlib import pyplot as plt
 import seaborn as sns
 
+from statsmodels.tsa.seasonal import seasonal_decompose
+
 # Stažení dat z ČSÚ o inflaci
 if not Path("inflace.csv").exists():
   base_url = "https://data.csu.gov.cz/api/dotaz/v1/data/vybery/"
@@ -86,4 +88,21 @@ df_sazba = df_sazba/100
 data = pd.concat([df_hdp,df_prace,df_inflace,df_sazba],axis=1)
 data = data.dropna(axis=0)
 data.plot(subplots=True)
+
+# Odstranění sezónní složky
+plt.figure()
+for idx, col in enumerate(["HDP_cz","HDP_eu","Inflace"]):
+  sezonni_slozka = seasonal_decompose(data[col],
+                                      model="multiplicative",
+                                      period=4).seasonal
+  data[col] = data[col]/sezonni_slozka
+  plt.subplot(3,2,2*idx+1)
+  plt.plot(sezonni_slozka)
+  plt.title("Sezónní složka: "+col)
+  plt.xticks(rotation=45)
+  plt.subplot(3,2,2*idx+2)
+  plt.plot(data[col])
+  plt.title(col)
+  plt.xticks(rotation=45)
+plt.tight_layout()
 plt.show()
