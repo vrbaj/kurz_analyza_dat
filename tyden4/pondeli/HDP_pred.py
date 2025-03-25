@@ -32,3 +32,10 @@ if not Path("inflace.csv").exists():
   df_inflace.to_csv("inflace.csv")
 else:
   df_inflace = pd.read_csv("inflace.csv")
+
+# CZ and EU HDP (Eurostat) - https://ec.europa.eu/eurostat/databrowser/bookmark/f7d74afe-7ade-46c4-a17b-9a92abee7693?lang=en
+df_hdp = pd.read_csv("hdp.csv")
+df_hdp = df_hdp.drop(["DATAFLOW","LAST UPDATE","freq","unit",
+                      "s_adj","na_item","CONF_STATUS","OBS_FLAG"],axis=1)
+df_hdp = df_hdp.pivot(index="geo", columns="TIME_PERIOD", values="OBS_VALUE")
+print(df_hdp)
