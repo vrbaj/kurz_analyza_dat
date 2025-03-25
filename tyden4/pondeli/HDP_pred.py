@@ -304,5 +304,28 @@ predikce_val = pd.DataFrame(best_predikce, columns = val_int.columns,
 zobrazeni_predikce_2024(predikce, val, test, train, predikce_val)
 
 
+###### VARMAX model
+print("#"*50)
+print("VARMAX")
+
+best_mse = 1e10
+for p, q, trend in tqdm(list(
+  product(range(1,6), range(1,6), ["n","c","ct"])
+)):
+  model = VARMAX(train_int, exog=ext_data.loc[train_int.index],
+                 freq="QS-DEC",order = (p,q), trend=trend)
+  results = model.fit()
+  predikce = results.forecast(steps=4, exog=ext_data.loc[val.index])
+  mse = np.mean((predikce-val_int.to_numpy())**2)
+  if mse < best_mse:
+    best_mse = mse
+    best_results = results
+    bestorder = (p,q)
+    besttrend = trend
+    best_predikce = predikce
+
+print("Nejlepší model:",bestorder, besttrend)
+print(f"MSE: {best_mse:.4f}")
+
 
 plt.show()
