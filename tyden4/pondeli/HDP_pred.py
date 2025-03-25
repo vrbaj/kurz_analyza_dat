@@ -314,7 +314,8 @@ for p, q, trend in tqdm(list(
 )):
   model = VARMAX(train_int, exog=ext_data.loc[train_int.index],
                  freq="QS-DEC",order = (p,q), trend=trend)
-  results = model.fit()
+  results = model.fit(maxiter=10,
+                      method="newton")
   predikce = results.forecast(steps=4, exog=ext_data.loc[val.index])
   mse = np.mean((predikce-val_int.to_numpy())**2)
   if mse < best_mse:
