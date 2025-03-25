@@ -11,6 +11,7 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 
 from statsmodels.tsa.seasonal import seasonal_decompose
+from statsmodels.tsa.stattools import adfuller
 
 # Stažení dat z ČSÚ o inflaci
 if not Path("inflace.csv").exists():
@@ -105,4 +106,30 @@ for idx, col in enumerate(["HDP_cz","HDP_eu","Inflace"]):
   plt.title(col)
   plt.xticks(rotation=45)
 plt.tight_layout()
-plt.show()
+
+#### Vytovoření stacionárních dat
+delta_data = data.copy(deep=True)
+
+# přepočítám na meziroční změny (v %) pro slopce kde to má smysl
+cols = ["HDP_cz","HDP_eu","Inflace","trh_prace_cz"]
+delta_data[cols] = delta_data[cols].pct_change(periods=4, freq="QS-DEC")
+delta_data = delta_data.dropna()
+
+# uložím první řádek pro pozdější rekonstrukci
+data_pro_rek = delta_data.iloc[0]
+print(data_pro_rek)
+
+# udělám diferenci
+delta_data = delta_data.diff(axis=0).dropna()
+delta_data.plot(subplots=True)
+
+# uložim si data pro ukázku výpočtu predikce
+hdp_q4_2024 = data["HDP_cz"].loc["2024-12-01"]
+hdp_q4_2023 = data["HDP_cz"].loc["2023-12-01"]
+
+# Test na stacionaritu
+for col in delta_data.columns:
+  series = delta_data[col]
+  test = adfuller(series)
+  print(f"{col+':':{' '}<16}pval: {test[1]:.4f}")
+#plt.show()
