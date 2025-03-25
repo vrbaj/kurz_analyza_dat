@@ -327,5 +327,14 @@ for p, q, trend in tqdm(list(
 print("Nejlepší model:",bestorder, besttrend)
 print(f"MSE: {best_mse:.4f}")
 
+model = VARMAX(train_val_int, exog=ext_data.loc[train_val_int.index],
+               order = bestorder, trend=besttrend, freq="QS-DEC")
+results = model.fit()
+predikce = results.forecast(steps=4, exog=ext_data.loc[test.index])
+predikce = pd.DataFrame(predikce, columns=train_int.columns, 
+                        index= test.index)
+predikce_val = pd.DataFrame(best_predikce, columns=val_int.columns,
+                            index=val_int.index)
+zobrazeni_predikce_2024(predikce, val,test, train, predikce_val)
 
 plt.show()
