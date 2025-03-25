@@ -160,16 +160,21 @@ model = VAR(train, freq="QS-DEC")
 # výběr řádu modelu
 best_mse = 1e10
 
+
+ic = "fpe"
+mses = []
+
 # vybíráme z maximálních řádů 1-7 a z trendů "n","c","ct"
 for order, trend in tqdm(list(
                          product(range(1,8),
                                  ["n","c","ct"]))):
   # fit modelu
-  model_results = model.fit(order, trend=trend, ic="fpe")
+  model_results = model.fit(order, trend=trend, ic=ic)
   # predikce 4 následujících hodnot
   predikce = model_results.forecast(y=train.to_numpy(), steps=4)
   # spočtení chyby predikce
-  mse = np.mean((val.to_numpy()-predikce)**2)
+  mse = np.mean(np.abs(val.to_numpy()[:,0]-predikce[:,0]))
+  mses.append(mse)
   # nejlepší model uložíme
   if mse < best_mse:
     best_mse = mse
@@ -186,7 +191,7 @@ print(f"MSE: {best_mse:.4f}")
 # Vypočtení predikce
 train_val = pd.concat([train,val])
 model = VAR(train_val, freq="QS-DEC")
-model_results = model.fit(best_order, trend=best_trend, ic="fpe")
+model_results = model.fit(best_order, trend=best_trend, ic=ic)
 predikce = model_results.forecast(y=train_val.to_numpy(), steps=4)
 predikce = pd.DataFrame(predikce, columns=test.columns, index=test.index)
 predikce_val = pd.DataFrame(best_predikce, columns=val.columns,
@@ -219,3 +224,16 @@ def zobrazeni_predikce_2024(predikce, val, test, train, predikce_val):
   print(f"Meziroční změna: {predikce_yy:.2%}")
 
 zobrazeni_predikce_2024(predikce, val, test, train, predikce_val)
+
+#plt.figure()
+#model_results.plot_forecast(steps=4)
+
+predikce = model_results.forecast_interval(
+  y=train_val.to_numpy(), steps=1,
+  alpha=0.5)
+print("Prumerna:", predikce[0])
+print("Spodni mez:", predikce[1])
+print("Horni mez:", predikce[2])
+
+#print(sorted(mses))
+plt.show()
