@@ -183,35 +183,41 @@ print(f"Nejlepší model: {best_order} {best_trend}")
 print(f"MSE: {best_mse:.4f}")
 #print(best_results.summary())
 
-# Zobrazení predikce do grafu
-col = "HDP_cz"
+# Vypočtení predikce
 train_val = pd.concat([train,val])
 model = VAR(train_val, freq="QS-DEC")
 model_results = model.fit(best_order, trend=best_trend, ic="fpe")
 predikce = model_results.forecast(y=train_val.to_numpy(), steps=4)
 predikce = pd.DataFrame(predikce, columns=test.columns, index=test.index)
 
-plt.figure()
-sns.lineplot(data=train_val, x=train_val.index, y=col, label="HDP")
-sns.lineplot(data=test, x=test.index, y=col, label="HDP 2024")
-sns.lineplot(data=predikce, x=predikce.index, y=col, label="predikce")
-sns.lineplot(data=pd.DataFrame(best_predikce, columns=val.columns,
-                               index=val.index), x=val.index, y=col,
-                               label="predikce val")
+# Definice funkce pro zobrazení predikce
+def zobrazeni_predikce_2024(predikce, val, test, train):
+  col = "HDP_cz"
+  train_val = pd.concat([train,val])
 
-vysledny_df = pd.concat([train_val,predikce])
-vysledny_df.loc[vysledny_df.index[0]-pd.tseries.offsets.QuarterBegin(1),
-                :] = data_pro_rek
-vysledny_df = vysledny_df.sort_index()
-vysledny_df = vysledny_df.cumsum()
-predikce_yy = vysledny_df[col].loc["2024-12-01"]
-predikce_q4_2024 = hdp_q4_2023*(1+predikce_yy)
+  plt.figure()
+  sns.lineplot(data=train_val, x=train_val.index, y=col, label="HDP")
+  sns.lineplot(data=test, x=test.index, y=col, label="HDP 2024")
+  sns.lineplot(data=predikce, x=predikce.index, y=col, label="predikce")
+  sns.lineplot(data=pd.DataFrame(best_predikce, columns=val.columns,
+                                index=val.index), x=val.index, y=col,
+                                label="predikce val")
 
-print("-"*50)
-print(f"Predikce pro Q4 2024")
-print("Má vyjít:", hdp_q4_2024)
-print("Predikce:", predikce_q4_2024)
-print(f"Meziroční změna: {predikce_yy:.2%}")
+  vysledny_df = pd.concat([train_val,predikce])
+  vysledny_df.loc[vysledny_df.index[0]-pd.tseries.offsets.QuarterBegin(1),
+                  :] = data_pro_rek
+  vysledny_df = vysledny_df.sort_index()
+  vysledny_df = vysledny_df.cumsum()
+  predikce_yy = vysledny_df[col].loc["2024-12-01"]
+  predikce_q4_2024 = hdp_q4_2023*(1+predikce_yy)
+
+  print("-"*50)
+  print(f"Predikce pro Q4 2024")
+  print("Má vyjít:", hdp_q4_2024)
+  print("Predikce:", predikce_q4_2024)
+  print(f"Meziroční změna: {predikce_yy:.2%}")
+
+zobrazeni_predikce_2024(predikce, val, test, train)
 
 # VECM - vsechny jako interni
 print("#"*50)
