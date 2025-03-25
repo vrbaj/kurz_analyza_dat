@@ -189,9 +189,11 @@ model = VAR(train_val, freq="QS-DEC")
 model_results = model.fit(best_order, trend=best_trend, ic="fpe")
 predikce = model_results.forecast(y=train_val.to_numpy(), steps=4)
 predikce = pd.DataFrame(predikce, columns=test.columns, index=test.index)
+predikce_val = pd.DataFrame(best_predikce, columns=val.columns,
+                            index=val.index)
 
 # Definice funkce pro zobrazení predikce
-def zobrazeni_predikce_2024(predikce, val, test, train):
+def zobrazeni_predikce_2024(predikce, val, test, train, predikce_val):
   col = "HDP_cz"
   train_val = pd.concat([train,val])
 
@@ -199,9 +201,8 @@ def zobrazeni_predikce_2024(predikce, val, test, train):
   sns.lineplot(data=train_val, x=train_val.index, y=col, label="HDP")
   sns.lineplot(data=test, x=test.index, y=col, label="HDP 2024")
   sns.lineplot(data=predikce, x=predikce.index, y=col, label="predikce")
-  sns.lineplot(data=pd.DataFrame(best_predikce, columns=val.columns,
-                                index=val.index), x=val.index, y=col,
-                                label="predikce val")
+  sns.lineplot(data=predikce_val, x=predikce_val.index, y=col,
+               label="predikce val")
 
   vysledny_df = pd.concat([train_val,predikce])
   vysledny_df.loc[vysledny_df.index[0]-pd.tseries.offsets.QuarterBegin(1),
@@ -217,7 +218,7 @@ def zobrazeni_predikce_2024(predikce, val, test, train):
   print("Predikce:", predikce_q4_2024)
   print(f"Meziroční změna: {predikce_yy:.2%}")
 
-zobrazeni_predikce_2024(predikce, val, test, train)
+zobrazeni_predikce_2024(predikce, val, test, train, predikce_val)
 
 # VECM - vsechny jako interni
 print("#"*50)
@@ -254,8 +255,10 @@ results = model.fit()
 predikce = results.predict(steps=4)
 predikce = pd.DataFrame(predikce, columns=test.columns,
                         index=test.index)
+predikce_val = pd.DataFrame(best_predikce, columns=val.columns,
+                            index = val.index)
 # Zobrazení VECM predikce
-zobrazeni_predikce_2024(predikce, val, test, train)
+zobrazeni_predikce_2024(predikce, val, test, train,predikce_val)
 
 # VAR s externim
 print("#"*50)
@@ -269,7 +272,7 @@ ext_data = data[["sazba"]]
 # hledam nejlepsi model
 model = VAR(train_int, exog=ext_data.loc[train.index], freq="QS-DEC")
 best_mse = 1e10
-for order, trend in tqdm(product(range(1,8),["n","c","ct"])):
+for order, trend in tqdm(list(product(range(1,8),["n","c","ct"]))):
   results = model.fit(order, trend=trend)
   predikce = results.forecast(y=train_int.to_numpy(),
                               steps=4,
@@ -285,8 +288,20 @@ for order, trend in tqdm(product(range(1,8),["n","c","ct"])):
 print(f"Nejlepší model: {best_order} {best_trend}")
 print(f"MSE: {best_mse:.4f}")
 
-
-
+# Vypočtení predikce
+train_val_int = pd.concat([train_int,val_int])
+model = VAR(train_val_int,
+            exog=ext_data.loc[train_val_int.index],
+            freq = "QS-DEC")
+model_results = model.fit(best_order, trend=best_trend)
+predikce = model_results.forecast(y=train_val_int.to_numpy(),
+                                  steps=4,
+                                  exog_future=ext_data.loc[test.index])
+predikce = pd.DataFrame(predikce, columns=train_int.columns,
+                        index=test.index)
+predikce_val = pd.DataFrame(best_predikce, columns = val_int.columns,
+                            index=val_int.index)
+zobrazeni_predikce_2024(predikce, val, test, train, predikce_val)
 
 
 
