@@ -158,7 +158,7 @@ model = VAR(train, freq="QS-DEC")
 # výběr řádu modelu
 best_mse = 1e10
 
-# vybíráme z maximálních řádů 1-10 a z trendů "n","c","ct"
+# vybíráme z maximálních řádů 1-7 a z trendů "n","c","ct"
 for order, trend in tqdm(list(
                          product(range(1,8),
                                  ["n","c","ct"]))):
@@ -185,7 +185,16 @@ print(best_results.summary())
 col = "HDP_cz"
 train_val = pd.concat([train,val])
 model = VAR(train_val, freq="QS-DEC")
-model_results = model.fit(best_order, trend=best_trend)
+model_results = model.fit(best_order, trend=best_trend, ic="fpe")
 predikce = model_results.forecast(y=train_val.to_numpy(), steps=4)
 predikce = pd.DataFrame(predikce, columns=test.columns, index=test.index)
-print(predikce)
+
+plt.figure()
+sns.lineplot(data=train_val, x=train_val.index, y=col, label="HDP")
+sns.lineplot(data=test, x=test.index, y=col, label="HDP 2024")
+sns.lineplot(data=predikce, x=predikce.index, y=col, label="predikce")
+sns.lineplot(data=pd.DataFrame(best_predikce, columns=val.columns,
+                               index=val.index), x=val.index, y=col,
+                               label="predikce val")
+
+plt.show()
