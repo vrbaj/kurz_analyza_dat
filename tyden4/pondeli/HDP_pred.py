@@ -154,6 +154,8 @@ test = delta_data.loc["2024-03-01":"2024-12-01"] # pro predikci
 print(train.shape,val.shape,test.shape)
 
 ############ VAR model
+print("#"*50)
+print("VAR")
 model = VAR(train, freq="QS-DEC")
 # výběr řádu modelu
 best_mse = 1e10
@@ -179,7 +181,7 @@ for order, trend in tqdm(list(
 # vypíšeme model
 print(f"Nejlepší model: {best_order} {best_trend}")
 print(f"MSE: {best_mse:.4f}")
-print(best_results.summary())
+#print(best_results.summary())
 
 # Zobrazení predikce do grafu
 col = "HDP_cz"
@@ -210,4 +212,38 @@ print(f"Predikce pro Q4 2024")
 print("Má vyjít:", hdp_q4_2024)
 print("Predikce:", predikce_q4_2024)
 print(f"Meziroční změna: {predikce_yy:.2%}")
+
+# VECM - vsechny jako interni
+print("#"*50)
+print("VECM - pouze interni promenne")
+
+best_mse=1e10
+for order in tqdm(range(1,10)):
+  # definujeme model
+  model = VECM(train, freq="QS-DEC",
+               deterministic="ci",
+               k_ar_diff=order,
+               seasons=4)
+  # trénujeme
+  results = model.fit()
+  # predikujeme
+  predikce = results.predict(steps=4)
+  # spočteme průměrnou kvadratickou odchylku
+  mse = np.mean((predikce - val.to_numpy())**2)
+  if best_mse>mse:
+    best_mse = mse
+    best_order = order
+    best_results = results
+    best_predikce = predikce
+
+print("Nejlepší model:", best_order)
+print(f"MSE: {best_mse:.4f}")
+
+
+
+
+
+
+
+
 plt.show()
