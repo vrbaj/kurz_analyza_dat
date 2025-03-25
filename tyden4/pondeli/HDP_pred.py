@@ -27,7 +27,7 @@ if not Path("inflace.csv").exists():
                                     ["category"]["index"].keys())
 
   df_inflace = pd.DataFrame(np.array(slovnik_inflace["value"]).reshape(-1,len(nazvy_sloupcu)),
-                          columns=nazvy_sloupcu, 
+                          columns=nazvy_sloupcu,
                           index = (slovnik_inflace["dimension"]["CZCOICOP"]
                                                   ["category"]["label"].values())
                           )
@@ -267,7 +267,7 @@ print("VAR - s externimi promennymi")
 # pripravim data
 train_int = train[["HDP_cz","HDP_eu","Inflace","trh_prace_cz"]]
 val_int = val[["HDP_cz","HDP_eu","Inflace","trh_prace_cz"]]
-ext_data = data[["sazba"]]
+ext_data = delta_data[["sazba"]]
 
 # hledam nejlepsi model
 model = VAR(train_int, exog=ext_data.loc[train.index], freq="QS-DEC")
@@ -305,41 +305,43 @@ zobrazeni_predikce_2024(predikce, val, test, train, predikce_val)
 
 
 # ###### VARMAX model
-# print("#"*50)
-# print("VARMAX")
+print("#"*50)
+print("VARMAX")
 
-# best_mse = 1e10
-# for p, q, trend in tqdm(list(
-#   product(range(1,6), range(1,6), ["n","c","ct"])
-# )):
-#   try:
-#     model = VARMAX(train_int, exog=ext_data.loc[train_int.index],
-#                   freq="QS-DEC",order = (p,q), trend=trend)
-#     results = model.fit(maxiter=10,
-#                         method="newton")
-#     predikce = results.forecast(steps=4, exog=ext_data.loc[val.index])
-#     mse = np.mean((predikce-val_int.to_numpy())**2)
-#     if mse < best_mse:
-#       best_mse = mse
-#       best_results = results
-#       bestorder = (p,q)
-#       besttrend = trend
-#       best_predikce = predikce
-#   except:
-#     print("Něco se pokazilo, pokračuji dál...")
+best_mse = 1e10
+for p, q, trend in tqdm(list(
+  product(range(0,5), range(0,5), ["n","ct"])
+)):
+  try:
+    model = VARMAX(train_int, exog=ext_data.loc[train_int.index],
+                  freq="QS-DEC",order = (p,q), trend=trend)
+    results = model.fit(maxiter=20,
+                        method="lbfgs",
+                        cov_type="approx",
+                        )
+    predikce = results.forecast(steps=4, exog=ext_data.loc[val.index])
+    mse = np.mean((predikce-val_int.to_numpy())**2)
+    if mse < best_mse:
+      best_mse = mse
+      best_results = results
+      bestorder = (p,q)
+      besttrend = trend
+      best_predikce = predikce
+  except:
+    print("Něco se pokazilo, pokračuji dál...")
 
-# print("Nejlepší model:",bestorder, besttrend)
-# print(f"MSE: {best_mse:.4f}")
+print("Nejlepší model:",bestorder, besttrend)
+print(f"MSE: {best_mse:.4f}")
 
-# model = VARMAX(train_val_int, exog=ext_data.loc[train_val_int.index],
-#                order = bestorder, trend=besttrend, freq="QS-DEC")
-# results = model.fit()
-# predikce = results.forecast(steps=4, exog=ext_data.loc[test.index])
-# predikce = pd.DataFrame(predikce, columns=train_int.columns, 
-#                         index= test.index)
-# predikce_val = pd.DataFrame(best_predikce, columns=val_int.columns,
-#                             index=val_int.index)
-# zobrazeni_predikce_2024(predikce, val,test, train, predikce_val)
+model = VARMAX(train_val_int, exog=ext_data.loc[train_val_int.index],
+               order = bestorder, trend=besttrend, freq="QS-DEC")
+results = model.fit()
+predikce = results.forecast(steps=4, exog=ext_data.loc[test.index])
+predikce = pd.DataFrame(predikce, columns=train_int.columns,
+                        index= test.index)
+predikce_val = pd.DataFrame(best_predikce, columns=val_int.columns,
+                            index=val_int.index)
+zobrazeni_predikce_2024(predikce, val,test, train, predikce_val)
 
 ########################
 # VAR predikce pro 2025
@@ -366,7 +368,20 @@ predikce.loc[predikce.index[0]-pd.tseries.offsets.QuarterBegin(1)] \
   = data_pro_rek
 predikce.sort_index(inplace=True)
 predikce_yy = predikce.cumsum()
+horni = pd.concat([delta_data,horni])
+horni.loc[horni.index[0]-pd.tseries.offsets.QuarterBegin(1)] \
+  = data_pro_rek
+horni.sort_index(inplace=True)
+horni_yy = horni.cumsum()
+spodni = pd.concat([delta_data,spodni])
+spodni.loc[spodni.index[0]-pd.tseries.offsets.QuarterBegin(1)] \
+  = data_pro_rek
+spodni.sort_index(inplace=True)
+spodni_yy = spodni.cumsum()
+
 print(predikce.iloc[-4:,:])
+print(spodni.iloc[-4:,:])
+print(horni.iloc[-4:,:])
 
 
 plt.show()
