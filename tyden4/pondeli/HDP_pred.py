@@ -181,4 +181,11 @@ print(f"Nejlepší model: {best_order} {best_trend}")
 print(f"MSE: {best_mse:.4f}")
 print(best_results.summary())
 
-plt.show()
+# Zobrazení predikce do grafu
+col = "HDP_cz"
+train_val = pd.concat([train,val])
+model = VAR(train_val, freq="QS-DEC")
+model_results = model.fit(best_order, trend=best_trend)
+predikce = model_results.forecast(y=train_val.to_numpy(), steps=4)
+predikce = pd.DataFrame(predikce, columns=test.columns, index=test.index)
+print(predikce)
