@@ -13,3 +13,8 @@ import seaborn as sns
 base_url = "https://data.csu.gov.cz/api/dotaz/v1/data/vybery/"
 kod_sady = "CEN0101CT02"
 r = requests.get(base_url+kod_sady+"?format=JSON_STAT")
+
+slovnik_inflace = r.json()
+nazvy_sloupcu = list(slovnik_inflace["dimension"]["CasM"]
+                                    ["category"]["index"].keys())
+print(nazvy_sloupcu)
