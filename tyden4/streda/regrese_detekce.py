@@ -52,5 +52,17 @@ sns.heatmap(pandas_features.corr(), cmap="YlGnBu")
 vysledky_predikci = []
 loo = LeaveOneOut()
 for trenovaci_index, testovaci_index in loo.split(X):
-    print(f"trenovaci_index = {trenovaci_index}")
-    print(f"testovaci_index = {testovaci_index}")
+    # print(f"trenovaci_index = {trenovaci_index}")
+    # print(f"testovaci_index = {testovaci_index}")
+    X_trenovaci = X[trenovaci_index]
+    X_testovaci = X[testovaci_index]
+    y_trenovaci = hospodarsky_vysledek[trenovaci_index]
+    y_testovaci = hospodarsky_vysledek[testovaci_index]
+    print(f"Rozměr trénovací X{X_trenovaci.shape} - rozměr testovaci X {X_testovaci.shape}")
+    print(f"Rozměr trénovací y {y_trenovaci.shape} - rozměr testovaci y {y_testovaci.shape}")
+    skalovac = MinMaxScaler()
+    model = Ridge()
+    parametry_modelu = {"model__alpha": [0.001, 0.01, 0.1, 1.0, 10.]}
+    pipe = Pipeline([("skalovac", skalovac), ("model", model)])
+    vysledny_model = GridSearchCV(pipe, parametry_modelu)
+    vysledny_model.fit(X_trenovaci, y_trenovaci)
