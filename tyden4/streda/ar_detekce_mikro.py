@@ -1,6 +1,7 @@
 from pathlib import Path
 import pandas as pd
 from statsmodels.tsa.arima.model import ARIMA
+import numpy as np
 
 #tabulka s výsledky predikcí pro jednotlivé firmy
 vysledky_predikci = pd.DataFrame(columns=["soubor", "chyba_predikce",
@@ -35,11 +36,18 @@ for soubor in Path(".", "mikro").iterdir():
     # print(AR_testovaci_data)
     # AR model
     ar_model = ARIMA(AR_trenovaci_data, order=(2, 0, 0))
-    natrenovany_model = ar_model.fit()
-    predikce = natrenovany_model.forecast(steps=1)
+    try:
+        natrenovany_model = ar_model.fit()
+        predikce = natrenovany_model.forecast(steps=1)[0]
+    except np.linalg.LinAlgError:
+        predikce = np.inf
     chyba_predikce = abs(AR_testovaci_data - predikce)
     print(f"absolutní chyba predikce: {chyba_predikce} - "
           f"očekávaná hodnota: {AR_testovaci_data} - "
           f"predikce: {predikce}")
-
-
+    relativni_chyba_predikce = (predikce - AR_testovaci_data) / (AR_testovaci_data + 1e-6)
+    novy_radek_vysledku = pd.DataFrame([[soubor.name, chyba_predikce, AR_testovaci_data,
+                                         predikce, relativni_chyba_predikce]],
+                                       columns=vysledky_predikci.columns)
+    vysledky_predikci = pd.concat([vysledky_predikci, novy_radek_vysledku])
+print(vysledky_predikci)
