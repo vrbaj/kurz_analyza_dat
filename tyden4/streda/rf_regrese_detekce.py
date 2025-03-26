@@ -2,12 +2,13 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from sklearn.linear_model import Ridge
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split, LeaveOneOut, GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 import matplotlib.pyplot as plt
+from tqdm import tqdm
 
 TYP_FIRMY = "mikro"
 X = []
@@ -51,7 +52,7 @@ sns.heatmap(pandas_features.corr(), cmap="YlGnBu")
 # print(f"Predikce {predikce}, skutečnost: {y_testovaci}")
 vysledky_predikci = []
 loo = LeaveOneOut()
-for trenovaci_index, testovaci_index in loo.split(X):
+for trenovaci_index, testovaci_index in tqdm(loo.split(X)):
     # print(f"trenovaci_index = {trenovaci_index}")
     # print(f"testovaci_index = {testovaci_index}")
     X_trenovaci = X[trenovaci_index]
@@ -62,10 +63,14 @@ for trenovaci_index, testovaci_index in loo.split(X):
     print(f"Rozměr trénovací y {y_trenovaci.shape} - rozměr testovaci y {y_testovaci.shape}")
     #skalovac = MinMaxScaler()
     skalovac = StandardScaler()
-    model = Ridge()
-    parametry_modelu = {"model__alpha": [0.001, 0.01, 0.1, 1.0, 10.]}
+    model = RandomForestRegressor(random_state=42)
+    parametry_modelu = {"model__n_estimators": [20, 50, 100],
+                        "model__max_depth": [2, 5, 10],
+                        "model__min_samples_split": [2, 3],
+                        "model__criterion": ["mse"],
+                        "model__bootstrap": [True]}
     pipe = Pipeline([("skalovac", skalovac), ("model", model)])
-    vysledny_model = GridSearchCV(pipe, parametry_modelu)
+    vysledny_model = GridSearchCV(pipe, parametry_modelu, n_jobs=-1)
     vysledny_model.fit(X_trenovaci, y_trenovaci)
     predikce = vysledny_model.predict(X_testovaci)
     vysledky_predikci.append(predikce[0])
@@ -76,8 +81,8 @@ plt.bar(indexy - sirka / 2, hospodarsky_vysledek, sirka, label="Skutečná hodno
 plt.bar(indexy + sirka / 2, vysledky_predikci, sirka, label="Predikce")
 plt.xlabel("Index firmy")
 plt.ylabel("Hodnota")
-plt.title("Porovnání predikce a skutečného HV - ridge regrese")
+plt.title("Porovnání predikce a skutečného HV - RF")
 plt.xticks(indexy, [str(i + 1) for i in range(len(vysledky_predikci))])
 plt.legend()
-plt.savefig(f"ridge_regrese_zaverky_{TYP_FIRMY}.png", dpi=300)
+plt.savefig(f"rf_regrese_zaverky_{TYP_FIRMY}.png", dpi=300)
 plt.show()

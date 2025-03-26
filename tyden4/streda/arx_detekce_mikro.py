@@ -4,7 +4,7 @@ import numpy as np
 from statsmodels.tsa.arima.model import ARIMA
 from matplotlib import pyplot as plt
 
-TYP_FIRMY = "mikro"
+TYP_FIRMY = "mala"
 #tabulka s výsledky predikcí pro jednotlivé firmy
 vysledky_predikci = pd.DataFrame(columns=["soubor", "chyba_predikce",
                                           "skutecna_hodnota", "predikovana_hodnota",
