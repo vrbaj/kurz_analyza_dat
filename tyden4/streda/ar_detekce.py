@@ -1,5 +1,6 @@
 from pathlib import Path
 import pandas as pd
+from statsmodels.tsa.arima.model import ARIMA
 
 zaverka = pd.read_excel(Path(".", "mikro", "01a.xlsx"))
 #print(zaverka.head())
@@ -23,3 +24,11 @@ print(AR_trenovaci_data)
 AR_testovaci_data = X_ar[0, -1]
 print("Testovací data pro AR model")
 print(AR_testovaci_data)
+# AR model
+ar_model = ARIMA(AR_trenovaci_data, order=(2, 0, 0))
+natrenovany_model = ar_model.fit()
+predikce = natrenovany_model.forecast(steps=1)
+chyba_predikce = abs(AR_testovaci_data - predikce)
+print(f"absolutní chyba predikce: {chyba_predikce} - "
+      f"očekávaná hodnota: {AR_testovaci_data} - "
+      f"predikce: {predikce}")
