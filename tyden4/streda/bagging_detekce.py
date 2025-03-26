@@ -13,7 +13,7 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
-TYP_FIRMY = "mala"
+TYP_FIRMY = "mikro"
 X = []
 hospodarsky_vysledek = []
 
@@ -88,7 +88,7 @@ plt.bar(indexy - sirka / 2, hospodarsky_vysledek, sirka, label="Skutečná hodno
 plt.bar(indexy + sirka / 2, vysledky_predikci, sirka, label="Predikce")
 plt.xlabel("Index firmy")
 plt.ylabel("Hodnota")
-plt.title("Porovnání predikce a skutečného HV - RF")
+plt.title("Porovnání predikce a skutečného HV - Bagging")
 plt.xticks(indexy, [str(i + 1) for i in range(len(vysledky_predikci))])
 plt.legend()
 plt.savefig(f"bagging_regrese_zaverky_{TYP_FIRMY}.png", dpi=300)
