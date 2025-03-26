@@ -3,9 +3,10 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from sklearn.linear_model import Ridge
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, LeaveOneOut, GridSearchCV
+from sklearn.pipeline import Pipeline
 from sklearn.metrics import mean_squared_error, mean_absolute_error
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 import matplotlib.pyplot as plt
 
 TYP_FIRMY = "mikro"
@@ -36,11 +37,20 @@ print(f"Velikost X po odstranění nulových features - {X.shape}")
 pandas_features = pd.DataFrame.from_records(X)
 sns.heatmap(pandas_features.corr(), cmap="YlGnBu")
 # plt.show()
-X_trenovaci, X_testovaci, y_trenovaci, y_testovaci = train_test_split(X,
-                                                                      hospodarsky_vysledek,
-                                                                      test_size = 1,
-                                                                      random_state=10)
-skalovani = MinMaxScaler()
-X_trenovaci = skalovani.fit_transform(X_trenovaci)
-X_testovaci = skalovani.transform(X_testovaci)
-print(np.max(X_trenovaci), np.min(X_trenovaci))
+# X_trenovaci, X_testovaci, y_trenovaci, y_testovaci = train_test_split(X,
+#                                                                       hospodarsky_vysledek,
+#                                                                       test_size = 1,
+#                                                                       random_state=10)
+# skalovani = StandardScaler()
+# X_trenovaci = skalovani.fit_transform(X_trenovaci)
+# X_testovaci = skalovani.transform(X_testovaci)
+# print(np.max(X_trenovaci), np.min(X_trenovaci))
+# model = Ridge(alpha=0.01)
+# model.fit(X_trenovaci, y_trenovaci)
+# predikce = model.predict(X_testovaci)
+# print(f"Predikce {predikce}, skutečnost: {y_testovaci}")
+vysledky_predikci = []
+loo = LeaveOneOut()
+for trenovaci_index, testovaci_index in loo.split(X):
+    print(f"trenovaci_index = {trenovaci_index}")
+    print(f"testovaci_index = {testovaci_index}")
