@@ -66,13 +66,15 @@ for trenovaci_index, testovaci_index in tqdm(loo.split(X)):
     #print(f"Rozměr trénovací y {y_trenovaci.shape} - rozměr testovaci y {y_testovaci.shape}")
     #skalovac = MinMaxScaler()
     skalovac = StandardScaler()
-    model = RandomForestRegressor(random_state=42)
-    parametry_modelu = {"model__n_estimators": [10, 20, 50, 100, 150, 200],
-                        "model__max_depth": [2, 3, 4, 5, 6],
-                        "model__min_samples_split": [2, 3],
-                        "model__criterion": ["squared_error"],
-                        "model__bootstrap": [True],
-                        "model__max_samples": [0.7, 0.8, 0.9, 1.]}
+    model = BaggingRegressor(random_state=42, n_jobs=-1)
+    parametry_modelu = {"model__estimator": [SVR(kernel="rbf"),
+                                             SVR(kernel="poly", degree=2),
+                                             DecisionTreeRegressor(),
+                                             Ridge()],
+                        "model__n_estimators": [5, 10, 50, 100, 300],
+                        "model__max_features": [0.1, 0.3, 0.5, 0.7, 0.9, 1.],
+                        "model__bootstrap": [True, False],
+                        "model__bootstrap_features": [True, False]}
     pipe = Pipeline([("skalovac", skalovac), ("model", model)])
     vysledny_model = GridSearchCV(pipe, parametry_modelu, n_jobs=-1)
     vysledny_model.fit(X_trenovaci, y_trenovaci)
@@ -89,5 +91,5 @@ plt.ylabel("Hodnota")
 plt.title("Porovnání predikce a skutečného HV - RF")
 plt.xticks(indexy, [str(i + 1) for i in range(len(vysledky_predikci))])
 plt.legend()
-plt.savefig(f"rf_regrese_zaverky_{TYP_FIRMY}.png", dpi=300)
+plt.savefig(f"bagging_regrese_zaverky_{TYP_FIRMY}.png", dpi=300)
 plt.show()
