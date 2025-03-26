@@ -36,7 +36,7 @@ for soubor in Path(".", TYP_FIRMY).iterdir():
     #print(EX_trenovaci_data.shape)
     model = ARIMA(AR_trenovaci_data, exog=EX_trenovaci_data.T, order=(2, 0, 0))
     try:
-        natrenovany_model = model.fit()
+        natrenovany_model = model.fit(method="burg")
         predikce = natrenovany_model.forecast(steps=1, exog=EX_testovaci_data.T)[0]
         #print(f"Predikce: {predikce}, skutečnost: {AR_testovaci_data}")
     except np.linalg.LinAlgError:
@@ -61,4 +61,5 @@ vysledky_predikci.replace(np.inf, np.nan, inplace=True)
 vysledky_predikci.dropna(inplace=True)
 vysledky_predikci.set_index("soubor")
 vysledky_predikci.plot(x="soubor", y="chyba_predikce", kind="bar")
+vysledky_predikci.to_csv(f"{TYP_FIRMY}_arx_predikce.csv")
 plt.show()
