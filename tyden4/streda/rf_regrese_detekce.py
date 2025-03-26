@@ -59,21 +59,23 @@ for trenovaci_index, testovaci_index in tqdm(loo.split(X)):
     X_testovaci = X[testovaci_index]
     y_trenovaci = hospodarsky_vysledek[trenovaci_index]
     y_testovaci = hospodarsky_vysledek[testovaci_index]
-    print(f"Rozměr trénovací X{X_trenovaci.shape} - rozměr testovaci X {X_testovaci.shape}")
-    print(f"Rozměr trénovací y {y_trenovaci.shape} - rozměr testovaci y {y_testovaci.shape}")
+    #print(f"Rozměr trénovací X{X_trenovaci.shape} - rozměr testovaci X {X_testovaci.shape}")
+    #print(f"Rozměr trénovací y {y_trenovaci.shape} - rozměr testovaci y {y_testovaci.shape}")
     #skalovac = MinMaxScaler()
     skalovac = StandardScaler()
     model = RandomForestRegressor(random_state=42)
-    parametry_modelu = {"model__n_estimators": [20, 50, 100],
-                        "model__max_depth": [2, 5, 10],
+    parametry_modelu = {"model__n_estimators": [10, 20, 50, 100, 150, 200],
+                        "model__max_depth": [2, 3, 4, 5, 6],
                         "model__min_samples_split": [2, 3],
-                        "model__criterion": ["mse"],
-                        "model__bootstrap": [True]}
+                        "model__criterion": ["squared_error"],
+                        "model__bootstrap": [True],
+                        "model__max_samples": [0.7, 0.8, 0.9, 1.]}
     pipe = Pipeline([("skalovac", skalovac), ("model", model)])
     vysledny_model = GridSearchCV(pipe, parametry_modelu, n_jobs=-1)
     vysledny_model.fit(X_trenovaci, y_trenovaci)
     predikce = vysledny_model.predict(X_testovaci)
     vysledky_predikci.append(predikce[0])
+    print(vysledny_model.best_params_)
 indexy = np.arange(len(vysledky_predikci))
 sirka = 0.4
 plt.figure()
