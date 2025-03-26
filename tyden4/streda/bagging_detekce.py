@@ -2,7 +2,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import BaggingRegressor
+from sklearn.svm import SVR
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.linear_model import Ridge
 from sklearn.model_selection import train_test_split, LeaveOneOut, GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import mean_squared_error, mean_absolute_error
