@@ -1,5 +1,7 @@
 from pathlib import Path
 import pandas as pd
+import numpy as np
+from statsmodels.tsa.arima.model import ARIMA
 
 zaverka = pd.read_excel(Path(".", "mikro", "01a.xlsx"))
 sloupce_smazat = [sloupec for sloupec in zaverka.columns if sloupec.startswith("Unnamed")]
@@ -12,3 +14,15 @@ data_pro_x = zaverka[zaverka["Nazev Polozky"].isin(["ProvozniVysledekHospodareni
 data_pro_x.drop(["Nazev Polozky"], axis=1, inplace=True)
 print(data_pro_x.head())
 # trénování ARX modelu
+X_ar = data_pro_ar.to_numpy()
+EX_ar = data_pro_x.to_numpy()
+AR_trenovaci_data = X_ar[0, 0:-1]
+EX_trenovaci_data = EX_ar[:, 0:-1]
+AR_testovaci_data = X_ar[0, -1]
+EX_testovaci_data = EX_ar[:, -1]
+print(AR_trenovaci_data.shape)
+print(EX_trenovaci_data.shape)
+model = ARIMA(AR_trenovaci_data, exog=EX_trenovaci_data.T, order=(2, 0, 0))
+natrenovany_model = model.fit()
+predikce = natrenovany_model.forecast(steps=1, exog=EX_testovaci_data.T)
+print(f"Predikce: {predikce}, skutečnost: {AR_testovaci_data}")
