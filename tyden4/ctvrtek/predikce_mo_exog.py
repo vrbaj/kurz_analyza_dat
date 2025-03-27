@@ -18,3 +18,12 @@ from statsmodels.tsa.statespace.varmax import VARMAX
 from statsmodels.tools.sm_exceptions import EstimationWarning
 
 from warnings import filterwarnings
+
+# Filtrování upozornění
+filterwarnings("ignore", category=EstimationWarning)
+
+# Stažení dat o inflaci
+soubor_inflace = Path("inflace_pro_mo.csv")
+if not soubor_inflace.exists():
+  base_url = "https://data.csu.gov.cz/api/dotaz/v1/data/vybery/"
+  kod_sady = "CEN0101CT02"
