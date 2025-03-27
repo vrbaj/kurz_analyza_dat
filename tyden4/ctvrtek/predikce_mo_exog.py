@@ -77,4 +77,17 @@ df_spotreba = df_spotreba[["MB CS", "Nafta CS"]]
 df_ceny = pd.read_excel(tabulka,sheet_name="Ceny_MN_BA", index_col=0)
 df_ceny.index = pd.to_datetime(df_ceny.index)
 df_ceny = df_ceny.resample("MS").mean()
-print(df_ceny)
+df_ceny = df_ceny.sort_index()
+
+# nacteni dat CHMI
+soubor_pocasi = Path("pocasi.csv")
+if not soubor_pocasi.exists():
+  url = ("https://opendata.chmi.cz" + 
+        "/meteorology/climate/historical/data/monthly/")
+  r = requests.get(url)
+  #print(r.text)
+  linky = re.findall(r'href=".*\.json"', r.text)
+  linky = [link.split('"')[1] for link in linky]
+  print(linky)
+
+
