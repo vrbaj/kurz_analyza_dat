@@ -109,5 +109,17 @@ else:
 pocasi_df = pocasi_df[
   ((pocasi_df["ELEMENT"]=="SRA") & (pocasi_df["MDFUNCTION"]=="SUM")) |
   ((pocasi_df["ELEMENT"]=="T") & (pocasi_df["MDFUNCTION"]=="AVG") &
-   (pocasi_df["TIMEFUCNTION"]=="AVG"))]
-
+   (pocasi_df["TIMEFUNCTION"]=="AVG"))]
+pocasi_df["datum"] = pd.to_datetime(
+  pocasi_df["YEAR"].astype(str)+ "-" + 
+  pocasi_df["MONTH"].astype(str) +"-01"
+)
+#print(pocasi_df.columns)
+pocasi_df.drop(["STATION","YEAR","MONTH","MDFUNCTION","TIMEFUNCTION"],
+               axis=1, inplace=True)
+pocasi_df = pocasi_df.groupby(["datum","ELEMENT"]).mean().reset_index()
+pocasi_df = pocasi_df.pivot(index="datum",columns="ELEMENT",
+                            values="VALUE")
+pocasi_df.sort_index(inplace=True)
+sns.lineplot(data=pocasi_df)
+plt.show()
