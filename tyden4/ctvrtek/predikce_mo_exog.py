@@ -160,7 +160,7 @@ data.plot(subplots=True)
 plt.figure()
 sns.heatmap(data.corr(), annot=True)
 
-data.to_excel("data_mo.xlsx")
+#data.to_excel("data_mo.xlsx")
 
 
 # Transformace dat aby byla stacionární
@@ -208,3 +208,17 @@ exog.dropna(inplace=True)
 for col in exog.columns:
   result = adfuller(exog[col])
   print(f"{col}: {result[1]}")
+
+# Příprava trénovacích dat
+train = endog.loc[:"2024-01-01"]
+test = endog.loc["2024-01-01":]
+
+print(train.shape, train.index[0], train.index[-1])
+print(test.shape, test.index[0], test.index[-1])
+print(exog.shape, exog.index[0], exog.index[-1])
+
+bestmse = 1e10
+for p,q,trend in tqdm(list(product(
+  range(0,6), range(0,6), ["n","c","t","ct"]
+))):
+  pass
