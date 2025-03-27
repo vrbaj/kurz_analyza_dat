@@ -217,8 +217,32 @@ print(train.shape, train.index[0], train.index[-1])
 print(test.shape, test.index[0], test.index[-1])
 print(exog.shape, exog.index[0], exog.index[-1])
 
+mses = []
 bestmse = 1e10
 for p,q,trend in tqdm(list(product(
   range(0,6), range(0,6), ["n","c","t","ct"]
 ))):
-  pass
+  try:
+    model = VARMAX(train, exog=exog.loc[train.index],
+                   order=(p,q), trend=trend, freq="QS-DEC")
+    model_fit = model.fit(
+      method="lbfgs",
+      maxiter=100
+    )
+    mse = model_fit.predict(
+      start=test.index[0], end=test.index[-1],
+      exog=exog.loc[test.index]
+    ).sub(test).pow(2).mean().mean()
+    mses.append(mse)
+    if mse < bestmse:
+      bestmse = mse
+      bestmodel = model_fit
+      bestorder = (p,q)
+      besttrend = trend
+  except Exception as e:
+    print(e)
+    mses.append(np.nan)
+
+print(f"Nejlepší mse: {bestmse:.5f}")
+print(f"Nejlepší parametry: {bestorder}, {besttrend}")
+print(mses)
