@@ -185,3 +185,26 @@ endog.dropna(inplace=True)
 for col in endog.columns:
   result = adfuller(endog[col])
   print(f"{col}: {result[1]}")
+
+# Pro exogenní data
+# mezikvartální změna (jako desetinne cislo)
+exog = exog.pct_change().dropna()
+for col in exog.columns:
+  # odstranění sezónní složky
+  dekompozice = seasonal_decompose(
+    exog[col], period=4, model="additive"
+  )
+  exog[col] = exog[col]-dekompozice.seasonal
+  if col == "HDP_cz":
+    hdp_2025 = pd.DataFrame(
+      [0.006, 0.006, 0.006, 0.006],
+      columns=["HDP_cz"],
+      index=pd.date_range("2025-01-01","2025-12-31", freq="QS-DEC")
+    )
+    exog = pd.concat([exog, hdp_2025])
+  exog[col] = exog[col].diff().dropna()
+exog.dropna(inplace=True)
+# spočtení testu stacionarity
+for col in exog.columns:
+  result = adfuller(exog[col])
+  print(f"{col}: {result[1]}")
