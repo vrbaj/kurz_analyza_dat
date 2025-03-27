@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 from io import BytesIO
 import json
+import numpy as np
 
 # url dotazu ze kterého získáme json
 url_katalog = "https://data.csu.gov.cz/api/katalog/v1/vybery"
@@ -69,3 +70,49 @@ print("------------ Role ------------")
 print(json_hi["role"])
 print("------------ Dimension -----------")
 print(json_hi["dimension"])
+print(json_hi["dimension"].keys())
+print(json_hi["dimension"]["CZCOICOP"])
+print("----------- CZCOICOP --------------")
+print(json_hi["dimension"]["CZCOICOP"].keys())
+print(json_hi["dimension"]["CZCOICOP"]["category"])
+print(json_hi["dimension"]["CZCOICOP"]["category"].keys())
+print(json_hi["dimension"]["CZCOICOP"]["category"]["label"])
+kategorie = json_hi["dimension"]["CZCOICOP"]["category"]["label"].values()
+print("-------------- Kategorie ---------------")
+print(list(kategorie))
+print("-------------- CasM --------------")
+print(json_hi["dimension"]["CasM"])
+print(json_hi["dimension"]["CasM"].keys())
+print(json_hi["dimension"]["CasM"]["category"].keys())
+print(json_hi["dimension"]["CasM"]["category"]["index"].keys())
+print("------- Sloupečky měsíce ----------")
+print(len(json_hi["dimension"]["CasM"]["category"]["index"].keys()))
+nazvy_sloupecku = list(json_hi["dimension"]["CasM"]["category"]["index"].keys())
+print(nazvy_sloupecku)
+pocet_radku = json_hi["size"][3]
+pocet_sloupcu = json_hi["size"][4]
+hodnoty_tabulky = np.array(json_hi["value"]).reshape(pocet_radku, pocet_sloupcu)
+print(hodnoty_tabulky.shape)
+print(hodnoty_tabulky)
+df = pd.DataFrame(hodnoty_tabulky, columns=nazvy_sloupecku)
+print(df.head())
+print(df.tail())
+kategorie = pd.DataFrame({"kategorie":list(kategorie)})
+print(kategorie)
+tabulka_ihc = pd.concat([kategorie, df], axis=1)
+print(tabulka_ihc.head())
+
+# čtení csv
+# url_csv = url_vybery + kod_sady + "?format=CSV"
+# csv_response = requests.get(url_csv)
+# if csv_response.status_code == 200:
+#     print(f"csv response OK: {csv_response.status_code}")
+#     with open("hisc_csv.csv", "wb") as f:
+#         f.write(csv_response.content)
+# else:
+#     print(f"csv request selhal: {csv_response.status_code}")
+hisc_pandas = pd.read_csv("hisc_csv.csv")
+print(hisc_pandas.head())
+print(hisc_pandas.columns)
+print(hisc_pandas["CZ-COICOP"].unique())
+print(hisc_pandas[["CZ-COICOP", "Měsíce", "Hodnota"]])
