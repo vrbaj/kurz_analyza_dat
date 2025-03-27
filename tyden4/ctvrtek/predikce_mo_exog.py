@@ -41,3 +41,13 @@ if not soubor_inflace.exists():
     index=(slovnik_inflace["dimension"]["CZCOICOP"]
                           ["category"]["label"].values())
   )
+
+  df_inflace = df_inflace.loc[["Úhrn","Doprava"]]
+  df_inflace.to_csv(soubor_inflace, index=False)
+else:
+  df_inflace = pd.read_csv(soubor_inflace)
+
+df_inflace = df_inflace.T
+df_inflace.index = pd.to_datetime(df_inflace.index)
+df_inflace.columns = ["Úhrn","Doprava"]
+print(df_inflace)
