@@ -64,5 +64,17 @@ df_spotreba = pd.read_excel(tabulka,
                             index_col=0)
 df_spotreba.dropna(inplace=True)
 df_spotreba.columns = ["MB CS","MB CSU", "Nafta CS", "Nafta CSU"]
-#print(((df_spotreba["MB CS"]-df_spotreba["MB CSU"])/df_spotreba["MB CS"]).max())
-df_spotreba = df_spotreba[["MB CS", "Nafta CSU"]]
+df_spotreba.index = pd.to_datetime(df_spotreba.index)
+df_spotreba = df_spotreba.loc["2010-01-01":,:]
+
+# df_spotreba_viz = df_spotreba.resample("YS").mean() # dalsi moznost je "MS" - na mesice a "QS" - kvartaly
+# relativni = (df_spotreba_viz["MB CS"]-df_spotreba_viz["MB CSU"])/df_spotreba_viz["MB CS"]
+# print(relativni)
+# relativni.plot()
+df_spotreba = df_spotreba[["MB CS", "Nafta CS"]]
+
+# Nacteni dat o cene
+df_ceny = pd.read_excel(tabulka,sheet_name="Ceny_MN_BA", index_col=0)
+df_ceny.index = pd.to_datetime(df_ceny.index)
+df_ceny = df_ceny.resample("MS").mean()
+print(df_ceny)
