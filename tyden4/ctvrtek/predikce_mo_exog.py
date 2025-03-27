@@ -28,13 +28,14 @@ if not soubor_inflace.exists():
   base_url = "https://data.csu.gov.cz/api/dotaz/v1/data/vybery/"
   kod_sady = "CEN0101CT02"
 
+  # Nacteni dat z internetu
   r = requests.get(base_url+kod_sady+"?format=JSON_STAT")
 
+  # Zpracovani dat
   slovnik_inflace = r.json()
   nazvy_sloupcu = list(
     slovnik_inflace["dimension"]["CasM"]["category"]["index"].keys()
   )
-
   df_inflace = pd.DataFrame(
     np.array(slovnik_inflace["value"]).reshape(-1,len(nazvy_sloupcu)),
     columns=nazvy_sloupcu,
@@ -47,7 +48,21 @@ if not soubor_inflace.exists():
 else:
   df_inflace = pd.read_csv(soubor_inflace)
 
+# Dostanu do formatu pro spojeni
 df_inflace = df_inflace.T
 df_inflace.index = pd.to_datetime(df_inflace.index)
 df_inflace.columns = ["Úhrn","Doprava"]
-print(df_inflace)
+#print(df_inflace)
+
+# Nacteni dat z xlsx souboru
+soubor = Path("Dataset_MO_novy.xlsx")
+tabulka = pd.ExcelFile(soubor)
+print(tabulka.sheet_names)
+
+df_spotreba = pd.read_excel(tabulka,
+                            sheet_name = "Spotreba_CS_CSU_mesic",
+                            index_col=0)
+df_spotreba.dropna(inplace=True)
+df_spotreba.columns = ["MB CS","MB CSU", "Nafta CS", "Nafta CSU"]
+#print(((df_spotreba["MB CS"]-df_spotreba["MB CSU"])/df_spotreba["MB CS"]).max())
+df_spotreba = df_spotreba[["MB CS", "Nafta CSU"]]
