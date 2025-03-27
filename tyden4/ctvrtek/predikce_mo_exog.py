@@ -122,4 +122,19 @@ pocasi_df = pocasi_df.pivot(index="datum",columns="ELEMENT",
                             values="VALUE")
 pocasi_df.sort_index(inplace=True)
 sns.lineplot(data=pocasi_df)
-plt.show()
+
+# Načtení HDP
+df_hdp = pd.read_csv("hdp.csv")
+df_hdp = df_hdp.drop(
+  ["DATAFLOW","LAST UPDATE","freq","unit",
+   "s_adj","na_item","CONF_STATUS","OBS_FLAG"],
+   axis=1
+)
+df_hdp = df_hdp.pivot(
+  index="TIME_PERIOD", columns="geo", values="OBS_VALUE"
+)
+df_hdp.index = pd.to_datetime(df_hdp.index) + pd.DateOffset(months=2)
+df_hdp.columns = ["HDP_cz", "HDP_eu"]
+df_hdp.sort_index(inplace=True)
+
+
