@@ -159,6 +159,29 @@ data = data.sort_index().dropna()
 data.plot(subplots=True)
 plt.figure()
 sns.heatmap(data.corr(), annot=True)
-plt.show()
+
+data.to_excel("data_mo.xlsx")
 
 
+# Transformace dat aby byla stacionární
+data.columns = ['MB CS','Nafta CS','Natural 95', 'MN', 
+                'SRA', 'T', 'Úhrn','Doprava', 'HDP_cz', 'HDP_eu']
+exog = data[["HDP_cz"]]
+endog = data[["MB CS", "Nafta CS", "Natural 95", "MN"]]
+
+sezoni_slozky = {}
+# mezikvartální změna (jako desetinne cislo)
+endog = endog.pct_change().dropna()
+for col in endog.columns:
+  # odstranění sezónní složky
+  dekompozice = seasonal_decompose(
+    endog[col], period=4, model="additive"
+  )
+  endog[col] = endog[col]-dekompozice.seasonal
+  sezoni_slozky[col] = dekompozice.seasonal
+  endog[col] = endog[col].diff().dropna()
+endog.dropna(inplace=True)
+# spočtení testu stacionarity
+for col in endog.columns:
+  result = adfuller(endog[col])
+  print(f"{col}: {result[1]}")
