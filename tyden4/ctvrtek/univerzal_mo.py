@@ -94,9 +94,34 @@ def vizualizace_dat(endog, exog):
              color="black")
     plt.legend()
 
+def hlavni_pipeline(endog, exog, budoucnost):
+  # 1. transformovat data - "transformace_dat"
+  # 2. rezdělit data na trénovací a testovací - v kódu
+  # 3. hledání vhodného modelu, hledáme skrz hyperparametry 
+  #       (a možná skrz modely) - TODO funkce 
+  # 4. dotrénování modelu na všech datech - v kódu
+  # 5. predikce budoucnosti - v kódu
+  # 6. zpětná transformace dat - "zpetna_transformace_dat"
+  pass
+
+def transformace_dat(endog, exog):
+  pass
+
+def zpetna_transformace_dat(endog, exog, predikce, 
+                            info_o_transformaci):
+  pass
+
+def vizualizace_predikce(predikce):
+  pass
+
+def ukladani_predikce(predikce):
+  pass
 
 ###############
 # Pořadí běhu příkazů
 exog, endog, budoucnost = nacteni_dat()
 vizualizace_dat(endog, exog)
+predikce = hlavni_pipeline(endog, exog, budoucnost)
+vizualizace_predikce(predikce)
+ukladani_predikce(predikce)
 plt.show()
