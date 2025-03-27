@@ -171,6 +171,7 @@ exog = data[["HDP_cz"]]
 endog = data[["MB CS", "Nafta CS", "Natural 95", "MN"]]
 
 sezoni_slozky = {}
+posledni_pred_diff = {}
 # mezikvartální změna (jako desetinne cislo)
 endog = endog.pct_change().dropna()
 for col in endog.columns:
@@ -180,6 +181,7 @@ for col in endog.columns:
   )
   endog[col] = endog[col]-dekompozice.seasonal
   sezoni_slozky[col] = dekompozice.seasonal
+  posledni_pred_diff[col] = endog[col].iloc[-1]
   endog[col] = endog[col].diff().dropna()
 
 endog.dropna(inplace=True)
@@ -265,12 +267,24 @@ model = VARMAX(
   freq="QS-DEC"
 )
 model_fit = model.fit(
-  method="lbfgs",
+  method="nm",
   maxiter=100,
 )
 predpoved = model_fit.get_forecast(
   steps = 4,
   exog = exog.iloc[-4:,:]
 )
-print(predpoved.predicted_mean)
+#print(predpoved.predicted_mean)
+pred = predpoved.predicted_mean
 
+for col in pred.columns:
+  pred[col].iloc[0] += posledni_pred_diff[col]
+  pred[col] = pred[col].cumsum()
+  pred[col] = pred[col] + sezoni_slozky[col][-4:].values + 1
+
+pred.iloc[0,:] = pred.iloc[0,:]*data.iloc[-1,data.columns.get_indexer(
+  pred.columns
+)]
+pred = pred.cumprod()
+print(pred)
+print(pred.sum())
