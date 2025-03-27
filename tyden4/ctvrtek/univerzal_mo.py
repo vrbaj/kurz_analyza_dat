@@ -22,11 +22,19 @@ from warnings import filterwarnings
 # Filtrování upozornění
 filterwarnings("ignore", category=EstimationWarning)
 
+###############
+# Definice funkcí
+
+def dopredikuj(endog):
+  # dopredikujeme jednotlivé sloupce 
+  # až do maximálního indexu
+  # např. SARIMA
+  return endog
+
 def nacteni_dat(nazev_souboru="data_mo.xlsx"):
   # nactu soubor
   soubor = pd.ExcelFile(nazev_souboru)
   # overeni souboru
-  print(soubor.sheet_names)
   listy_ok = all([nazev_list in ["exog","endog"] for nazev_list
                   in soubor.sheet_names])
   assert listy_ok, "Špatný formát souboru"
@@ -45,4 +53,26 @@ def nacteni_dat(nazev_souboru="data_mo.xlsx"):
   budoucnost = budoucnost[budoucnost>endog.index[-1]]
   assert len(budoucnost) > 0, "Není definované období pro predikci"
 
-nacteni_dat()
+  # overim ze data nejsou prazdna
+  assert exog.shape[0] > 0 and exog.shape[1] > 0, "Exogenní data jsou špatně"
+  assert endog.shape[0] > 0 and endog.shape[1] > 0, "Endogenní data jsou špatně"
+
+  # Do budoucnosti co by mohlo být implementováno
+  endog = dopredikuj(endog)
+
+  return exog, endog, budoucnost
+
+def vizualizace_dat(endog, exog):
+  # zobrazení všech dat v závislosti na čase
+  endog.plot(subplots=True)
+  plt.suptitle("Endogenní data")
+  plt.tight_layout()
+  exog.plot(subplots=True)
+  plt.suptitle("Exogenní data")
+  plt.tight_layout()
+
+###############
+# Pořadí běhu příkazů
+exog, endog, budoucnost = nacteni_dat()
+vizualizace_dat(endog, exog)
+plt.show()
