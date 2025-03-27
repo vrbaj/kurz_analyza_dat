@@ -137,4 +137,28 @@ df_hdp.index = pd.to_datetime(df_hdp.index) + pd.DateOffset(months=2)
 df_hdp.columns = ["HDP_cz", "HDP_eu"]
 df_hdp.sort_index(inplace=True)
 
+# Spojení všech dat
+data = pd.concat(
+  [df_spotreba, df_ceny, pocasi_df, df_inflace],
+  axis=1
+)
+
+for col in data.columns:
+  if col in ["MB CS", "Nafta CS"]:
+    resampled = data[col].resample("QS-DEC").sum()
+  elif col in ["Úhrn","Doprava"]:
+    resampled = data[col].resample("QS-DEC").last()
+  else:
+    resampled = data[col].resample("QS-DEC").mean()
+  data[col]=resampled
+data = pd.concat(
+  [data, df_hdp],
+  axis=1
+)
+data = data.sort_index().dropna()
+data.plot(subplots=True)
+plt.figure()
+sns.heatmap(data.corr(), annot=True)
+plt.show()
+
 
