@@ -145,7 +145,9 @@ data = pd.concat(
 
 for col in data.columns:
   if col in ["MB CS", "Nafta CS"]:
-    resampled = data[col].resample("QS-DEC").sum()
+    resampled = data[col].resample("QS-JAN").sum()
+    resampled = resampled["2010-06-01":]
+    resampled.index = resampled.index + pd.DateOffset(months=2)
   elif col in ["Úhrn","Doprava"]:
     resampled = data[col].resample("QS-DEC").last()
   else:
@@ -159,8 +161,7 @@ data = data.sort_index().dropna()
 data.plot(subplots=True)
 plt.figure()
 sns.heatmap(data.corr(), annot=True)
-
-#data.to_excel("data_mo.xlsx")
+data.to_excel("data_mo.xlsx")
 
 
 # Transformace dat aby byla stacionární
@@ -180,6 +181,7 @@ for col in endog.columns:
   endog[col] = endog[col]-dekompozice.seasonal
   sezoni_slozky[col] = dekompozice.seasonal
   endog[col] = endog[col].diff().dropna()
+
 endog.dropna(inplace=True)
 # spočtení testu stacionarity
 for col in endog.columns:
@@ -271,6 +273,4 @@ predpoved = model_fit.get_forecast(
   exog = exog.iloc[-4:,:]
 )
 print(predpoved.predicted_mean)
-print(exog)
-print(endog)
 
