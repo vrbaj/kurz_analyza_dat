@@ -106,3 +106,8 @@ if not soubor_pocasi.exists():
 else:
   pocasi_df = pd.read_csv(soubor_pocasi)
 
+pocasi_df = pocasi_df[
+  ((pocasi_df["ELEMENT"]=="SRA") & (pocasi_df["MDFUNCTION"]=="SUM")) |
+  ((pocasi_df["ELEMENT"]=="T") & (pocasi_df["MDFUNCTION"]=="AVG") &
+   (pocasi_df["TIMEFUCNTION"]=="AVG"))]
+
