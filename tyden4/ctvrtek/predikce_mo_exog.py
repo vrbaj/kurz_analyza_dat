@@ -88,6 +88,21 @@ if not soubor_pocasi.exists():
   #print(r.text)
   linky = re.findall(r'href=".*\.json"', r.text)
   linky = [link.split('"')[1] for link in linky]
-  print(linky)
-
+  #print(linky)
+  pocasi_df = pd.DataFrame()
+  for link in tqdm(linky):
+    r = requests.get(url+link)
+    slovnik_pocasi = r.json()
+    novy_radek = pd.DataFrame(
+      slovnik_pocasi["data"]["data"]["values"],
+      columns=slovnik_pocasi["data"]["data"]["header"].split(",")
+    )
+    novy_radek.drop(["FLAG_REPEAT","FLAG_INTERRUPTED"],
+                    axis=1, inplace=True)
+    novy_radek.dropna(inplace=True)
+    novy_radek = novy_radek[novy_radek["ELEMENT"].isin(["T","SRA"])]
+    pocasi_df = pd.concat([pocasi_df, novy_radek], ignore_index=True)
+  pocasi_df.to_csv(soubor_pocasi,index=False)
+else:
+  pocasi_df = pd.read_csv(soubor_pocasi)
 
