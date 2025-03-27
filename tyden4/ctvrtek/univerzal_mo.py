@@ -67,9 +67,33 @@ def vizualizace_dat(endog, exog):
   endog.plot(subplots=True)
   plt.suptitle("Endogenní data")
   plt.tight_layout()
+  plt.savefig("endogenni_data.png")
   exog.plot(subplots=True)
   plt.suptitle("Exogenní data")
   plt.tight_layout()
+  plt.savefig("exogenni_data.png")
+
+  # zobrazení korelační matice
+  spojena_data = pd.concat([endog,exog], axis=1).dropna()
+  plt.figure()
+  sns.heatmap(
+    spojena_data.corr(),
+    annot=True,
+  )
+  plt.title("Korelační matice pro všechna data")
+  plt.savefig("korelacni_matice.png")
+
+  for col in spojena_data.columns[2:]:
+    plt.figure() # TODO secondary axis
+    plt.title(f"{col} s predikovanými veličinami")
+    plt.plot(spojena_data[col], label=col,
+             color="yellow")
+    plt.plot(spojena_data.iloc[:,0], label=spojena_data.columns[0], 
+             color="green")
+    plt.plot(spojena_data.iloc[:,1], label=spojena_data.columns[1], 
+             color="black")
+    plt.legend()
+
 
 ###############
 # Pořadí běhu příkazů
