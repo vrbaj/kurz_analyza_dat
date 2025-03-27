@@ -221,7 +221,9 @@ mses = []
 bestmse = 1e10
 for p,q,trend in tqdm(list(product(
   range(0,6), range(0,6), ["n","c","t","ct"]
+  # [3], [5], ["n"]
 ))):
+  break # pro testovani skriptu vypnuto
   try:
     model = VARMAX(train, exog=exog.loc[train.index],
                    order=(p,q), trend=trend, freq="QS-DEC")
@@ -243,6 +245,32 @@ for p,q,trend in tqdm(list(product(
     print(e)
     mses.append(np.nan)
 
+# pro usporu rychlosti
+bestmse = 0.028
+bestorder = (3,5)
+besttrend = "n"
+
 print(f"Nejlepší mse: {bestmse:.5f}")
 print(f"Nejlepší parametry: {bestorder}, {besttrend}")
 print(mses)
+
+# Natrénování modelu po identifikaci optimálních parametrů
+model = VARMAX(
+  endog,
+  exog = exog.loc[endog.index],
+  order = bestorder,
+  trend = besttrend,
+  freq="QS-DEC"
+)
+model_fit = model.fit(
+  method="lbfgs",
+  maxiter=100,
+)
+predpoved = model_fit.get_forecast(
+  steps = 4,
+  exog = exog.iloc[-4:,:]
+)
+print(predpoved.predicted_mean)
+print(exog)
+print(endog)
+
