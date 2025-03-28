@@ -76,7 +76,7 @@ else:
 
     # vykreslení dat
     data_df.plot(subplots=True)
-    plt.show()
+    plt.suptitle("Data před interpolací")
 
     # interpolace
     data_df = data_df.interpolate()
@@ -86,4 +86,12 @@ else:
     data_df["Ropa Brent"] = data_df["Ropa Brent"].bfill()
     print("---------- Chybějící data po zpětném vyplnění ----------")
     print(tabulate(pd.isna(data_df).sum().reset_index(), headers="keys"))
+    cesta_csv = cesta_k_souboru.stem + ".csv"
+    cesta_excel = cesta_k_souboru.stem + ".xlsx"
+    data_df.to_csv(cesta_csv)
+    data_df.to_excel(cesta_excel)
 
+    # vykreslení po interpolaci
+    data_df.plot(subplots=True)
+    plt.suptitle("Data po interpolaci")
+    plt.show()
