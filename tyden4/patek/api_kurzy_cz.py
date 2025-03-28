@@ -70,3 +70,20 @@ else:
     # pozor, chybí ceny ropy Brent
     print("----- Počet chybějících hodnot ---------")
     print(tabulate(pd.isna(data_df).sum().reset_index(), headers="keys"))
+    # vytiskneme si řádky s chybějící
+    print("-------- Řádky s chybějící hodnotou ----------")
+    print(tabulate(data_df[pd.isna(data_df["Benzín CZ"])].head(20)))
+
+    # vykreslení dat
+    data_df.plot(subplots=True)
+    plt.show()
+
+    # interpolace
+    data_df = data_df.interpolate()
+    print("---------- Chybějící data po interpolaci ----------")
+    print(tabulate(pd.isna(data_df).sum().reset_index(), headers="keys"))
+    # zpětné vyplnění
+    data_df["Ropa Brent"] = data_df["Ropa Brent"].bfill()
+    print("---------- Chybějící data po zpětném vyplnění ----------")
+    print(tabulate(pd.isna(data_df).sum().reset_index(), headers="keys"))
+
