@@ -34,3 +34,39 @@ if cesta_neexistuje:
     else:
         print(f"Request selhal, kód: {r.status_code}")
         raise "Skript ukončen, data nestažena"
+else:
+    print(f"Soubor {cesta_k_souboru.name} existuje")
+    with open(cesta_k_souboru, "r") as f:
+        data_json = json.load(f)
+    print(type(data_json))
+    # data jsou seznam
+    # print(data_json[0])
+    # seznam obsahuje slovníky
+    print(type(data_json[0]))
+    # položky slovníku
+    print(data_json[0].keys())
+    print("--------- Položky slovníky - hodnoty -----------")
+    for klic, hodnota in data_json[0].items():
+        print(f"{klic} - {hodnota}")
+
+    seznam_tabulek = []
+    for data_komodita in data_json:
+        seznam_tabulek.append(pd.json_normalize(data_komodita["data"]))
+        # print(seznam_tabulek[0].columns)
+        # print(seznam_tabulek[0].head())
+        # změníme sloupec den na datum
+        seznam_tabulek[-1]["den"] = pd.to_datetime(seznam_tabulek[-1]["den"])
+        # vytvoření index pro sloučení tabulek
+        seznam_tabulek[-1].set_index("den", inplace=True)
+        # zbavíme se sloupečku mena
+        seznam_tabulek[-1].drop(columns=["mena"], inplace=True)
+        nazev_komodity = data_komodita["nazev"]
+        seznam_tabulek[-1].rename(columns={"hodnota": nazev_komodity}, inplace=True)
+        print(seznam_tabulek[-1].columns)
+    # sloučení tabulek
+    data_df = pd.concat(seznam_tabulek, axis=1)
+    print("------------ Info o sloučené tabulce ---------------")
+    print(data_df.info())
+    # pozor, chybí ceny ropy Brent
+    print("----- Počet chybějících hodnot ---------")
+    print(tabulate(pd.isna(data_df).sum().reset_index(), headers="keys"))
