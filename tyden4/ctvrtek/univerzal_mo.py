@@ -96,8 +96,25 @@ def vizualizace_dat(endog, exog):
 
 
 def hlavni_pipeline(endog, exog, budoucnost):
-  # 1. transformovat data - "transformace_dat"
-  # 2. rezdělit data na trénovací a testovací - v kódu
+  # covidova data filtrace
+  covid_index = endog.index
+  covid_index = covid_index[(
+    (covid_index >= "2020-01-01") &
+    (covid_index <= "2022-12-31")
+  )]
+
+  # 1. transformovat data
+  trenovaci_data = pd.concat([
+    exog, endog.iloc[:, 2:],
+    axis=1
+  ])
+  for col in endog.columns[:2]:
+    for i in range(1,5):
+      trenovaci_data[f"{col}_{i}"]= endog[col].shift(i)
+  trenovaci_data = trenovaci_data.dropna()
+
+  # 2. rezdělit data na trénovací a testovací
+
   # 3. hledání vhodného modelu, hledáme skrz hyperparametry 
   #       (a možná skrz modely) - TODO funkce 
   # 4. dotrénování modelu na všech datech - v kódu

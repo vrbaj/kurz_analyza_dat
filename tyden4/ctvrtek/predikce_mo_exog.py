@@ -267,8 +267,8 @@ model = VARMAX(
   freq="QS-DEC"
 )
 model_fit = model.fit(
-  method="nm",
-  maxiter=100,
+  method="lbfgs",
+  maxiter=400,
 )
 predpoved = model_fit.get_forecast(
   steps = 4,
