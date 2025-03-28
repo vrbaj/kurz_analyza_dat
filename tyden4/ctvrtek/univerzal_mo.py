@@ -159,14 +159,43 @@ def hlavni_pipeline(endog, exog, budoucnost):
     if mse < best_mse:
       best_mse = mse
       best_model = model
+      predikce_val = predikce_df
   print(f"Nejlepší model s MSE: {best_mse}")
   print(best_model)
 
-
   # 4. dotrénování modelu na všech datech - v kódu
+  indexy = trenovaci_data.index
+  indexy = indexy[~indexy.isin(covid_index)]
+
+  best_model.fit(
+    trenovaci_data.loc[indexy[1:] - pd.DateOffset(months=3)],
+    endog.loc[indexy[1:]]
+  )
+
+
   # 5. predikce budoucnosti - v kódu
-  # 6. zpětná transformace dat - "zpetna_tr#       (a možná skrz modely) - TODO funkce ansformace_dat"
-  pass
+  predikce_df = pd.DataFrame(index=budoucnost, columns=endog.columns)
+  predikcni_data = trenovaci_data
+  for timestep in budoucnost:
+    predikce = best_model.predict(
+      predikcni_data.loc[[timestep-pd.DateOffset(months=3)]]
+    )
+    predikce_df.loc[timestep] = predikce
+    # doplnim si data pro dalsi predikci
+    predikcni_data.loc[timestep] = exog.loc[timestep]
+    if len(endog.columns) > 2:
+      predikcni_data.loc[timestep, endog.columns[2:]] = predikce_df.loc[timestep, endog.columns[2:]] 
+    for col in endog.columns[:2]:
+      for i in range(1,5):
+        if i == 1:
+          predikcni_data.loc[timestep, f"{col}_{i}"] = predikce_df.loc[timestep, col]
+        else:
+          predikcni_data.loc[timestep, f"{col}_{i}"] = \
+            predikcni_data.loc[timestep-pd.DateOffset(months=3), f"{col}_{i-1}"]
+    
+  # 6. zpětná transformace dat
+  # -> není potřeba, protože se transformace dat neprovádí
+  return predikce_df, predikce_val
 
 def transformace_dat(endog, exog):
   pass
