@@ -213,7 +213,11 @@ def vizualizace_predikce(predikce, predikce_val, endog, exog):
     plt.savefig(f"predikce_{col}.png")
 
 def ukladani_predikce(predikce, endog, exog):
-  pass
+  # ulozeni dat
+  with pd.ExcelWriter("predikce.xlsx") as soubor:
+    exog.to_excel(soubor, sheet_name="exog")
+    endog.to_excel(soubor, sheet_name="endog")
+    predikce.to_excel(soubor, sheet_name="predikce")
 
 ###############
 # Pořadí běhu příkazů
