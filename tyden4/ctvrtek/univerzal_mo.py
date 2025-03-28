@@ -119,33 +119,35 @@ def hlavni_pipeline(endog, exog, budoucnost):
   train_index = trenovaci_data.index[:-len(budoucnost)]
   test_index = trenovaci_data.index[-len(budoucnost):]
   train_index = train_index[~train_index.isin(covid_index)]
-  test_index = test_index[~train_index.isin(covid_index)]
+  test_index = test_index[~test_index.isin(covid_index)]
 
   # 3. hledání vhodného modelu, hledáme skrz hyperparametry 
   best_mse = np.inf
   for alpha in [0, 1e-2, 1e-1, 1, 1e1, 1e2]:
     model = Ridge(alpha=alpha)
     model.fit(
-      trenovaci_data.loc[train_index[1: - pd.DateOffset(months=3)]],
+      trenovaci_data.loc[train_index[1:] - pd.DateOffset(months=3)],
       endog.loc[train_index[1:]]
     )
 
     predikce_df = pd.DataFrame(index=test_index, columns=endog.columns)
     predikcni_data = trenovaci_data.loc[train_index]
+
     for timestep in test_index:
       # predikce pro každý timestep
+      print(predikcni_data.loc[[timestep-pd.DateOffset(months=3)]])
       predikce = model.predict(predikcni_data.loc[[timestep-pd.DateOffset(months=3)]])
       predikce_df.loc[timestep] = predikce
 
       # doplnim si data pro další predikci
-      predikcni_data.loc[timestep] = predikce.loc[timestep,:]
+      predikcni_data.loc[timestep] = predikce_df.loc[timestep,:]
+      predikcni_data.loc[timestep] = exog.loc[timestep]
       if len(endog.columns) > 2:
         predikcni_data.loc[timestep, endog.columns[2:]] = endog.loc[timestep, endog.columns[2:]]
-      
       for col in endog.columns[:2]:
         for i in range(1,5):
           if i == 1:
-            predikcni_data.loc[timestep, f"{col}_{i}"] = predikce.loc[timestep, col]
+            predikcni_data.loc[timestep, f"{col}_{i}"] = predikce_df.loc[timestep, col]
           else:
             predikcni_data.loc[timestep, f"{col}_{i}"] = \
               predikcni_data.loc[timestep-pd.DateOffset(months=3), f"{col}_{i-1}"]
