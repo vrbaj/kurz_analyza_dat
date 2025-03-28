@@ -17,6 +17,8 @@ from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.statespace.varmax import VARMAX
 from statsmodels.tools.sm_exceptions import EstimationWarning
 
+from sklearn.linear_model import Ridge
+
 from warnings import filterwarnings
 
 # Filtrování upozornění
@@ -100,26 +102,64 @@ def hlavni_pipeline(endog, exog, budoucnost):
   covid_index = endog.index
   covid_index = covid_index[(
     (covid_index >= "2020-01-01") &
-    (covid_index <= "2022-12-31")
+    (covid_index <= "2021-12-31")
   )]
 
   # 1. transformovat data
-  trenovaci_data = pd.concat([
-    exog, endog.iloc[:, 2:],
+  trenovaci_data = pd.concat(
+    [exog, endog.iloc[:, 2:]],
     axis=1
-  ])
+  )
   for col in endog.columns[:2]:
     for i in range(1,5):
       trenovaci_data[f"{col}_{i}"]= endog[col].shift(i)
   trenovaci_data = trenovaci_data.dropna()
 
   # 2. rezdělit data na trénovací a testovací
+  train_index = trenovaci_data.index[:-len(budoucnost)]
+  test_index = trenovaci_data.index[-len(budoucnost):]
+  train_index = train_index[~train_index.isin(covid_index)]
+  test_index = test_index[~train_index.isin(covid_index)]
 
   # 3. hledání vhodného modelu, hledáme skrz hyperparametry 
-  #       (a možná skrz modely) - TODO funkce 
+  best_mse = np.inf
+  for alpha in [0, 1e-2, 1e-1, 1, 1e1, 1e2]:
+    model = Ridge(alpha=alpha)
+    model.fit(
+      trenovaci_data.loc[train_index[1: - pd.DateOffset(months=3)]],
+      endog.loc[train_index[1:]]
+    )
+
+    predikce_df = pd.DataFrame(index=test_index, columns=endog.columns)
+    predikcni_data = trenovaci_data.loc[train_index]
+    for timestep in test_index:
+      # predikce pro každý timestep
+      predikce = model.predict(predikcni_data.loc[[timestep-pd.DateOffset(months=3)]])
+      predikce_df.loc[timestep] = predikce
+
+      # doplnim si data pro další predikci
+      predikcni_data.loc[timestep] = predikce.loc[timestep,:]
+      if len(endog.columns) > 2:
+        predikcni_data.loc[timestep, endog.columns[2:]] = endog.loc[timestep, endog.columns[2:]]
+      
+      for col in endog.columns[:2]:
+        for i in range(1,5):
+          if i == 1:
+            predikcni_data.loc[timestep, f"{col}_{i}"] = predikce.loc[timestep, col]
+          else:
+            predikcni_data.loc[timestep, f"{col}_{i}"] = \
+              predikcni_data.loc[timestep-pd.DateOffset(months=3), f"{col}_{i-1}"]
+      # vyhodnoceni predikce
+      mse = np.mean(
+        ((predikce_df.loc[test_index, endog.columns[:2]]) - \
+        (endog.loc[test_index, endog.columns[:2]]))**2
+      )
+      
+
+
   # 4. dotrénování modelu na všech datech - v kódu
   # 5. predikce budoucnosti - v kódu
-  # 6. zpětná transformace dat - "zpetna_transformace_dat"
+  # 6. zpětná transformace dat - "zpetna_tr#       (a možná skrz modely) - TODO funkce ansformace_dat"
   pass
 
 def transformace_dat(endog, exog):
