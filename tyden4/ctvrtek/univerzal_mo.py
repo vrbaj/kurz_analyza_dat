@@ -84,15 +84,16 @@ def vizualizace_dat(endog, exog):
   plt.savefig("korelacni_matice.png")
 
   for col in spojena_data.columns[2:]:
-    plt.figure() # TODO secondary axis
-    plt.title(f"{col} s predikovanými veličinami")
-    plt.plot(spojena_data[col], label=col,
-             color="yellow")
-    plt.plot(spojena_data.iloc[:,0], label=spojena_data.columns[0], 
-             color="green")
-    plt.plot(spojena_data.iloc[:,1], label=spojena_data.columns[1], 
-             color="black")
-    plt.legend()
+    plt.figure()
+    spojena_data[col].plot(label=col, color="yellow", legend=True)
+    spojena_data.iloc[:,0].plot(label=spojena_data.columns[0],
+                                color="green", secondary_y=True, legend=True)
+    spojena_data.iloc[:,1].plot(label=spojena_data.columns[1],
+                                color="black", secondary_y=True, legend=True)
+    plt.title(f"Graf pro {col} a predikované sloupce")
+    plt.tight_layout()
+    plt.savefig(f"graf_{col}.png")
+
 
 def hlavni_pipeline(endog, exog, budoucnost):
   # 1. transformovat data - "transformace_dat"
