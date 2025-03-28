@@ -135,7 +135,7 @@ def hlavni_pipeline(endog, exog, budoucnost):
 
     for timestep in test_index:
       # predikce pro každý timestep
-      print(predikcni_data.loc[[timestep-pd.DateOffset(months=3)]])
+      #print(predikcni_data.loc[[timestep-pd.DateOffset(months=3)]])
       predikce = model.predict(predikcni_data.loc[[timestep-pd.DateOffset(months=3)]])
       predikce_df.loc[timestep] = predikce
 
@@ -197,24 +197,29 @@ def hlavni_pipeline(endog, exog, budoucnost):
   # -> není potřeba, protože se transformace dat neprovádí
   return predikce_df, predikce_val
 
-def transformace_dat(endog, exog):
-  pass
+def vizualizace_predikce(predikce, predikce_val, endog, exog):
+  for col in endog.columns[:2]:
+    plt.figure()
+    # vizualizace predikce_val
+    predikce_val[col].plot(label="predikce", color="black", legend=True, linestyle="--")
+    # skutecnost
+    endog[col].plot(label="Realna data", color="blue", legend=True)
+    # vizualizace budoucnosti (oos predikce)
+    predikce[col].plot(label="Predikce do budoucnosti", color="red", legend=True,
+                       linestyle="--", marker="x")
+    # zbytek
+    plt.suptitle(f"Predikce pro {col}")
+    plt.tight_layout()
+    plt.savefig(f"predikce_{col}.png")
 
-def zpetna_transformace_dat(endog, exog, predikce, 
-                            info_o_transformaci):
-  pass
-
-def vizualizace_predikce(predikce):
-  pass
-
-def ukladani_predikce(predikce):
+def ukladani_predikce(predikce, endog, exog):
   pass
 
 ###############
 # Pořadí běhu příkazů
 exog, endog, budoucnost = nacteni_dat()
 vizualizace_dat(endog, exog)
-predikce = hlavni_pipeline(endog, exog, budoucnost)
-vizualizace_predikce(predikce)
-ukladani_predikce(predikce)
+predikce, predikce_val = hlavni_pipeline(endog, exog, budoucnost)
+vizualizace_predikce(predikce, predikce_val, endog, exog)
+ukladani_predikce(predikce, endog, exog)
 plt.show()
