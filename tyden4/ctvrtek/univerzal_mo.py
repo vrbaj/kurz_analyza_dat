@@ -149,12 +149,16 @@ def hlavni_pipeline(endog, exog, budoucnost):
           else:
             predikcni_data.loc[timestep, f"{col}_{i}"] = \
               predikcni_data.loc[timestep-pd.DateOffset(months=3), f"{col}_{i-1}"]
-      # vyhodnoceni predikce
-      mse = np.mean(
-        ((predikce_df.loc[test_index, endog.columns[:2]]) - \
-        (endog.loc[test_index, endog.columns[:2]]))**2
-      )
-      
+    # vyhodnoceni predikce
+    mse = np.mean(
+      ((predikce_df.loc[test_index, endog.columns[:2]]) - \
+      (endog.loc[test_index, endog.columns[:2]]))**2
+    )
+    if mse < best_mse:
+      best_mse = mse
+      best_model = model
+  print(f"Nejlepší model s MSE: {best_mse}")
+  print(best_model)
 
 
   # 4. dotrénování modelu na všech datech - v kódu
