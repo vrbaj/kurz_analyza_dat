@@ -4,7 +4,7 @@ import numpy as np
 from statsmodels.tsa.arima.model import ARIMA
 from matplotlib import pyplot as plt
 
-TYP_FIRMY = "mala"
+TYP_FIRMY = "mikro"
 #tabulka s výsledky predikcí pro jednotlivé firmy
 vysledky_predikci = pd.DataFrame(columns=["soubor", "chyba_predikce",
                                           "skutecna_hodnota", "predikovana_hodnota",
@@ -36,7 +36,7 @@ for soubor in Path(".", TYP_FIRMY).iterdir():
     #print(EX_trenovaci_data.shape)
     model = ARIMA(AR_trenovaci_data, exog=EX_trenovaci_data.T, order=(2, 0, 0))
     try:
-        natrenovany_model = model.fit(method="burg")
+        natrenovany_model = model.fit()
         predikce = natrenovany_model.forecast(steps=1, exog=EX_testovaci_data.T)[0]
         #print(f"Predikce: {predikce}, skutečnost: {AR_testovaci_data}")
     except np.linalg.LinAlgError:
