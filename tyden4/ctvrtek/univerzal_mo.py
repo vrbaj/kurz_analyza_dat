@@ -111,8 +111,8 @@ def hlavni_pipeline(endog, exog, budoucnost):
     axis=1
   )
   for col in endog.columns[:2]:
-    for i in range(1,5):
-      trenovaci_data[f"{col}_{i}"]= endog[col].shift(i)
+    for i in range(0,4):
+      trenovaci_data[f"{col}_ti-{i}"]= endog[col].shift(i)
   trenovaci_data = trenovaci_data.dropna()
 
   # 2. rezdělit data na trénovací a testovací
@@ -145,12 +145,12 @@ def hlavni_pipeline(endog, exog, budoucnost):
       if len(endog.columns) > 2:
         predikcni_data.loc[timestep, endog.columns[2:]] = endog.loc[timestep, endog.columns[2:]]
       for col in endog.columns[:2]:
-        for i in range(1,5):
-          if i == 1:
-            predikcni_data.loc[timestep, f"{col}_{i}"] = predikce_df.loc[timestep, col]
+        for i in range(0,4):
+          if i == 0:
+            predikcni_data.loc[timestep, f"{col}_ti-{i}"] = predikce_df.loc[timestep, col]
           else:
-            predikcni_data.loc[timestep, f"{col}_{i}"] = \
-              predikcni_data.loc[timestep-pd.DateOffset(months=3), f"{col}_{i-1}"]
+            predikcni_data.loc[timestep, f"{col}_ti-{i}"] = \
+              predikcni_data.loc[timestep-pd.DateOffset(months=3), f"{col}_ti-{i-1}"]
     # vyhodnoceni predikce
     mse = np.mean(
       ((predikce_df.loc[test_index, endog.columns[:2]]) - \
@@ -186,15 +186,20 @@ def hlavni_pipeline(endog, exog, budoucnost):
     if len(endog.columns) > 2:
       predikcni_data.loc[timestep, endog.columns[2:]] = predikce_df.loc[timestep, endog.columns[2:]] 
     for col in endog.columns[:2]:
-      for i in range(1,5):
-        if i == 1:
-          predikcni_data.loc[timestep, f"{col}_{i}"] = predikce_df.loc[timestep, col]
-        else:
-          predikcni_data.loc[timestep, f"{col}_{i}"] = \
-            predikcni_data.loc[timestep-pd.DateOffset(months=3), f"{col}_{i-1}"]
+      for i in range(0,4):
+          if i == 0:
+            predikcni_data.loc[timestep, f"{col}_ti-{i}"] = predikce_df.loc[timestep, col]
+          else:
+            predikcni_data.loc[timestep, f"{col}_ti-{i}"] = \
+              predikcni_data.loc[timestep-pd.DateOffset(months=3), f"{col}_ti-{i-1}"]
     
   # 6. zpětná transformace dat
   # -> není potřeba, protože se transformace dat neprovádí
+  print("#"*64)
+  print("Predikce:")
+  print(predikce_df)
+  print("Celkem:")
+  print(predikce_df.sum(axis=0).to_string())
   return predikce_df, predikce_val
 
 def vizualizace_predikce(predikce, predikce_val, endog, exog):
