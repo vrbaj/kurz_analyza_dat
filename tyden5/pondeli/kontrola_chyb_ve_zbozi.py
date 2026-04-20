@@ -63,4 +63,9 @@ povolene[sloupce_povolene] = povolene[sloupce_povolene].astype("Int64", errors="
 # Levy join tabulky povolene na tabulku data
 sparovane_tabulky = data.merge(povolene, on=["cAuditAction", "ccommodity"], how="left", indicator=True)
 
-print(tabulate(sparovane_tabulky.head(20), headers="keys", tablefmt="psql"))
+# Zachovame radky, ktere predstavuji nepovolene kombinace
+filtr = sparovane_tabulky["_merge"] == "left_only"
+nepovolene = sparovane_tabulky[filtr].copy()
+nepovolene.drop(columns=["_merge"], inplace=True)
+
+print(tabulate(nepovolene.head(20), headers="keys", tablefmt="psql"))
