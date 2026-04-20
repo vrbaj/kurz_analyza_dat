@@ -40,4 +40,9 @@ def stahni_data():
 
 # Nacteni hlavnich dat
 data_vse = stahni_data()
+
+# Sjednoceni datovych typu u ciselnych typu na integer (cele cislo)
+sloupce_data = ["crecord", "cAuditAction", "ccommodity"]
+data_vse[sloupce_data] = data_vse[sloupce_data].astype("Int64", errors="raise")
+
 print(tabulate(data_vse.head(), headers="keys", tablefmt="psql"))
