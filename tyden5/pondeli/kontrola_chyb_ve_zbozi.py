@@ -22,4 +22,13 @@ def stahni_data():
             "TrustServerCertificate=yes;"
         )
 
+        # Nacteni vlastni query
+        query_cesta = Path("sql_query", "poruseni_s_vybranymi_cinnostmi.sql")
+        query = query_cesta.read_text()
+        data_vse = pd.read_sql(query, conn)
+
+        # Ulozeni souboru
+        data_vse.to_csv(cesta_data, index=False, encoding="utf-8", sep=";")
+
+
 stahni_data()
