@@ -75,5 +75,13 @@ nepovolene.dropna(inplace=True)
 filtr = nepovolene["cAuditAction"].isin(povolene["cAuditAction"])
 nepovolene = nepovolene[filtr].copy()
 
-print(nepovolene.shape)
-print(tabulate(nepovolene.head(20), headers="keys", tablefmt="psql"))
+# Zobrazeni poctu kontrol pro kazdou z KC, kde je vyplneny neocekavany typ zbozi
+nepovolene_pocty = (
+    nepovolene.groupby(["cAuditAction", "AuditActionName"])
+              .size()
+              .sort_values(ascending=False)
+              .reset_index(name="pocet")
+)
+
+print(nepovolene_pocty.shape)
+print(tabulate(nepovolene_pocty, headers="keys", tablefmt="psql"))
