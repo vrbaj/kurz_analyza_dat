@@ -23,4 +23,13 @@ povolene_znaky = set("ABCDEFHIJKLMNPRSTUVXYZ0123456789")
 data["je_validni"] = data.apply(lambda x: x["je_validni"] if \
             set(x["RZ"]).union(povolene_znaky) == povolene_znaky else False, axis=1)
 
-print(tabulate(data, headers="keys", tablefmt="psql"))
+# Kontrola, ze znacka obsahuje alespon jednu cislici
+cislice = set([str(x) for x in range(10)])
+data["je_validni"] = data.apply(lambda x: x["je_validni"] if \
+            len(set(x["RZ"]).intersection(cislice)) > 0 else False, axis=1)
+
+print("Validni formaty")
+print(tabulate(data[data["je_validni"] == True], headers="keys", tablefmt="psql"))
+
+print("Nevhodne formaty")
+print(tabulate(data[data["je_validni"] == False], headers="keys", tablefmt="psql"))
