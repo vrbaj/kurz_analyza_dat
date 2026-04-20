@@ -16,7 +16,7 @@ def stahni_data():
         # Konektor na databazi
         conn = pyodbc.connect(
             "DRIVER={ODBC Driver 18 for SQL Server};"
-            "SERVER=(localdb)\\MSSQLLocalDB;"
+            "SERVER=10.2.35.17;"
             "DATABASE=MD2_VSCHT;"
             "Trusted_Connection=yes;"
             "TrustServerCertificate=yes;"
