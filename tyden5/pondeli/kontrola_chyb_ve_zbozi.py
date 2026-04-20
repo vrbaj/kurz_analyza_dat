@@ -137,3 +137,14 @@ print("#" * 150)
 print("Kontroly s nevyplnenym typem zbozi")
 print(nevyplnene.shape)
 print(tabulate(nevyplnene.head(20), headers="keys", tablefmt="psql"))
+
+# Relativni cetnosti KC, kde neni vyplnen typ zbozi
+problematicke = nevyplnene.groupby("cAuditAction").size().rename("problematicke")
+relativni_cetnosti = pd.concat([nazvy, celkove_pocty, problematicke], axis=1)
+relativni_cetnosti["relativni_pocty"] = relativni_cetnosti["relativni_pocty"].fillna(0)
+relativni_cetnosti["pomer"] = relativni_cetnosti["problematicke"] / relativni_cetnosti["celkem"]
+relativni_cetnosti.sort_values("pomer", ascending=False, inplace=True)
+
+print("#" * 150)
+print("Relativni cetnosti nevyplneneho typu zbozi u jednotlivych KC")
+print(tabulate(relativni_cetnosti, headers="keys", tablefmt="psql"))
