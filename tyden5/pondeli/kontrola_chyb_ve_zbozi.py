@@ -53,4 +53,14 @@ data = data_vse # rozhodli jsme se duplicity zachovat
 povolene = pd.read_excel("odhalovani_vad.xlsx", sheet_name="MDX_Commodity x MDx_AuditAction") \
     [["cCommodity", "cAuditAction"]]
 
-print(tabulate(povolene, headers="keys", tablefmt="psql"))
+# Sjednoceni nazvu sloupce ccommodity
+povolene.rename(columns={"cCommodity": "ccommodity"}, inplace=True)
+
+# Sjednoceni datovych typu pro oba sloupce
+sloupce_povolene = ["ccommodity", "cAuditAction"]
+povolene[sloupce_povolene] = povolene[sloupce_povolene].astype("Int64", errors="raise")
+
+# Levy join tabulky povolene na tabulku data
+sparovane_tabulky = data.merge(povolene, on=["cAuditAction", "ccommodity"], how="left", indicator=True)
+
+print(tabulate(sparovane_tabulky.head(20), headers="keys", tablefmt="psql"))
