@@ -141,7 +141,7 @@ print(tabulate(nevyplnene.head(20), headers="keys", tablefmt="psql"))
 # Relativni cetnosti KC, kde neni vyplnen typ zbozi
 problematicke = nevyplnene.groupby("cAuditAction").size().rename("problematicke")
 relativni_cetnosti = pd.concat([nazvy, celkove_pocty, problematicke], axis=1)
-relativni_cetnosti["relativni_pocty"] = relativni_cetnosti["relativni_pocty"].fillna(0)
+relativni_cetnosti["problematicke"] = relativni_cetnosti["problematicke"].fillna(0)
 relativni_cetnosti["pomer"] = relativni_cetnosti["problematicke"] / relativni_cetnosti["celkem"]
 relativni_cetnosti.sort_values("pomer", ascending=False, inplace=True)
 
