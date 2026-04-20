@@ -83,5 +83,19 @@ nepovolene_pocty = (
               .reset_index(name="pocet")
 )
 
+print("#" * 150)
+print("Vyskyty kontrolnich cinnosti s neocekavanym typem zbozi")
 print(nepovolene_pocty.shape)
 print(tabulate(nepovolene_pocty, headers="keys", tablefmt="psql"))
+
+# Nejcasteji se vyskytujici neobvykle kombinace KC a typu zbozi
+nepovolene_kombinace = (
+    nepovolene.groupby(["cAuditAction", "AuditActionName", "ccommodity", "CommodityName"])
+              .size()
+              .sort_values(ascending=False)
+              .reset_index(name="pocet")
+)
+
+print("#" * 150)
+print("Nejcastejsi vyskyty neobvyklych kombinaci KC - typ zbozi")
+print(tabulate(nepovolene_kombinace, headers="keys", tablefmt="psql"))
