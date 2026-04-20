@@ -130,8 +130,8 @@ print(tabulate(relativni_cetnosti, headers="keys", tablefmt="psql"))
 filtr = (data["ccommodity"].isnull()) & (data["cAuditAction"].isin(povolene["cAuditAction"]))
 nevyplnene = data[filtr].copy()
 
-# Odfiltrovani vsech KC s cAuditAction 1, 13
-nevyplnene = nevyplnene[~nevyplnene["cAuditAction"].isin([1, 13])]
+# Odfiltrovani vsech KC s cAuditAction 1, 13, 83
+nevyplnene = nevyplnene[~nevyplnene["cAuditAction"].isin([1, 13, 83])]
 
 print("#" * 150)
 print("Kontroly s nevyplnenym typem zbozi")
