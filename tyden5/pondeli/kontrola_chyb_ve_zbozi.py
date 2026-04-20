@@ -45,4 +45,12 @@ data_vse = stahni_data()
 sloupce_data = ["crecord", "cAuditAction", "ccommodity"]
 data_vse[sloupce_data] = data_vse[sloupce_data].astype("Int64", errors="raise")
 
-print(tabulate(data_vse.head(), headers="keys", tablefmt="psql"))
+# Odstraneni duplicit v kombinaci crecord - cAuditAction - ccommodity
+# data = data_vse.drop_duplicates(subset=["ccrecord", "cAuditAction", "ccommodity"])
+data = data_vse # rozhodli jsme se duplicity zachovat
+
+# Nacteni excelovske tabulky s povolenymi kombinacemi KC a typu zbozi
+povolene = pd.read_excel("odhalovani_vad.xlsx", sheet_name="MDX_Commodity x MDx_AuditAction") \
+    [["cCommodity", "cAuditAction"]]
+
+print(tabulate(povolene, headers="keys", tablefmt="psql"))
