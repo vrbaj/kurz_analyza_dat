@@ -99,3 +99,27 @@ nepovolene_kombinace = (
 print("#" * 150)
 print("Nejcastejsi vyskyty neobvyklych kombinaci KC - typ zbozi")
 print(tabulate(nepovolene_kombinace, headers="keys", tablefmt="psql"))
+
+# Relativni pocty cinnosti s neobvyklym typem zbozi
+# Sloupec s nazvem cinnosti a cislem KC jako indexem
+nazvy = data.groupby("cAuditAction")["AuditActionName"].first()
+
+# Sloupec s celkovou cetnosti jednotlivych KC
+celkove_pocty = data.groupby("cAuditAction").size().rename("celkem")
+
+# Sloupec s cetnosti neobvyklych typu zbozi pro kazde cislo KC
+problematicke = nepovolene.groupby("cAuditAction").size().rename("problematicke")
+
+# Tabulka cetnosti pro KC
+relativni_cetnosti = pd.concat([nazvy, celkove_pocty, problematicke], axis=1)
+
+# Vyplneni prazdnych bunek neobvyklych cetnosti pro KC, kde neni zadna neobvykla kombinace
+relativni_cetnosti["problematicke"] = relativni_cetnosti["problematicke"].fillna(0)
+
+# Relativni cetnosti vyskytu
+relativni_cetnosti["pomer"] = relativni_cetnosti["problematicke"] / relativni_cetnosti["celkem"]
+relativni_cetnosti.sort_values("pomer", ascending=False, inplace=True)
+
+print("#" * 150)
+print("Tabulka relativnich cetnosti KC")
+print(tabulate(relativni_cetnosti, headers="keys", tablefmt="psql"))
