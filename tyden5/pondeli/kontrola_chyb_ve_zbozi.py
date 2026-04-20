@@ -102,6 +102,7 @@ print(tabulate(nepovolene_kombinace, headers="keys", tablefmt="psql"))
 
 # Relativni pocty cinnosti s neobvyklym typem zbozi
 # Sloupec s nazvem cinnosti a cislem KC jako indexem
+# Pokud bych chtel cetnosti pro jednotlive typy zbozi, staci slucovat pres ccommodity misto cAuditAction
 nazvy = data.groupby("cAuditAction")["AuditActionName"].first()
 
 # Sloupec s celkovou cetnosti jednotlivych KC
@@ -123,3 +124,13 @@ relativni_cetnosti.sort_values("pomer", ascending=False, inplace=True)
 print("#" * 150)
 print("Tabulka relativnich cetnosti KC")
 print(tabulate(relativni_cetnosti, headers="keys", tablefmt="psql"))
+
+# Kontrolni cinnosti, kde neni vyplnen typ zbozi a je ocekavani, ze by mel byt vyplnen
+# Filtr, ktery oznacuje radky, kde neni vyplnen typ zbozi a zaroven KC je mezi sledovanymi v excelu
+filtr = (data["ccommodity"].isnull()) & (data["cAuditAction"].isin(povolene["cAuditAction"]))
+nevyplnene = data[filtr].copy()
+
+print("#" * 150)
+print("Kontroly s nevyplnenym typem zbozi")
+print(nevyplnene.shape)
+print(tabulate(nevyplnene.head(20), header="keys", tablefmt="psql"))
