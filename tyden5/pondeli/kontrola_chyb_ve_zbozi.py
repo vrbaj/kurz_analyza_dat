@@ -30,5 +30,14 @@ def stahni_data():
         # Ulozeni souboru
         data_vse.to_csv(cesta_data, index=False, encoding="utf-8", sep=";")
 
+    # Data jiz jsou stazena
+    else:
+        # Nacteni dat primo ze souboru
+        data_vse = pd.read_csv(cesta_data, sep=";")
 
-stahni_data()
+    # Vratit nactena data jako vystup z funkce
+    return data_vse
+
+# Nacteni hlavnich dat
+data_vse = stahni_data()
+print(tabulate(data_vse.head(), headers="keys", tablefmt="psql"))
