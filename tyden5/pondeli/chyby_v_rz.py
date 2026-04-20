@@ -19,6 +19,6 @@ filtr = (data["RZ"].str.len() < 5) | (data["RZ"].str.len() > 8)
 data.loc[filtr, "je_validni"] = False
 
 # Kontrola povolenych znaku
-povolene_znaky = set("ABCDEFHIJKLMNPRTUVXYZ0123456789")
+povolene_znaky = set("ABCDEFHIJKLMNPRSTUVXYZ0123456789")
 
 print(tabulate(data, headers="keys", tablefmt="psql"))
