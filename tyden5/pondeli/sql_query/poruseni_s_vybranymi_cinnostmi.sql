@@ -14,3 +14,4 @@ LEFT JOIN MD2_VSCHT.inetuser.MDx_Commodity AS commo
     ON commo.cCommodity = article.ccommodity
 WHERE disorder.exist = 1
   AND disorder.isCrimact = 1
+  AND disorder.year = 2025
