@@ -68,4 +68,12 @@ filtr = sparovane_tabulky["_merge"] == "left_only"
 nepovolene = sparovane_tabulky[filtr].copy()
 nepovolene.drop(columns=["_merge"], inplace=True)
 
+# Odstraneni radku bez typu zbozi
+nepovolene.dropna(inplace=True)
+
+# Odstraneni radku, kde cislo KC neodpovida zadnemu cislu KC v Excelu
+filtr = nepovolene["cAuditAction"].isin(povolene["cAuditAction"])
+nepovolene = nepovolene[filtr].copy()
+
+print(nepovolene.shape)
 print(tabulate(nepovolene.head(20), headers="keys", tablefmt="psql"))
