@@ -373,11 +373,11 @@ def analyza_patecni_pokles():
     # projdem každý loupec denní směny
     for bar, val, sig in zip(bars_den, den_vals, [kraje_den_sig[k] for k in spolecne]):
         label =f"{val:.1f}% *" if sig == "ANO" else f"{val:.1f}%"
-        ax2.text(bar.get_width( + 0.3, bar.get_y() + bar.get_height() / 2,label, va="center", fontsize=8))
+        ax2.text(bar.get_width() + 0.3, bar.get_y() + bar.get_height() / 2,label, va="center", fontsize=8)
 
     for bar, val, sig in zip(bars_noc, noc_vals, [kraje_noc_sig[k] for k in spolecne]):
         label =f"{val:.1f}% *" if sig == "ANO" else f"{val:.1f}%"
-        ax2.text(bar.get_width( + 0.3, bar.get_y() + bar.get_height() / 2,label, va="center", fontsize=8))
+        ax2.text(bar.get_width() + 0.3, bar.get_y() + bar.get_height() / 2,label, va="center", fontsize=8)
 
     # nastavení pozice popisků na ose y
     ax2.set_yticks(y)
