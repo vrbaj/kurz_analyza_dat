@@ -52,7 +52,9 @@ print(tabulate(prazdne, headers="keys", tablefmt="psql"))
 
 # Typy mist, kde neni vyplnen typ mista
 mista_bez_transportu = data[data["CisloTransportu"].isnull()]
+mista_bez_transportu = (mista_bez_transportu.groupby(["CisloMista", "TypMista"]).size()
+                            .reset_index(name="pocet"))
 print("#" * 150)
 print("Mista, kde neni vyplnen transport")
-print(mista_bez_transportu.shape)
-print(tabulate(mista_bez_transportu.head(), headers="keys", tablefmt="psql"))
+# print(mista_bez_transportu.shape)
+print(tabulate(mista_bez_transportu, headers="keys", tablefmt="psql"))
