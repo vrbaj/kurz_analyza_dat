@@ -49,7 +49,7 @@ def logaritmicka_regrese_top15():
     if os.path.exists(CACHE_FILE):
         print("-> načítání dat z cache")
         # načtení dat z uloženého souboru pokud není připojení k databázi
-        df_db = pd.read_csv(CACHE_FILE, dtype={"Kod_Obce": str}, encoding="utf-8", sep=";")
+        df_db = pd.read_csv(CACHE_FILE, dtype={"Kod_Obce": str}, encoding="utf-8")
 
     else:
         print("-> načítání dat z databáze")
