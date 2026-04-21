@@ -170,4 +170,32 @@ def logaritmicka_regrese_top15():
     plt.show()
 
 
-logaritmicka_regrese_top15()
+def analyza_patecni_pokles():
+    # 1) nahrání dat z databáze
+    # cesta k souboru
+    CACHE_FILE_KONTROLY = "vstupy/cachce_kontroly.csv"
+
+    if os.path.exists(CACHE_FILE_KONTROLY):
+        print("-> nahrávám data z uloženého csv")
+        # načítání dat
+        df = pd.read_csv(CACHE_FILE_KONTROLY, dtype={"RUIAN_KOD_OBEC":str,"crecorda":str}, encoding="utf-8")
+
+    # funkce pro stahování dat z databáze
+    else:
+        print("-> stahování dat z databáze")
+        query = """
+        SELECT
+            d.recdate,
+            d.isCrimact,
+            d.cAuditAction,
+            d.RUIAN_KOD_OBEC,
+            d.LocTime,
+            d.LocDate,
+            d.crecorda,
+            o.divrep
+        FROM inetuser.MDx_Disorder d
+        JOIN inetuser.MDx_Order o On d.crecord = o.crecord;
+        """
+
+
+# logaritmicka_regrese_top15()
