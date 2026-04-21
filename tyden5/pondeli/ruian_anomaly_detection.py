@@ -349,7 +349,7 @@ def analyza_patecni_pokles():
             kraje_noc_sig[r[0]] = r[9]
 
     # vyberem kraje kde je nocni a denni smena
-    spolecne = [k for k in kraje_list if k in kraje_den and in kraje_noc]
+    spolecne = [k for k in kraje_list if k in kraje_den and k in kraje_noc]
     spolecne.sort(key=lambda k: kraje_den.get(k, 0))
 
     # seznamy hondot poklesu pro denní a noční směnu
@@ -386,6 +386,8 @@ def analyza_patecni_pokles():
     ax2.set_title("Pokles počtů kontrol v pátek denní vs noční směna")
     ax2.axvline(x=0, color="black", linewidth=2)
 
+    plt.tight_layout()
+    plt.show()
 
 # logaritmicka_regrese_top15()
 analyza_patecni_pokles()
