@@ -232,7 +232,7 @@ def analyza_patecni_pokles():
 
     # odstranění záznamů s čísly
     df = df[~df["kraj"].str.match(r"^\d+$")]
-
+    print(df.kraj.value_counts())
     # 3) tvorba heatmapy
     print("-> generování heatmapy")
     # vyopčtení matice kombinací kraj a hodina
@@ -273,6 +273,43 @@ def analyza_patecni_pokles():
     plt.tight_layout()
     fig1.savefig("vystupy/graf_denni.png")
     plt.show()
+
+
+    # 4) funkce pro statistické testování pátku
+    print("-> statistické testy")
+
+    def testuj_patek(data):
+        # spočítání denních kontrol
+        kontroly = data.groupby(["LocDate", "den_v_tydnu"]).size().reset_index(name="pocet")
+        pracovni = kontroly[kontroly["den_v_tydnu"] <= 4]
+        patek = pracovni[pracovni["den_v_tydnu"] == 4]["pocet"]
+        po_ct = pracovni[pracovni["den_v_tydnu"] <=3]["pocet"]
+
+        # odstranění vzorků s méně než 5 pozorováními
+        if len(patek) <5 or len(po_ct) <5:
+            # vrátí None, nepužijem tento kraj, nebo směnu
+            return None
+        # welchuv test
+        t_stat, p_two = stats.ttest_ind(patek, po_ct, equal_var=False)
+        p_one = p_two / 2
+        # Mann-whitney U test
+        _, p_mw = stats.mannwhitneyu(patek, po_ct, alternative="less")
+        # cohenovo d
+        pooled_std = ((po_ct.std() ** 2 + patek.std() ** 2)/2) ** 0.5
+        cohen_d = (po_ct.mean()-patek.mean()) / pooled_std if pooled_std > 0 else 0
+        signif = "ANO" if (t_stat < 0 and p_one < 0.05) else "NE"
+
+        return(
+            round(po_ct.mean(),1),
+            round(patek.mean(),1),
+            round(po_ct.mean() - patek.mean(),1),
+            round((po_ct.mean()-patek.mean())/ po_ct.mean() * 100,1),
+            round(p_one, 4),
+            round(p_mw, 4),
+            round(cohen_d, 4),
+            signif
+        )
+
 
 
 
