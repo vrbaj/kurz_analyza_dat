@@ -107,7 +107,10 @@ def logaritmicka_regrese_top15():
     # převod zpět z logaritmické škály
     df["Ocekavane"] = 10**df["Log_Ocekavane"]
     # výpočet orchylky
-    df["Odchylka"] = df["Pocet_deliktu"] - df["Ocekavane"]
-    print(df["Odchylka"].head())
+    df["Odchylka"] = df["Pocet_Deliktu"] - df["Ocekavane"]
+    # seřazení
+    extremy = df.sort_values(by="Odchylka", ascending=False)
+    print(extremy)
+
 
 logaritmicka_regrese_top15()
