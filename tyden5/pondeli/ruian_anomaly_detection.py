@@ -62,12 +62,16 @@ def logaritmicka_regrese_top15():
         FROM inetuser.MDx_Disorder d
         JOIN inetuser.MDx_AuditAction a ON d.cAuditAction = a.cAuditAction
         WHERE d.isCrimact = 1
-            AND a.nAuditAction NOT LIKE '%Dálniční známky%'
+            AND a.nAuditAction NOT IN ('%Dálniční známky%', '%Elektronické mýtné%')
+ 
         """
 
         # bahrání dat z databáze pomocí query do dataframu
         df_db = pd.read_sql(query, conn)
         conn.close()
+
+        # oprava záznamů s .0 na celé čísla
+        df_db["Kod_Obce"] = df_db["Kod_Obce"].astype(str).str.replace(r"\.0$", "", regex=True)
 
         print(df_db.head())
 
