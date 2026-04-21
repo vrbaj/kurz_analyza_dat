@@ -93,6 +93,10 @@ kombinace = (
         .reset_index(name="Pocet") # prevedeni na tabulku
         .sort_values(["TypMista", "Pocet"], ascending=[True, False])
 )
+
+# Relativni cetnost vztazena na celkovy pocet vyskytu typu mista
+kombinace["Podil"] = kombinace.groupby("TypMista")["Pocet"].transform(lambda x: x / x.sum())
+
 print("#" * 150)
 print("Cetnosti pro kombinace misto - transport")
 print(tabulate(kombinace.head(20), headers="keys", tablefmt="psql"))
