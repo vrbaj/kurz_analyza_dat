@@ -199,9 +199,22 @@ def analyza_patecni_pokles():
         conn = pyodbc.connect(CONN_STR)
         df = pd.read_sql(query, conn)
         conn.close()
-        print(df.head())
 
+        # uložení do csv souboru
         df.to_csv(CACHE_FILE_KONTROLY, index=False)
+
+    # 2) předzpracování
+    print("-> předzpracování")
+    # převod datumu ze stringu na datetime format
+    df["LocDate"] = pd.to_datetime(df["LocDate"], format="mixed")
+    # převod dnů v týdnu
+    df["den_v_týdnu"] = df["LocDate"].dt.dayofweek
+    # sjeddnocení času
+    df["hodina"] = df["LocTime"].str.replace(".", ":", regex=False).str.split(":").str[0]
+    df["hodina"] = pd.to_numeric(df["hodina"], errors="coerce")
+
+    print(df["hodina"])
+
 
 
 
