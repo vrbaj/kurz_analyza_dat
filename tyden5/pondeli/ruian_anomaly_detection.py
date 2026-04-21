@@ -31,5 +31,11 @@ def logaritmicka_regrese_top15():
     print("RUIAN_detekce_anomálií")
     print(f"{"=" * 60}")
 
+    # 1) načtení excelu s názvy obcí
+    print("-> Načítání excelu s obcemi")
+    df_obec = pd.read_excel("vstupy/spojene_obce.xlsx", usecols=["Id", "Název obce", "Obyvatel celkem"])
+    print(df_obec)
+
+
 
 logaritmicka_regrese_top15()
