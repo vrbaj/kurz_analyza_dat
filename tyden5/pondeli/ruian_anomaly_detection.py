@@ -137,6 +137,10 @@ def logaritmicka_regrese_top15():
     # přidání regresní křivky
     plt.plot(x_range,y_pred, color="red", linewidth=2, label="Regresní křivka")
 
+    # nastavení logarimtické škály
+    plt.xscale("log")
+    plt.yscale("log")
 
+    plt.show()
 
 logaritmicka_regrese_top15()
