@@ -213,8 +213,10 @@ def analyza_patecni_pokles():
     df["hodina"] = df["LocTime"].str.replace(".", ":", regex=False).str.split(":").str[0]
     df["hodina"] = pd.to_numeric(df["hodina"], errors="coerce")
 
-    print(df["hodina"])
-
+    # odstranění řádků s neplatnými záznamy
+    df =df.dropna(subset=["hodina"])
+    # převod na celé čísla
+    df["hodina"] = df["hodina"].astype(int)
 
 
 
