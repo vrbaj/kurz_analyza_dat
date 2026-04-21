@@ -358,7 +358,7 @@ def analyza_patecni_pokles():
 
     # denní směna
     den_barvy = ["#e67e22" if kraje_den_sig[k] == "ANO" else "#f5cba7" for k in spolecne]
-    noc_barvy = ["#e67e22" if kraje_noc_sig[k] == "ANO" else "#f5cba7" for k in spolecne]
+    noc_barvy = ["#2c3e50" if kraje_noc_sig[k] == "ANO" else "#aeb6bf" for k in spolecne]
     # vytvoření pole indexů
     y = np.arange(len(spolecne))
     vyska = 0.35
