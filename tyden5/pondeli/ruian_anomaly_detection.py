@@ -252,9 +252,23 @@ def analyza_patecni_pokles():
 
     # pozice popisků, jednotky a popisky
     ax1.set_xticks(range(24))
+    ax1.set_xticklabels([f"{h}:00" for h in range(24)], rotation=45, fontsize=9)
+    # nastavení popisků na ose y
+    ax1.set_yticks(range(len(pivot_pct)))
+    ax1.set_yticklabels(pivot_pct.index, fontsize=9)
+
+    ax1.set_xlabel("Hodina", fontsize=12)
     ax1.set_title("Rozložení kontrol v průběhu dne podle krajů", fontsize=14)
 
+    # přidání bílých čar na hranici denní a noční směny
+    ax1.axvline(x=5.5, color="white", linewidth=2, linestyle="--", label="6:00 - začátek denní")
+    ax1.axvline(x=17.5, color="white", linewidth=2, linestyle="--", label="18:00 - začátek noční")
+
+
+
     plt.show()
+
+
 
 
 # logaritmicka_regrese_top15()
