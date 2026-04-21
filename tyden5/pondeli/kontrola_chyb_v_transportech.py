@@ -66,3 +66,12 @@ data["CisloTransportu"] = data["CisloTransportu"].fillna(-1)
 # Kontrola duplicit
 print("#" * 150)
 print("Celkova velikost:", data.shape, "Bez duplicit", data.drop_duplicates().shape)
+
+# Odstraneni duplicitnich radku
+data.drop_duplicates(inplace=True)
+
+# Unikatni typy transportu a jejich cetnosti
+unikatni_transporty = data["TypTransportu"].value_counts().reset_index(name="pocet")
+print("#" * 150)
+print("Unikatni typy transportu a jejich cetnosti")
+print(tabulate(unikatni_transporty, headers="keys", tablefmt="psql"))
