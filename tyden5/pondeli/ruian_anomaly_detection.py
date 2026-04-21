@@ -157,7 +157,7 @@ def logaritmicka_regrese_top15():
     # přiřazení názvů obcí bodům
     for _, row in top_15.iterrows():
         plt.annotate(
-            row["Kod_Obce"],
+            row["Nazev_Obce"],
             (row["Obyvatele"], row["Pocet_Deliktu"]),
             xytext=(7,7), textcoords="offset points",
             fontsize=9, fontweight="bold"
