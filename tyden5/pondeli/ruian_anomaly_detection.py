@@ -215,6 +215,7 @@ def analyza_patecni_pokles():
 
     # odstranění řádků s neplatnými záznamy
     df =df.dropna(subset=["hodina"])
+    print(df)
     # převod na celé čísla
     df["hodina"] = df["hodina"].astype(int)
 
@@ -230,7 +231,7 @@ def analyza_patecni_pokles():
     )
 
     # odstranění záznamů s čísly
-    df = df[df["kraj"].str.match(r"^\d+$")]
+    df = df[~df["kraj"].str.match(r"^\d+$")]
 
     # 3) tvorba heatmapy
     print("-> generování heatmapy")
