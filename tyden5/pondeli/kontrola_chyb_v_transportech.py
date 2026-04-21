@@ -75,3 +75,9 @@ unikatni_transporty = data["TypTransportu"].value_counts().reset_index(name="poc
 print("#" * 150)
 print("Unikatni typy transportu a jejich cetnosti")
 print(tabulate(unikatni_transporty, headers="keys", tablefmt="psql"))
+
+# Unikatni typy mist a jejich cetnosti
+unikatni_mista = data["TypMista"].value_counts().reset_index(name="pocet")
+print("#" * 150)
+print("Unikatni typy mist a jejich cetnosti")
+print(tabulate(unikatni_mista, headers="keys", tablefmt="psql"))
