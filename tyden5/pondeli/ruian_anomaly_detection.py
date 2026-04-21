@@ -36,8 +36,11 @@ def logaritmicka_regrese_top15():
     # načtení dat  ecelu do dataframu
     df_obec = pd.read_excel("vstupy/spojene_obce.xlsx", usecols=["Id", "Název obce", "Obyvatel celkem"])
     # přejmenování soupců
-    df_obec = df_obec.rename(columns={"Id": "Kod_obce", "Název obce": "Nazev_Obce", "Obyvatel celkem": "Obyvatele"})
-
+    df_obec = df_obec.rename(columns={"Id": "Kod_Obce", "Název obce": "Nazev_Obce", "Obyvatel celkem": "Obyvatele"})
+    # převod na celá čísla
+    df_obec["Kod_Obce"] = df_obec["Kod_Obce"].astype(str).str.replace(r"\.0$", "", regex=True)
+    # vyhozeí duplicitních záznamů
+    df_obec = df_obec.drop_duplicates(subset=["Kod_Obce"])
 
     print(df_obec)
 
