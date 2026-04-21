@@ -95,7 +95,12 @@ def logaritmicka_regrese_top15():
     log_X = np.log10(df["Obyvatele"].values).reshape(-1,1)
     log_Y = np.log10(df["Pocet_Deliktu"].values)
 
-
+    # definování modelu
+    model = LinearRegression()
+    # natrénování
+    model.fit(log_X, log_Y)
+    # zobrazení metriky modelu
+    print(f"Metrika modelu: {model.score(log_X, log_Y)}")
 
 
     print(df.head())
