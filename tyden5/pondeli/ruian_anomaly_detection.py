@@ -19,7 +19,7 @@ os.makedirs("vystupy", exist_ok=True)
 # informace pro připojení k databázi
 CONN_STR = (
             "DRIVER={ODBC Driver 18 for SQL Server};"
-            "SERVER=(localdb)\\MSSQLLocalDB;"
+            "SERVER=10.2.35.17;"
             "DATABASE=MD2_VSCHT;"
             "Trusted_Connection=yes;"
             "TrustServerCertificate=yes;"
