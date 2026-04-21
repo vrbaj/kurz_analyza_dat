@@ -62,3 +62,7 @@ print(tabulate(mista_bez_transportu, headers="keys", tablefmt="psql"))
 # Vyplneni typu transportu v prazdnych bunkach
 data["TypTransportu"] = data["TypTransportu"].fillna("nevyplněno")
 data["CisloTransportu"] = data["CisloTransportu"].fillna(-1)
+
+# Kontrola duplicit
+print("#" * 150)
+print("Celkova velikost:", data.shape, "Bez duplicit", data.drop_duplicates().shape)
