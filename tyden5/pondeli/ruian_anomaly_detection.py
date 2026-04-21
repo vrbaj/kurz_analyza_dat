@@ -62,7 +62,7 @@ def logaritmicka_regrese_top15():
         FROM inetuser.MDx_Disorder d
         JOIN inetuser.MDx_AuditAction a ON d.cAuditAction = a.cAuditAction
         WHERE d.isCrimact = 1
-            AND a.nAuditAction NOT IN ('%Dálniční známky%', '%Elektronické mýtné%')
+            AND a.nAuditAction NOT IN ('Dálniční známky', 'Elektronické mýtné')
  
         """
 
@@ -72,6 +72,10 @@ def logaritmicka_regrese_top15():
 
         # oprava záznamů s .0 na celé čísla
         df_db["Kod_Obce"] = df_db["Kod_Obce"].astype(str).str.replace(r"\.0$", "", regex=True)
+        # odstranění záznamů s kodm obce nula
+        df_db = df_db[df_db["Kod_Obce"] != "0"]
+        # uložení výszupu do databáze
+        df_db.to_csv(CACHE_FILE, index=False)
 
         print(df_db.head())
 
