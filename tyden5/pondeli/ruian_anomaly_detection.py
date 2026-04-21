@@ -19,7 +19,7 @@ os.makedirs("vystupy", exist_ok=True)
 # informace pro připojení k databázi
 CONN_STR = (
             "DRIVER={ODBC Driver 18 for SQL Server};"
-            "SERVER=10.2.35.17;"
+            "SERVER=(localdb)\\MSSQLLocalDB;"
             "DATABASE=MD2_VSCHT;"
             "Trusted_Connection=yes;"
             "TrustServerCertificate=yes;"
@@ -52,7 +52,7 @@ def logaritmicka_regrese_top15():
         df_db = pd.read_csv(CACHE_FILE, dtype={"Kod_Obce": str}, encoding="utf-8", sep=";")
 
     else:
-        print("-> načítání dat z t´databáze")
+        print("-> načítání dat z databáze")
         # přípraprava řipojení do databáze
         conn = pyodbc.connect(CONN_STR)
         query = """
