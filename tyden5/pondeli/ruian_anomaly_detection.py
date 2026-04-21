@@ -264,8 +264,13 @@ def analyza_patecni_pokles():
     ax1.axvline(x=5.5, color="white", linewidth=2, linestyle="--", label="6:00 - začátek denní")
     ax1.axvline(x=17.5, color="white", linewidth=2, linestyle="--", label="18:00 - začátek noční")
 
-
-
+    # přidání legendy
+    ax1.legend(loc="upper right", fontsize=9)
+    # barevá škála
+    cbar= plt.colorbar(im, ax=ax1, shrink=0.8)
+    cbar.set_label("% kontrol", fontsize=10)
+    plt.tight_layout()
+    fig1.savefig("vystupy/graf_denni.png")
     plt.show()
 
 
