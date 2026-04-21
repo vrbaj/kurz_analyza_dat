@@ -220,7 +220,6 @@ def analyza_patecni_pokles():
 
     # třízení záznamů na denní a noční směnu
     df["smena"] = df["hodina"].apply(lambda h: "denni" if 6 <= h < 18 else "nocni")
-    print(df[["smena", "hodina"]].head())
 
     # převod názvů CU
     df["kraj"] = (
@@ -238,12 +237,12 @@ def analyza_patecni_pokles():
     # vyopčtení matice kombinací kraj a hodina
     pivot = df.groupby(["kraj", "hodina"]).size().unstack(fill_value=0)
     # kontrola chabějících hodin
-    pivot = pivot.reindex(columns=(24), fill_value=0)
+    pivot = pivot.reindex(columns=range(24), fill_value=0)
     # převod absolutních hodnot an procentuální vyjádření
     pivot_pct = pivot.div(pivot.sum(axis=1),axis=0)*100
     pivot_pct["den_podil"] = pivot_pct[range(6,18)].sum(axis=1)
     # seřazení krajů
-    pivot_pct = pivot.pct.sort_values("den_podil", ascending=True)
+    pivot_pct = pivot_pct.sort_values("den_podil", ascending=True)
     # odstranění pomocného sloupce
     pivot_pct = pivot_pct.drop(columns="den_podil")
 
