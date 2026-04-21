@@ -117,3 +117,6 @@ kombinace["Podil"] = kombinace.groupby("TypTransportu")["Pocet"].transform(lambd
 
 # Filtr dle relativni cetnosti
 podezrele_dle_transportu = kombinace[kombinace["Podil"] < 0.1].copy()
+print("#" * 150)
+print("Cetnosti pro kombinace transport - misto")
+print(tabulate(podezrele_dle_transportu, headers="keys", tablefmt="psql"))
