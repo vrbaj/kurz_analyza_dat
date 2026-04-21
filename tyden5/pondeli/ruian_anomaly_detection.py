@@ -102,7 +102,12 @@ def logaritmicka_regrese_top15():
     # zobrazení metriky modelu
     print(f"Metrika modelu: {model.score(log_X, log_Y)}")
 
-
-    print(df.head())
+    # 5) výpočet očekávané hodnoty a odchylky
+    df["Log_Ocekavane"] = model.predict(log_X)
+    # převod zpět z logaritmické škály
+    df["Ocekavane"] = 10**df["Log_Ocekavane"]
+    # výpočet orchylky
+    df["Odchylka"] = df["Pocet_deliktu"] - df["Ocekavane"]
+    print(df["Odchylka"].head())
 
 logaritmicka_regrese_top15()
