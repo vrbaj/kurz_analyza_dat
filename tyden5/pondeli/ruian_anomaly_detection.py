@@ -220,8 +220,19 @@ def analyza_patecni_pokles():
 
     # třízení záznamů na denní a noční směnu
     df["smena"] = df["hodina"].apply(lambda h: "denni" if 6 <= h < 18 else "nocni")
-    print(df["smena"].head())
+    print(df[["smena", "hodina"]].head())
 
+    # převod názvů CU
+    df["kraj"] = (
+        df["divrep"].astype(str)    # převod na string
+        .str.split("/").str[0]      # extrakce za lomítkem
+        .str.split(",").str[0]      # extrakce za čárkou
+        .str.strip()                # odstranění mezer na začátku a konci
+    )
+
+    # odstranění záznamů s čísli
+    df = df[df["kraj"].str.match(r"^\d+$")]
+    print(df.head())
 
 
 # logaritmicka_regrese_top15()
