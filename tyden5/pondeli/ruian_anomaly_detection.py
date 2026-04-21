@@ -218,6 +218,10 @@ def analyza_patecni_pokles():
     # převod na celé čísla
     df["hodina"] = df["hodina"].astype(int)
 
+    # třízení záznamů na denní a noční směnu
+    df["smena"] = df["hodina"].apply(lambda h: "denni" if 6 <= h < 18 else "nocni")
+    print(df["smena"].head())
+
 
 
 # logaritmicka_regrese_top15()
