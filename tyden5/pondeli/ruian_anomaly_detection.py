@@ -110,7 +110,14 @@ def logaritmicka_regrese_top15():
     df["Odchylka"] = df["Pocet_Deliktu"] - df["Ocekavane"]
     # seřazení
     extremy = df.sort_values(by="Odchylka", ascending=False)
-    print(extremy)
+
+    # omezení počtu extrémů
+    # reorganizace tabulky
+    vypis = extremy[["Kod_Obce", "Nazev_Obce", "Obyvatele", "Pocet_Deliktu", "Ocekavane", "Odchylka"]]
+    # zaokrouhlení výsledků
+    vypis["Ocekavane"] = vypis["Ocekavane"].round(1)
+    vypis["Odchylka"] = vypis["Odchylka"].round(1)
+    print(vypis.to_string(index=False))
 
 
 logaritmicka_regrese_top15()
