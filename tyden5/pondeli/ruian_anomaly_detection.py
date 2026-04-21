@@ -310,6 +310,21 @@ def analyza_patecni_pokles():
             signif
         )
 
+    rows = []
+
+    def zpracuj(data, nazev):
+        for smena in ["celkem", "denni", "nocni"]:
+            subset = data if smena == "celkem" else data[data["smena"] == smena]
+            res = testuj_patek(subset)
+
+            if res:
+                rows.append((nazev, smena, *res))
+
+    # neprjme spočítám statistku pro celou čr
+    zpracuj(df, "ČR CELKEM")
+    # teď postupně por každý kraj
+    for kraj in sorted(df["kraj"].unique()):
+        zpracuj(df[df["kraj"] == kraj], kraj)
 
 
 
