@@ -83,6 +83,11 @@ def logaritmicka_regrese_top15():
     delikty_obce = df_db.groupby("Kod_Obce").size().reset_index(name="Pocet_Deliktu")
     # spojení dat
     df = pd.merge(delikty_obce, df_obec, on="Kod_Obce", how="inner")
+    # ošetření případu kdy počet obyvatel chybí
+    df = df.dropna(subset=["Obyvatele"])
+    # odstraněníobcí s málo delikty
+    df = df[(df["Obyvatele"] > 0) & (df["Pocet_Deliktu"] >= 5)]
+
     print(df.head())
 
 logaritmicka_regrese_top15()
