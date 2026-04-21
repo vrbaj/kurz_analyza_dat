@@ -196,6 +196,14 @@ def analyza_patecni_pokles():
         FROM inetuser.MDx_Disorder d
         JOIN inetuser.MDx_Order o ON d.crecord = o.crecord;
         """
+        conn = pyodbc.connect(CONN_STR)
+        df = pd.read_sql(query, conn)
+        conn.close()
+        print(df.head())
+
+        df.to_csv(CACHE_FILE_KONTROLY, index=False)
+
 
 
 # logaritmicka_regrese_top15()
+analyza_patecni_pokles()
