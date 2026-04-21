@@ -44,3 +44,8 @@ data = stahni_data()
 print("Ukazka zpracovavanych dat")
 print(tabulate(data.head(20), headers="keys", tablefmt="psql"))
 
+# Pocty prazdnych bunek v kazdem sloupci
+prazdne = data.isnull().sum().reset_index(name="pocet")
+print("#" * 150)
+print("Prazdne bunky ve sloupcich")
+print(tabulate(prazdne, headers="keys", tablefmt="psql"))
