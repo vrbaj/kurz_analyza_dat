@@ -141,6 +141,12 @@ def logaritmicka_regrese_top15():
     plt.xscale("log")
     plt.yscale("log")
 
-    plt.show()
+    # plt.show()
+    # přidání popisků
+    plt.title("Regrese zlogaritmizovaných dat (15 nevětších anomálií)", fontsize=15)
+    plt.xlabel("Počet obyvatel", fontsize=12)
+    plt.ylabel("Počet deliktů", fontsize=12)
+    plt.grid(True, which="both", ls="--", alpha=0.3)
+
 
 logaritmicka_regrese_top15()
