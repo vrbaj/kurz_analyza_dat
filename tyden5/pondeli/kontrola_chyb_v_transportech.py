@@ -58,3 +58,7 @@ print("#" * 150)
 print("Mista, kde neni vyplnen transport")
 # print(mista_bez_transportu.shape)
 print(tabulate(mista_bez_transportu, headers="keys", tablefmt="psql"))
+
+# Vyplneni typu transportu v prazdnych bunkach
+data["TypTransportu"] = data["TypTransportu"].fillna("nevyplněno")
+data["CisloTransportu"] = data["CisloTransportu"].fillna(-1)
