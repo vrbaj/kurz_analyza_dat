@@ -65,6 +65,11 @@ def logaritmicka_regrese_top15():
             AND a.nAuditAction NOT LIKE '%Dálniční známky%'
         """
 
+        # bahrání dat z databáze pomocí query do dataframu
+        df_db = pd.read_sql(query, conn)
+        conn.close()
+
+        print(df_db.head())
 
 
 logaritmicka_regrese_top15()
