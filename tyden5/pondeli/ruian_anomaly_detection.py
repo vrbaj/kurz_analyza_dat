@@ -42,7 +42,28 @@ def logaritmicka_regrese_top15():
     # vyhozeí duplicitních záznamů
     df_obec = df_obec.drop_duplicates(subset=["Kod_Obce"])
 
-    print(df_obec)
+    # 2) načtení dat z databáze
+    #název souboru do kterého si uložím mezivýsldek
+    CACHE_FILE = "vstupy/cache_delikty.csv"
+
+    if os.path.exists(CACHE_FILE):
+        print("-> načítání dat z cache")
+        # načtení dat z uloženého souboru pokud není připojení k databázi
+        df_db = pd.read_csv(CACHE_FILE, dtype={"Kod_Obce": str}, encoding="utf-8", sep=";")
+
+    else:
+        print("-> načítání dat z t´databáze")
+        # přípraprava řipojení do databáze
+        conn = pyodbc.connect(CONN_STR)
+        query = """
+        SELECT
+            d.RUIAN_KOD_OBEC AS Kod_Obce,
+            a.nAuditAction AS Typ_Poruseni
+        FROM inetuser.MDx_Disorder d
+        JOIN inetuser.MDx_AuditAction a ON d.cAuditAction = a.cAuditAction
+        WHERE d.isCrimact = 1
+            AND a.nAuditAction NOT LIKE '%Dálniční známky%'
+        """
 
 
 
