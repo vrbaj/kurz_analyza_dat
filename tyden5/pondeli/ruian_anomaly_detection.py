@@ -126,7 +126,17 @@ def logaritmicka_regrese_top15():
     # definování grafu
     plt.scatter(df["Obyvatele"], df["Pocet_Deliktu"], color="#1f77b4", alpha=0.5, edgecolor="black",
                 label="Obce (více než 5 deliktů)")
-    plt.show()
+    # plt.show()
+    # kreslení regresní křivky
+    log_x_range = np.linspace(log_X.min(), log_X.max(), 100).reshape(-1,1)
+    log_y_pred = model.predict(log_x_range)
+    # převod z logarimtické škály
+    x_range = 10 ** log_x_range
+    y_pred = 10 ** log_y_pred
+
+    # přidání regresní křivky
+    plt.plot(x_range,y_pred, color="red", linewidth=2, label="Regresní křivka")
+
 
 
 logaritmicka_regrese_top15()
