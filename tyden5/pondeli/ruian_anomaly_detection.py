@@ -348,10 +348,43 @@ def analyza_patecni_pokles():
             # uložíme si příznak signifikance
             kraje_noc_sig[r[0]] = r[9]
 
-    print("hotovo")
+    # vyberem kraje kde je nocni a denni smena
+    spolecne = [k for k in kraje_list if k in kraje_den and in kraje_noc]
+    spolecne.sort(key=lambda k: kraje_den.get(k, 0))
 
+    # seznamy hondot poklesu pro denní a noční směnu
+    den_vals = [kraje_den[k] for k in spolecne]
+    noc_vals = [kraje_noc[k] for k in spolecne]
 
+    # denní směna
+    den_barvy = ["#e67e22" if kraje_den_sig[k] == "ANO" else "#f5cba7" for k in spolecne]
+    noc_barvy = ["#e67e22" if kraje_noc_sig[k] == "ANO" else "#f5cba7" for k in spolecne]
+    # vytvoření pole indexů
+    y = np.arange(len(spolecne))
+    vyska = 0.35
 
+    # vytvoříme obrázek
+    fig2, ax2 = plt.subplots(figsize=(14, len(spolecne)*0.55))
+
+    # vodorovné sloupce pro denní a noni smenu
+    bars_den = ax2.barh(y + vyska /2, den_vals, vyska, color=den_barvy, edgecolor="white")
+    bars_noc = ax2.barh(y + vyska / 2, noc_vals, vyska, color=noc_barvy, edgecolor="white")
+
+    # projdem každý loupec denní směny
+    for bar, val, sig in zip(bars_den, den_vals, [kraje_den_sig[k] for k in spolecne]):
+        label =f"{val:.1f}% *" if sig == "ANO" else f"{val:.1f}%"
+        ax2.text(bar.get_width( + 0.3, bar.get_y() + bar.get_height() / 2,label, va="center", fontsize=8))
+
+    for bar, val, sig in zip(bars_noc, noc_vals, [kraje_noc_sig[k] for k in spolecne]):
+        label =f"{val:.1f}% *" if sig == "ANO" else f"{val:.1f}%"
+        ax2.text(bar.get_width( + 0.3, bar.get_y() + bar.get_height() / 2,label, va="center", fontsize=8))
+
+    # nastavení pozice popisků na ose y
+    ax2.set_yticks(y)
+    ax2.set_yticklabels(spolecne, fontsize=9)
+    ax2.set_xlabel("Pokles počtů kontrol v pátek vs ostatní dny")
+    ax2.set_title("Pokles počtů kontrol v pátek denní vs noční směna")
+    ax2.axvline(x=0, color="black", linewidth=2)
 
 
 # logaritmicka_regrese_top15()
