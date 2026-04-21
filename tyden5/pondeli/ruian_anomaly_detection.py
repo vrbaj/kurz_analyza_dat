@@ -208,7 +208,7 @@ def analyza_patecni_pokles():
     # převod datumu ze stringu na datetime format
     df["LocDate"] = pd.to_datetime(df["LocDate"], format="mixed")
     # převod dnů v týdnu
-    df["den_v_týdnu"] = df["LocDate"].dt.dayofweek
+    df["den_v_tydnu"] = df["LocDate"].dt.dayofweek
     # sjeddnocení času
     df["hodina"] = df["LocTime"].str.replace(".", ":", regex=False).str.split(":").str[0]
     df["hodina"] = pd.to_numeric(df["hodina"], errors="coerce")
@@ -325,6 +325,8 @@ def analyza_patecni_pokles():
     # teď postupně por každý kraj
     for kraj in sorted(df["kraj"].unique()):
         zpracuj(df[df["kraj"] == kraj], kraj)
+
+    print("hotovo")
 
 
 
