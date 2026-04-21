@@ -91,7 +91,7 @@ kombinace = (
     data.groupby(["TypMista", "TypTransportu"])
         .size() # cetnosti
         .reset_index(name="Pocet") # prevedeni na tabulku
-        .sort_values(["TypuMista", "Pocet"], ascending=[True, False])
+        .sort_values(["TypMista", "Pocet"], ascending=[True, False])
 )
 print("#" * 150)
 print("Cetnosti pro kombinace misto - transport")
