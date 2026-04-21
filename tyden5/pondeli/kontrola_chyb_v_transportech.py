@@ -54,4 +54,5 @@ print(tabulate(prazdne, headers="keys", tablefmt="psql"))
 mista_bez_transportu = data[data["CisloTransportu"].isnull()]
 print("#" * 150)
 print("Mista, kde neni vyplnen transport")
-print(tabulate(mista_bez_transportu, headers="keys", tablefmt="psql"))
+print(mista_bez_transportu.shape)
+print(tabulate(mista_bez_transportu.head(), headers="keys", tablefmt="psql"))
