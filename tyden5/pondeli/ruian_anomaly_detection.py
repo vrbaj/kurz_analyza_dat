@@ -147,12 +147,27 @@ def logaritmicka_regrese_top15():
     plt.xlabel("Počet obyvatel", fontsize=12)
     plt.ylabel("Počet deliktů", fontsize=12)
     plt.grid(True, which="both", ls="--", alpha=0.3)
-    plt.show()
 
     # zvíraznění 15 největších anomálií
     top_15 = extremy.head(15)
     # překreslíme 15 bodů v grafu
     plt.scatter(top_15["Obyvatele"], top_15["Pocet_Deliktu"], color="red", s=100, edgecolor="black",
                 label="Top 15 anomálií")
+    # plt.show()
+    # přiřazení názvů obcí bodům
+    for _, row in top_15.iterrows():
+        plt.annotate(
+            row["Kod_Obce"],
+            (row["Obyvatele"], row["Pocet_Deliktu"]),
+            xytext=(7,7), textcoords="offset points",
+            fontsize=9, fontweight="bold"
+        )
+
+    # poslední úpravy grafu
+    plt.legend(loc="upper left")
+    plt.tight_layout()
+    plt.savefig("vystupy/graf_odchylek.png")
+    plt.show()
+
 
 logaritmicka_regrese_top15()
