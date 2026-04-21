@@ -117,7 +117,16 @@ def logaritmicka_regrese_top15():
     # zaokrouhlení výsledků
     vypis["Ocekavane"] = vypis["Ocekavane"].round(1)
     vypis["Odchylka"] = vypis["Odchylka"].round(1)
-    print(vypis.to_string(index=False))
+    # print(vypis.to_string(index=False))
+
+    # 6) tvorba grafu
+    print("-> tvorba grafu")
+    # nastavení velikosti plátna
+    plt.figure(figsize=(14,9))
+    # definování grafu
+    plt.scatter(df["Obyvatele"], df["Pocet_Deliktu"], color="#1f77b4", alpha=0.5, edgecolor="black",
+                label="Obce (více než 5 deliktů)")
+    plt.show()
 
 
 logaritmicka_regrese_top15()
