@@ -85,3 +85,14 @@ print(tabulate(unikatni_mista, headers="keys", tablefmt="psql"))
 # Nastaveni datoveho typu jednotlivym identifikatorum
 cols = ["CisloKontroly", "CisloRozkazu", "CisloMista", "CisloTransportu"]
 data[cols] = data[cols].astype("Int64", errors="raise")
+
+# Pocty vykazanych kontrol podle typu mista a typu transportu
+kombinace = (
+    data.groupby(["TypMista", "TypTransportu"])
+        .size() # cetnosti
+        .reset_index(name="Pocet") # prevedeni na tabulku
+        .sort_values(["TypuMista", "Pocet"], ascending=[True, False])
+)
+print("#" * 150)
+print("Cetnosti pro kombinace misto - transport")
+print(tabulate(kombinace.head(20), headers="keys", tablefmt="psql"))
