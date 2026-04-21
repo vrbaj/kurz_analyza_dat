@@ -97,6 +97,9 @@ kombinace = (
 # Relativni cetnost vztazena na celkovy pocet vyskytu typu mista
 kombinace["Podil"] = kombinace.groupby("TypMista")["Pocet"].transform(lambda x: x / x.sum())
 
+# Filtr podle cetnosti
+kombinace = kombinace[kombinace["Podil"] < 0.1]
+
 print("#" * 150)
 print("Cetnosti pro kombinace misto - transport")
-print(tabulate(kombinace.head(20), headers="keys", tablefmt="psql"))
+print(tabulate(kombinace, headers="keys", tablefmt="psql"))
