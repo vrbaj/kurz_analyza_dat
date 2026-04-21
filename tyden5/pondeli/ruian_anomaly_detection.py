@@ -194,7 +194,7 @@ def analyza_patecni_pokles():
             d.crecorda,
             o.divrep
         FROM inetuser.MDx_Disorder d
-        JOIN inetuser.MDx_Order o On d.crecord = o.crecord;
+        JOIN inetuser.MDx_Order o ON d.crecord = o.crecord;
         """
 
 
