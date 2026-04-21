@@ -16,3 +16,20 @@ warnings.filterwarnings("ignore", category=UserWarning)
 os.makedirs("vstupy", exist_ok=True)
 os.makedirs("vystupy", exist_ok=True)
 
+# informace pro připojení k databázi
+CONN_STR = (
+            "DRIVER={ODBC Driver 18 for SQL Server};"
+            "SERVER=10.2.35.17;"
+            "DATABASE=MD2_VSCHT;"
+            "Trusted_Connection=yes;"
+            "TrustServerCertificate=yes;"
+        )
+
+# =========== logaritmicjá regrese ================
+def logaritmicka_regrese_top15():
+    print(f"{"="*60}")
+    print("RUIAN_detekce_anomálií")
+    print(f"{"=" * 60}")
+
+
+logaritmicka_regrese_top15()
