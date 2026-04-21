@@ -33,7 +33,12 @@ def logaritmicka_regrese_top15():
 
     # 1) načtení excelu s názvy obcí
     print("-> Načítání excelu s obcemi")
+    # načtení dat  ecelu do dataframu
     df_obec = pd.read_excel("vstupy/spojene_obce.xlsx", usecols=["Id", "Název obce", "Obyvatel celkem"])
+    # přejmenování soupců
+    df_obec = df_obec.rename(columns={"Id": "Kod_obce", "Název obce": "Nazev_Obce", "Obyvatel celkem": "Obyvatele"})
+
+
     print(df_obec)
 
 
