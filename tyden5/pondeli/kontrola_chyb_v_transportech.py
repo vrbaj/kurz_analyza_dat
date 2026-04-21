@@ -81,3 +81,7 @@ unikatni_mista = data["TypMista"].value_counts().reset_index(name="pocet")
 print("#" * 150)
 print("Unikatni typy mist a jejich cetnosti")
 print(tabulate(unikatni_mista, headers="keys", tablefmt="psql"))
+
+# Nastaveni datoveho typu jednotlivym identifikatorum
+cols = ["CisloKontroly", "CisloRozkazu", "CisloMista", "CisloTransportu"]
+data[cols] = data[cols].astype("Int64", errors="raise")
