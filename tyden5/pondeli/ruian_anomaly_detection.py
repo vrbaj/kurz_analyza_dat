@@ -88,6 +88,16 @@ def logaritmicka_regrese_top15():
     # odstraněníobcí s málo delikty
     df = df[(df["Obyvatele"] > 0) & (df["Pocet_Deliktu"] >= 5)]
 
+
+    # 4) loratitmická regrese
+    print("-> fitování logaritmické regrese")
+    # převod na logarimtickouo škálu
+    log_X = np.log10(df["Obyvatele"].values).reshape(-1,1)
+    log_Y = np.log10(df["Pocet_Deliktu"].values)
+
+
+
+
     print(df.head())
 
 logaritmicka_regrese_top15()
