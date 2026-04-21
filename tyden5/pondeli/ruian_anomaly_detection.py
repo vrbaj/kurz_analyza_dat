@@ -77,7 +77,12 @@ def logaritmicka_regrese_top15():
         # uložení výszupu do databáze
         df_db.to_csv(CACHE_FILE, index=False)
 
-        print(df_db.head())
-
+    # 3) propojení dat a přdzpracování
+    print("-> sloučení dat a předzpracování")
+    # spočtení kolik je dleiktů na obec
+    delikty_obce = df_db.groupby("Kod_Obce").size().reset_index(name="Pocet_Deliktu")
+    # spojení dat
+    df = pd.merge(delikty_obce, df_obec, on="Kod_Obce", how="inner")
+    print(df.head())
 
 logaritmicka_regrese_top15()
