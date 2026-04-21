@@ -98,8 +98,22 @@ kombinace = (
 kombinace["Podil"] = kombinace.groupby("TypMista")["Pocet"].transform(lambda x: x / x.sum())
 
 # Filtr podle cetnosti
-podezrele_dle_mista = kombinace[kombinace["Podil"] < 0.1]
+podezrele_dle_mista = kombinace[kombinace["Podil"] < 0.1].copy()
 
 print("#" * 150)
 print("Cetnosti pro kombinace misto - transport")
 print(tabulate(podezrele_dle_mista, headers="keys", tablefmt="psql"))
+
+# Relativni cetnost vztazena na celkovy pocet vyskytu typu vozidla
+kombinace = (
+    data.groupby(["TypTransportu", "TypMista"])
+        .size()
+        .reset_index(name="Pocet")
+        .sort_values(["TypTransportu", "Pocet"], ascending=[True, False])
+)
+
+# Relativni cetnost vztazena na celkovy pocet vyskytu typu transportu
+kombinace["Podil"] = kombinace.groupby("TypTransportu")["Pocet"].transform(lambda x: x / x.sum())
+
+# Filtr dle relativni cetnosti
+podezrele_dle_transportu = kombinace[kombinace["Podil"] < 0.1].copy()
