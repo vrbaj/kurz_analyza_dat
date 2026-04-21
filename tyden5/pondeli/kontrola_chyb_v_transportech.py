@@ -40,3 +40,7 @@ def stahni_data():
 
 # Stazeni dat
 data = stahni_data()
+
+print("Ukazka zpracovavanych dat")
+print(tabulate(data.head(20), headers="keys", tablefmt="psql"))
+
