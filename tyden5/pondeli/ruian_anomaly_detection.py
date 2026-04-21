@@ -326,7 +326,30 @@ def analyza_patecni_pokles():
     for kraj in sorted(df["kraj"].unique()):
         zpracuj(df[df["kraj"] == kraj], kraj)
 
+    # 5) tvorba sloupcového grafu
+    print("-> tvorba sloupcového grafu")
+    # seřadíme si kraje
+    kraje_list = sorted(df["kraj"].unique())
+    # připravíme si slovníky pro vysledky
+    kraje_den, kraje_noc, kraje_den_sig, kraje_noc_sig = {}, {}, {}, {}
+
+    for r in rows:
+        if r[0] == "ČR CELKEM": continue
+        # denní směna
+        if r[1] == "denni":
+            # uložíme si realtivní rozdíl v procentech
+            kraje_den[r[0]] = r[5]
+            # uložíme si příznak signifikance
+            kraje_den_sig[r[0]] = r[9]
+        # NOČNÍ SMĚNA
+        elif r[1] == "nocni":
+            # uložíme si realtivní rozdíl v procentech
+            kraje_noc[r[0]] = r[5]
+            # uložíme si příznak signifikance
+            kraje_noc_sig[r[0]] = r[9]
+
     print("hotovo")
+
 
 
 
