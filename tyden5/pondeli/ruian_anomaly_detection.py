@@ -194,7 +194,7 @@ def analyza_patecni_pokles():
             d.crecorda,
             o.divrep
         FROM inetuser.MDx_Disorder d
-        JOIN inetuser.MDx_Order o ON d.crecord = o.crecord;
+        JOIN inetuser.MDx_Order o ON d.crecorda = o.crecord;
         """
         conn = pyodbc.connect(CONN_STR)
         df = pd.read_sql(query, conn)
