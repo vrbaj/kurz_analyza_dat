@@ -49,3 +49,9 @@ prazdne = data.isnull().sum().reset_index(name="pocet")
 print("#" * 150)
 print("Prazdne bunky ve sloupcich")
 print(tabulate(prazdne, headers="keys", tablefmt="psql"))
+
+# Typy mist, kde neni vyplnen typ mista
+mista_bez_transportu = data[data["CisloTransportu"].isnull()]
+print("#" * 150)
+print("Mista, kde neni vyplnen transport")
+print(tabulate(mista_bez_transportu, headers="keys", tablefmt="psql"))
