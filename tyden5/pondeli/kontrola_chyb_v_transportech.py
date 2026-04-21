@@ -98,8 +98,8 @@ kombinace = (
 kombinace["Podil"] = kombinace.groupby("TypMista")["Pocet"].transform(lambda x: x / x.sum())
 
 # Filtr podle cetnosti
-kombinace = kombinace[kombinace["Podil"] < 0.1]
+podezrele_dle_mista = kombinace[kombinace["Podil"] < 0.1]
 
 print("#" * 150)
 print("Cetnosti pro kombinace misto - transport")
-print(tabulate(kombinace, headers="keys", tablefmt="psql"))
+print(tabulate(podezrele_dle_mista, headers="keys", tablefmt="psql"))
