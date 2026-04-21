@@ -120,3 +120,18 @@ podezrele_dle_transportu = kombinace[kombinace["Podil"] < 0.1].copy()
 print("#" * 150)
 print("Cetnosti pro kombinace transport - misto")
 print(tabulate(podezrele_dle_transportu, headers="keys", tablefmt="psql"))
+
+#### Nalezeni konkretnich crecordA / crecord pro neobvykle kombinace
+# Slouceni tabulek
+podezrele = (pd.concat([podezrele_dle_mista, podezrele_dle_transportu])
+                .drop_duplicates(subset=["TypTransportu", "TypMista"])
+)
+
+# Inner join na puvodni tabulku
+podezrele_zaznamy = data.merge(podezrele, on=["TypTransportu", "TypMista"], how="inner")
+
+# Ziskani seznamu unikatnich crecord
+cisla_kontroly = pd.DataFrame(columns=["crecord"], data=podezrele_zaznamy["CisloKontroly"].unique())
+
+# Ulozeni cisel
+cisla_kontroly.to_csv("kontroly_podezrele_misto_transport.csv", index=False, sep=";")
