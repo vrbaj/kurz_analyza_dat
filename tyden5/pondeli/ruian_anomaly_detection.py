@@ -246,7 +246,16 @@ def analyza_patecni_pokles():
     # odstranění pomocného sloupce
     pivot_pct = pivot_pct.drop(columns="den_podil")
 
-    print(pivot_pct.head())
+    # definice grafu
+    fig1, ax1 = plt.subplots(figsize=(16, max(8, len(pivot_pct) * 0.5)))
+    im = ax1.imshow(pivot_pct.values, aspect="auto", cmap="YlOrRd", norm=mcolors.PowerNorm(gamma=0.7))
+
+    # pozice popisků, jednotky a popisky
+    ax1.set_xticks(range(24))
+    ax1.set_title("Rozložení kontrol v průběhu dne podle krajů", fontsize=14)
+
+    plt.show()
+
 
 # logaritmicka_regrese_top15()
 analyza_patecni_pokles()
