@@ -98,4 +98,15 @@ ax1.set_xlabel("Hodina kontroly", fontsize=12)
 # nastavení popisků osy Y
 ax1.set_yticks(range(len(pivot_relativni)))
 ax1.set_yticklabels(pivot_relativni.index, fontsize=9)
+# nastavení titulkku
+plt.set_title("Kontroly v průběhu dne podle krajů (% podle kraje)")
+# přidání legendy
+ax1.legend(loc="upper right", fontsize=9)
+# zvýraznění začátku směn
+ax1.axvline(x=7, color="black", linewidth=2, linestyle="--", label="začátek denní směny 7:00")
+ax1.axvline(x=19, color="black", linewidth=2, linestyle="--", label="začátek noční směny 19:00")
+# přidání barevné škály
+cbar = plt.colorbar(im, ax=ax1, shrink=0.7)
+cbar.set_label("% kontrol", fontsize=8)
+plt.tight_layout()
 plt.show()
