@@ -63,3 +63,12 @@ print("#"*190)
 print("Prehled KC konztolnich akci dle rozkazu")
 print(tabulate(ka_dle_rozkazu.head(), headers="keys", tablefmt="psql"))
 
+# prehled doporucenych KC pro jednotlive k akce
+kc_dle_ka = stahni_data("doporucene_KC_dle_KA")
+kc_dle_ka["DoporuceneKC"] = kc_dle_ka["DoporuceneKC"].apply(
+    lambda x: set() if pd.isnull(x) else
+    set(sorted(x.strip().split(",")))
+)
+print("#"*190)
+print("Prehled doporucenych KC pro jednotlive KA")
+print(tabulate(kc_dle_ka.head(),headers="keys", tablefmt="psql"))
