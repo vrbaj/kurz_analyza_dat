@@ -54,4 +54,12 @@ narizene_kc["NarizeneKC"] = narizene_kc["NarizeneKC"].apply(
 )
 
 print("#"*190)
+print("Narizene KC pro jednotlive rozkazy")
 print(tabulate(narizene_kc.head(), headers="keys", tablefmt="psql"))
+
+# prehled rozkazu a z jakych kontrolnich akci vychazeji
+ka_dle_rozkazu = stahni_data("KA_dle_rozkazu")
+print("#"*190)
+print("Prehled KC konztolnich akci dle rozkazu")
+print(tabulate(ka_dle_rozkazu.head(), headers="keys", tablefmt="psql"))
+
