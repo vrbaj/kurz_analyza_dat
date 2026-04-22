@@ -77,3 +77,8 @@ pivot = df.groupby(["division", "hodina"]).size().unstack(fill_value=0)
 print(pivot.columns)
 print(f"Pivot table velikost {pivot.shape}")
 print(pivot.head(10))
+
+pivot_relativni = pivot.div(pivot.sum(axis=1), axis= 0) * 100
+
+pivot_relativni["den_podil"] = pivot_relativni[range(7, 19)].sum(axis=1)
+pivot_relativni.sort_values("den_podil", ascending=True, inplace=True)
