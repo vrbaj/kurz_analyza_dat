@@ -88,4 +88,13 @@ pivot_relativni.sort_values("den_podil", ascending=True, inplace=True)
 # vykreslení heatmapy
 fig1, ax1 = plt.subplots(figsize=(16, 16))
 im = ax1.imshow(pivot_relativni.values, aspect="auto", cmap="YlOrRd", norm=mcolors.PowerNorm(gamma=0.8))
+# nastavení popisků osy X
+ax1.set_xticks(range(24))
+ax1.set_xticklabels([f"{h}:00" for h in range(24)], rotation=45, fontsize=9)
+# popisek
+ax1.set_xlabel("Hodina kontroly", fontsize=12)
+
+# nastavení popisků osy Y
+ax1.set_yticks(range(len(pivot_relativni)))
+ax1.set_yticklabels(pivot_relativni.index, fontsize=9)
 plt.show()
