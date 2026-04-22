@@ -1,3 +1,9 @@
+"""
+Analýza outlierů v kontextu lokace provedených kontrol.
+Body reprezentující hranici je potřeba stáhnout zde:
+https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-0-countries/
+
+"""
 import geopandas
 from shapely.geometry import Point
 import pyodbc
@@ -65,7 +71,7 @@ if FILTRACE:
     # kontrola počtu kontrol mimo ČR a pásmo
     print(f"Počet kontrol mimo ČR: {zahranicni_kontroly_filtrovane.shape[0]}")
     # uložení kontrol do souboru
-    zahranicni_kontroly_filtrovane.to_csv("kontroly_filtrovane.csv")
+    zahranicni_kontroly_filtrovane.to_file("kontroly_filtrovane.shp")
 else:
-    zahranicni_kontroly_filtrovane = geopandas.read_file("kontroly_filtrovane.csv")
-    print(zahranicni_kontroly_filtrovane.head())
+    zahranicni_kontroly_filtrovane = geopandas.read_file("kontroly_filtrovane.shp")
+    print(zahranicni_kontroly_filtrovane)
