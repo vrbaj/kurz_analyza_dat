@@ -109,4 +109,6 @@ ax1.axvline(x=18.5, color="black", linewidth=2, linestyle="--", label="začátek
 cbar = plt.colorbar(im, ax=ax1, shrink=0.7)
 cbar.set_label("% kontrol", fontsize=8)
 plt.tight_layout()
+# uložení obrázku na disk
+plt.imsave("graf.png")
 plt.show()
