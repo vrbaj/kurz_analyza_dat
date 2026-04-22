@@ -156,7 +156,8 @@ print(tabulate(
 ### Vizualizace
 plt.figure()
 sns.histplot(
-    data_finalni, x="PodilPozitivnich", hue="JeDoporuceni",
+    data_finalni[(data_finalni["PodilPozitivnich"]>0) & (data_finalni["PodilPozitivnich"]<1)]
+    , x="PodilPozitivnich", hue="JeDoporuceni",
     element="step", stat="density", common_norm=False
 )
 plt.show()
