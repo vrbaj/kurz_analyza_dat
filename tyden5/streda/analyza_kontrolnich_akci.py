@@ -72,3 +72,5 @@ kc_dle_ka["DoporuceneKC"] = kc_dle_ka["DoporuceneKC"].apply(
 print("#"*190)
 print("Prehled doporucenych KC pro jednotlive KA")
 print(tabulate(kc_dle_ka.head(),headers="keys", tablefmt="psql"))
+
+
