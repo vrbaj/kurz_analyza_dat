@@ -4,7 +4,7 @@ from tabulate import tabulate
 from pathlib import Path
 from matplotlib import pyplot as plt
 import seaborn as sns
-from .connection_string import conn_string
+from connection_string import conn_string
 
 # fuknci pro stahovani dat
 def stahni_data(nazev_query):
