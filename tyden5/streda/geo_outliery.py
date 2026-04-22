@@ -98,5 +98,9 @@ else:
             # popisek bodu se souřadnicemi a kontrolní činností
             popup=f"X={radek["axisx"]}, Y={radek["axisy"]} - kontrolni činnost: {kontrolni_cinnost}",
         ).add_to(interaktivni_mapa)
-
-    folium.GeoJson(data=cesko_hranice.boundary.__geo_interface__)
+    # vykreslení hranice (pozor, pro větší přesnost je potřeba mít hranici s vícero body, což povede
+    # na výpočetně náročnější program
+    folium.GeoJson(data=cesko_hranice.boundary.__geo_interface__,
+                   style_function=lambda feature: {"color": "blue", "weight": 3},).add_to(interaktivni_mapa)
+    # uložení map do html pro následnou práci
+    interaktivni_mapa.save("interaktni_mapa.html")
