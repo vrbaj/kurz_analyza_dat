@@ -1,6 +1,8 @@
-
+import geopandas
+from shapely.geometry import Point
 import pyodbc
 import pandas as pd
+
 
 DB = False
 
@@ -25,4 +27,8 @@ if DB:
     # uložení do CSV
     lokace.to_csv("lokace.csv")
 else:
+    # nahraní dat z CSV
     lokace = pd.read_csv("lokace.csv")
+
+# ko
+print(lokace.head())
