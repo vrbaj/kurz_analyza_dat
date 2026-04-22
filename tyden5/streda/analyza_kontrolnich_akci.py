@@ -4,6 +4,7 @@ from tabulate import tabulate
 from pathlib import Path
 from matplotlib import pyplot as plt
 import seaborn as sns
+from .connection_string import conn_string
 
 # fuknci pro stahovani dat
 def stahni_data(nazev_query):
@@ -16,13 +17,6 @@ def stahni_data(nazev_query):
 
     # pokud ne tak stahneme
     else:
-        conn_string = (
-            "DRIVER={ODBC Driver 18 for SQL Server};"
-            r"SERVER=(localdb)\MSSQLLocalDB;"
-            "DATABASE=MD2_VSCHT;"
-            "Trusted_Connection=yes;"
-            "TrustServerCertificate=no;"
-        )
         conn = pyodbc.connect(conn_string)
         # nacteni SQL dotazu
         query_cesta = Path("sql_query", nazev_query + ".sql")
