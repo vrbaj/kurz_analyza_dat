@@ -31,7 +31,7 @@ if FILTRACE:
         # definice připojení k DB
         CONN_STR = (
             "DRIVER={ODBC Driver 18 for SQL Server};"
-            "SERVER=(localdb)\MSSQLLocalDB;"
+            r"SERVER=(localdb)\MSSQLLocalDB;"
             "DATABASE=MD2_VSCHT;"
             "Trusted_Connection=yes;"
             "TrustServerCertificate=no;"
