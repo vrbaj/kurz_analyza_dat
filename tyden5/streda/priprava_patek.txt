@@ -1,4 +1,4 @@
-curl -fsSL https://ollama.com/install.sh | sh
+irm https://ollama.com/install.ps1 | iex
 pip install ollama
 ollama pull ministral-3:3b
 ollama run ministral-3:3b
