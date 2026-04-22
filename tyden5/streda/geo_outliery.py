@@ -2,6 +2,7 @@ import geopandas
 from shapely.geometry import Point
 import pyodbc
 import pandas as pd
+from pathlib import Path
 
 
 DB = False
@@ -38,3 +39,8 @@ kontrola_souradnice = [Point(xy) for xy in zip(lokace["axisx"], lokace["axisy"])
 # geopandas dataframe se souřadnicovým systémem výška/šířka ve stupních
 gdf = geopandas.GeoDataFrame(lokace, geometry=kontrola_souradnice, crs="EPSG:4326")
 print(gdf.head())
+
+# cesta k soubouru s hranicí jako řetězec znaků string
+cesta_hranice = str(Path("./ne_10m_admin_0_countries.zip").resolve())
+# kontrola cesty k souboru s hranicemi
+print(cesta_hranice)
