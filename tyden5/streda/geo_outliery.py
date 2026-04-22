@@ -118,6 +118,12 @@ else:
     # specifikovat souřadnicový systém pro google maps, atp.
     zahranicni_kontroly_filtrovane_web = zahranicni_kontroly_filtrovane.to_crs(epsg=3857)
     # body kontrol do mapy
-    zahranicni_kontroly_filtrovane_web.plot(ax=ax, marker="o", color="red", marker_size=50)
+    zahranicni_kontroly_filtrovane_web.plot(ax=ax, marker="o", color="red", markersize=5)
     # přidání podkladové mapy
-
+    ctx.add_basemap(ax, source=ctx.providers.OpenStreetMap.Mapnik)
+    # schování os
+    ax.set_axis_off()
+    # uložení do souboru
+    fig.savefig("kontroly.png")
+    # zobrazení výsledné mapy
+    plt.show()
