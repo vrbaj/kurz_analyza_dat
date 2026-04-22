@@ -105,4 +105,13 @@ data_doporuceni = data_doporuceni.groupby("CisloRozkazu")["DoporuceneKC"].agg(
 ).reset_index()
 print("#"*190)
 print("Doporucene KC pro rozkazy bez duplicit")
-print(tabulate(data_doporuceni, headers="keys", tablefmt="psql"))
+print(tabulate(data_doporuceni.head(), headers="keys", tablefmt="psql"))
+
+# spojit vše
+data_finalni = data.merge(data_doporuceni, on="CisloRozkazu", how="left")
+data_finalni["DoporuceneKC"] = data_finalni["DoporuceneKC"].apply(
+    lambda x: set() if pd.isnull(x) else x
+)
+print("#"*190)
+print("Celkový přehled pozitivní/neg. KC a s nariznymi/doporucenymi KC")
+print(tabulate(data_finalni.head(), headers="keys", tablefmt="psql"))
