@@ -54,8 +54,8 @@ df["hodina"] = df["LocTime"].str.replace(".", ":", regex=False).str.split(":")[0
 # převod textu na číslo, v případě že to nejde tak NaN
 df["hodina"] = pd.to_numeric(df["hodina"], errors="coerce")
 # kontrola velikost
-print(df.shape)
+print(f"Kontrola velikosti před odstranění NaN z hodiny: {df.shape}")
 # odstranění NaN hodnot
 df.dropna(subset=["hodina"], inplace=True)
 # kontrola velikosti
-print(df.shape)
+print(f"Kontrola velikosti po odstranění NaN z hodiny: {df.shape}")
