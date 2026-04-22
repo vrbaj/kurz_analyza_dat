@@ -4,12 +4,14 @@ Body reprezentující hranici je potřeba stáhnout zde:
 https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-0-countries/
 
 """
+import contextily as ctx
 import folium
 import geopandas
 from shapely.geometry import Point
 import pyodbc
 import pandas as pd
 from pathlib import Path
+import matplotlib.pyplot as plt
 
 FILTRACE = False
 DB = False
@@ -38,7 +40,7 @@ if FILTRACE:
         conn = pyodbc.connect(CONN_STR)
         # požadovaná SQL query
         query = """
-        SELECT d.axisx, d.axisy, a.AuditAction, d.isCrimact
+        SELECT d.axisx, d.axisy, a.AuditAction, d.isCrimact,
         FROM inetuser.MDx_Disorder d
         LEFT JOIN inetuser.MDx_AuditAction a ON d.cAuditAction = a.cAuditAction"""
         # načtení dat z db
@@ -85,6 +87,7 @@ else:
     for idx, radek in zahranicni_kontroly_filtrovane.iterrows():
         kontrolni_cinnost = radek["AuditActio"]
         vysledek_kontrolni_cinnost = radek["isCrimact"]
+        # crecord = radek["crecord"]
         if vysledek_kontrolni_cinnost == 0:
             barva = "blue"
         else:
@@ -96,7 +99,8 @@ else:
             color=barva,  # barva podle výsledku kontroly
             fill_opacity=0.7,
             # popisek bodu se souřadnicemi a kontrolní činností
-            popup=f"X={radek["axisx"]}, Y={radek["axisy"]} - kontrolni činnost: {kontrolni_cinnost}",
+            popup=f"X={radek["axisx"]}, Y={radek["axisy"]} - kontrolni činnost: {kontrolni_cinnost},"
+                  #f"kontrola = {crecord}",
         ).add_to(interaktivni_mapa)
     # vykreslení hranice (pozor, pro větší přesnost je potřeba mít hranici s vícero body, což povede
     # na výpočetně náročnější program
@@ -104,3 +108,16 @@ else:
                    style_function=lambda feature: {"color": "blue", "weight": 3},).add_to(interaktivni_mapa)
     # uložení map do html pro následnou práci
     interaktivni_mapa.save("interaktni_mapa.html")
+
+    # odstaranění kontrol bez souřadnic
+    zahranicni_kontroly_filtrovane = zahranicni_kontroly_filtrovane[(zahranicni_kontroly_filtrovane["axisx"] != 0)
+                                                                    & (zahranicni_kontroly_filtrovane["axisy"] != 0)]
+    print(f"Počet kontrol filtrovaných s validními souřadnicemi {zahranicni_kontroly_filtrovane.shape[0]}")
+    # výsledky do statické mapy z openstreetmaps
+    fig, ax = plt.subplots(figsize=(10, 10), dpi=300)
+    # specifikovat souřadnicový systém pro google maps, atp.
+    zahranicni_kontroly_filtrovane_web = zahranicni_kontroly_filtrovane.to_crs(epsg=3857)
+    # body kontrol do mapy
+    zahranicni_kontroly_filtrovane_web.plot(ax=ax, marker="o", color="red", marker_size=50)
+    # přidání podkladové mapy
+
