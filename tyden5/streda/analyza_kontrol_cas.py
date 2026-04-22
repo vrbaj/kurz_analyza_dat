@@ -84,7 +84,8 @@ pivot_relativni = pivot.div(pivot.sum(axis=1), axis= 0) * 100
 pivot_relativni["den_podil"] = pivot_relativni[range(7, 19)].sum(axis=1)
 # seřazení
 pivot_relativni.sort_values("den_podil", ascending=True, inplace=True)
-
+# zahodíme den_podil sloupeček, protože už jsem tabulku setřídili
+pivot_relativni.drop(columns=["den_podil"],inplace=True)
 # vykreslení heatmapy
 fig1, ax1 = plt.subplots(figsize=(16, 16))
 im = ax1.imshow(pivot_relativni.values, aspect="auto", cmap="YlOrRd", norm=mcolors.PowerNorm(gamma=0.8))
