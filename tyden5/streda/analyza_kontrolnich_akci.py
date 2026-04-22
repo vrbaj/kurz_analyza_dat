@@ -145,3 +145,10 @@ data_finalni["ShodaNarizenychDoporucenychKC"] = (
     )
 )
 
+print("#"*190)
+print("Vysledky")
+print(tabulate(
+    data_finalni[data_finalni["JeDoporuceni"]].sort_values("ShodaNarizenychDoporucenychKC").head(20),
+    headers="keys", tablefmt="psql"))
+
+# data_finalni.to_excel("analyzovana_data.xlsx", index=False)
