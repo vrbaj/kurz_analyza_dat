@@ -17,9 +17,10 @@ SELECT
     d.LocTime,
     d.LocDate,
     d.crecorda,
-    o.divrep
+    dv.division
 FROM inetuser.MDx_Disorder d
-JOIN inetuser.MDx_Order o ON d.crecorda = o.crecord;
+JOIN inetuser.MDx_Order o ON d.crecorda = o.crecord
+JOIN inetuser.MDx_Division dv ON o.cdiv = dv.cdiv 
 """
 
 # připojení k DB
@@ -59,3 +60,18 @@ print(f"Kontrola velikosti před odstranění NaN z hodiny: {df.shape}")
 df.dropna(subset=["hodina"], inplace=True)
 # kontrola velikosti
 print(f"Kontrola velikosti po odstranění NaN z hodiny: {df.shape}")
+
+# denní směna 7:00 - 19:00
+# noční směna 19:00 - 7:00
+df["smena"] = df["hodina"].apply(lambda h: "denní" if 7 <= h < 19 else "noční")
+# kontrola nového sloupečku "smena"
+print(df["smena"].describe())
+
+# sloupeček s příslušným CÚ
+print(df["division"].unique())
+
+# seskupení dat podle kraje a hodiny kontroly
+pivot = df.groupby(["division", "hodina"].size().unstack(fill_value=0))
+# kontrola seskupení
+print(f"Pivot table velikost {pivot.shape}")
+print(pivot.head(10))
