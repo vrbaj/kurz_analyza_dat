@@ -40,7 +40,7 @@ if FILTRACE:
         conn = pyodbc.connect(CONN_STR)
         # požadovaná SQL query
         query = """
-        SELECT d.axisx, d.axisy, a.AuditAction, d.isCrimact,
+        SELECT d.axisx, d.axisy, a.AuditAction, d.isCrimact
         FROM inetuser.MDx_Disorder d
         LEFT JOIN inetuser.MDx_AuditAction a ON d.cAuditAction = a.cAuditAction"""
         # načtení dat z db
