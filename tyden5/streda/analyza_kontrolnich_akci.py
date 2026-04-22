@@ -152,3 +152,11 @@ print(tabulate(
     headers="keys", tablefmt="psql"))
 
 # data_finalni.to_excel("analyzovana_data.xlsx", index=False)
+
+### Vizualizace
+plt.figure()
+sns.histplot(
+    data_finalni, x="PodilPozitivnich", hue="JeDoporuceni",
+    element="step", stat="density", common_norm=False
+)
+plt.show()
