@@ -37,5 +37,9 @@ zjisteni["NegativniKC"] = zjisteni["NegativniKC"].apply(
     lambda x: set() if pd.isnull(x) else
     set(sorted(x.strip().split(",")))
 )
+zjisteni["PozitivniKC"] = zjisteni["PozitivniKC"].apply(
+    lambda x: set() if pd.isnull(x) else
+    set(sorted(x.strip().split(",")))
+)
 print(tabulate(zjisteni.head(), headers="keys", tablefmt="psql"))
 
