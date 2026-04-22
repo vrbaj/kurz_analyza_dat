@@ -54,6 +54,7 @@ df["hodina"] = df["LocTime"].str.replace(".", ":", regex=False).str.split(":").s
 
 # převod textu na číslo, v případě že to nejde tak NaN
 df["hodina"] = pd.to_numeric(df["hodina"], errors="coerce")
+df = df[df["hodina"] < 24]
 # kontrola velikost
 print(f"Kontrola velikosti před odstranění NaN z hodiny: {df.shape}")
 # odstranění NaN hodnot
@@ -71,7 +72,8 @@ print(df["smena"].describe())
 print(df["division"].unique())
 
 # seskupení dat podle kraje a hodiny kontroly
-pivot = df.groupby(["division", "hodina"].size().unstack(fill_value=0))
+pivot = df.groupby(["division", "hodina"]).size().unstack(fill_value=0)
 # kontrola seskupení
+print(pivot.columns)
 print(f"Pivot table velikost {pivot.shape}")
 print(pivot.head(10))
