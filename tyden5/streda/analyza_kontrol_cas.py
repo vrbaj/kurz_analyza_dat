@@ -49,7 +49,7 @@ print(df["den_v_tydnu"])
 # kontrola LocTime
 print(df["LocTime"])
 # extrakce hodiny ze sloupce LocTime
-df["hodina"] = df["LocTime"].str.replace(".", ":", regex=False).str.split(":")[0]
+df["hodina"] = df["LocTime"].str.replace(".", ":", regex=False).str.split(":").str[0]
 
 # převod textu na číslo, v případě že to nejde tak NaN
 df["hodina"] = pd.to_numeric(df["hodina"], errors="coerce")
