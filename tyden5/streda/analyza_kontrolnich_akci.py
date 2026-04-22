@@ -115,3 +115,31 @@ data_finalni["DoporuceneKC"] = data_finalni["DoporuceneKC"].apply(
 print("#"*190)
 print("Celkový přehled pozitivní/neg. KC a s nariznymi/doporucenymi KC")
 print(tabulate(data_finalni.head(), headers="keys", tablefmt="psql"))
+
+# ulozit
+#data_finalni.to_excel("analyza.xlsx", index=False)
+
+###########################
+# Analyza dat
+###########################
+data_finalni["JeDoporuceni"] = data_finalni["DoporuceneKC"].apply(len)>0
+
+data_finalni["PodilPozitivnich"] = (
+    data_finalni["PocetPozitivnichKC"]/(
+    data_finalni["PocetPozitivnichKC"] + data_finalni["PocetNegativnichKC"]
+)
+)
+
+data_finalni["UspesnostNarizenychKC"] = (
+    data_finalni.apply(
+        lambda radek: len(radek["PozitivniKC"].intersection(radek["NarizeneKC"]))/len(radek["NarizeneKC"])
+    )
+)
+
+data_finalni["ShodaNarizenychDoporucenychKC"] = (
+    data_finalni.apply(
+        lambda radek: len(radek["NarizeneKC"].intersection(radek["DoporuceneKC"]))/
+                      len(data_finalni["DoporuceneKC"])
+    )
+)
+
