@@ -44,3 +44,22 @@ print(gdf.head())
 cesta_hranice = str(Path("./ne_10m_admin_0_countries.zip").resolve())
 # kontrola cesty k souboru s hranicemi
 print(cesta_hranice)
+
+# načtení bodů hranic
+svet_hranice = geopandas.read_file(cesta_hranice)
+# Česko hranice (pozor, soubor obsahuje hranice všech států)
+cesko_hranice = svet_hranice[svet_hranice["NAME_EN"] == "Czech Republic"]
+# převod do Mercatorova válcového konformního zobrazení
+cesko_hranice_mercator = cesko_hranice.to_crs(epsg=32633)
+# výběr kontrol mimo ČR
+kontroly_zahranici = gdf[~gdf.within(cesko_hranice.geometry.iloc[0])]
+# zahraniční kontroly v MVK zobrazení
+kontroly_zahranici_mercator = kontroly_zahranici.to_crs(epsg=32633)
+# 5 km zóna, kvůli nepřesné hranici
+zona_5km = cesko_hranice_mercator.union_all().buffer(5000)
+# odfiltrujeme kontroly mimo pás 5000
+zahranicni_kontroly_filtrovane = kontroly_zahranici_mercator[~kontroly_zahranici_mercator.within(zona_5km)]
+# převod to GPS
+zahranicni_kontroly_filtrovane.to_crs(epsg=4326, inplace=True)
+# kontrola počtu kontrol mimo ČR a pásmo
+print(f"Počet kontrol mimo ČR: {zahranicni_kontroly_filtrovane.shape[0]}")
