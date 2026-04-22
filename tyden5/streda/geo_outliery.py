@@ -30,5 +30,11 @@ else:
     # nahraní dat z CSV
     lokace = pd.read_csv("lokace.csv")
 
-# ko
+# kontrola tabulky
 print(lokace.head())
+
+# převod souřadnic kontrol na geopandas body
+kontrola_souradnice = [Point(xy) for xy in zip(lokace["axisx"], lokace["axisy"])]
+# geopandas dataframe se souřadnicovým systémem výška/šířka ve stupních
+gdf = geopandas.GeoDataFrame(lokace, geometry=kontrola_souradnice, crs="EPSG:4326")
+print(gdf.head())
