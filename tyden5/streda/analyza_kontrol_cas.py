@@ -110,5 +110,5 @@ cbar = plt.colorbar(im, ax=ax1, shrink=0.7)
 cbar.set_label("% kontrol", fontsize=8)
 plt.tight_layout()
 # uložení obrázku na disk
-plt.imsave("graf.png", fig1)
+fig1.savefig("graf.png")
 plt.show()
