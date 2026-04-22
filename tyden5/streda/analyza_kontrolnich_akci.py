@@ -32,7 +32,7 @@ def stahni_data(nazev_query):
 zjisteni = stahni_data("pocty_kc_dle_zjisteni")
 #print(tabulate(zjisteni.head(), headers="keys", tablefmt="psql"))
 
-# převedeme NehgativniKC na mnozinu
+# převedeme NehgativniKC i PozitivniKC na mnozinu -> tim nejen usnadnime dalsi zpracovani dat ale i deduplikujeme zaznamy
 zjisteni["NegativniKC"] = zjisteni["NegativniKC"].apply(
     lambda x: set() if pd.isnull(x) else
     set(sorted(x.strip().split(",")))
@@ -41,5 +41,17 @@ zjisteni["PozitivniKC"] = zjisteni["PozitivniKC"].apply(
     lambda x: set() if pd.isnull(x) else
     set(sorted(x.strip().split(",")))
 )
+print("#"*190)
+print("Pozitivni a negativni zjisteni pro jednotlive rozkazy")
 print(tabulate(zjisteni.head(), headers="keys", tablefmt="psql"))
 
+
+# Stazeni dat pro jednotlive rozkazy
+narizene_kc = stahni_data("narizene_kc_dle_rozkazu")
+narizene_kc["NarizeneKC"] = narizene_kc["NarizeneKC"].apply(
+    lambda x: set() if pd.isnull(x) else
+    set(sorted(x.strip().split(",")))
+)
+
+print("#"*190)
+print(tabulate(narizene_kc.head(), headers="keys", tablefmt="psql"))
