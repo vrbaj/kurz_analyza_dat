@@ -4,13 +4,14 @@ Body reprezentující hranici je potřeba stáhnout zde:
 https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-0-countries/
 
 """
+import folium
 import geopandas
 from shapely.geometry import Point
 import pyodbc
 import pandas as pd
 from pathlib import Path
 
-FILTRACE = True
+FILTRACE = False
 DB = False
 
 if FILTRACE:
@@ -75,3 +76,22 @@ if FILTRACE:
 else:
     zahranicni_kontroly_filtrovane = geopandas.read_file("kontroly_filtrovane.shp")
     print(zahranicni_kontroly_filtrovane)
+
+    print("================== Příprava interaktivní mapy =======================")
+    interaktivni_mapa = folium.Map(location=[50.08, 14.42], zoom_start=6)
+    print(zahranicni_kontroly_filtrovane.columns)
+    for idx, radek in zahranicni_kontroly_filtrovane.iterrows():
+        kontrolni_cinnost = radek["AuditActio"]
+        vysledek_kontrolni_cinnost = radek["isCrimact"]
+        if vysledek_kontrolni_cinnost == 0:
+            barva = "blue"
+        else:
+            barva = "red"
+        folium.CircleMarker(
+            location=[radek["axisy"], radek["axisx"]],
+            radius = 3,
+            fill=True,
+            color=barva,
+            fill_opacity=0.7,
+            popup=f"X={radek["axisx"]}, Y={radek["axisy"]} - kontrolni činnost: {kontrolni_cinnost}",
+        ).add_to(interaktivni_mapa)
