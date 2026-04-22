@@ -75,7 +75,8 @@ print(tabulate(kc_dle_ka.head(),headers="keys", tablefmt="psql"))
 
 # spojeni dat zjisteni a rozkazu
 data = zjisteni.merge(narizene_kc, how="left", on="CisloRozkazu")
-
+print("#"*190)
+print("Spojeni dat zjisteni a rozkazu")
 print(tabulate(data.head()))
 
 # spojeni k jednotlivym kontrolnim akcim doporucene KC a prisluslne rozkazy
@@ -83,4 +84,25 @@ data_doporuceni = ka_dle_rozkazu.merge(kc_dle_ka, how="left", on="CisloKA")
 data_doporuceni["DoporuceneKC"] = data_doporuceni["DoporuceneKC"].apply(
     lambda x: set() if pd.isnull(x) else x
 )
+print("#"*190)
+print("spojeni KA a KC a příslušné rozkzazy")
 print(tabulate(data_doporuceni.head(),headers="keys", tablefmt="psql"))
+
+# data_doporuceni obsahuji duplicity (protoze jeden rozkaz muze mit vice KA), timto to dokazeme
+print("#"*190)
+print("pocty vyskytu kazdeho rozkazu")
+pocty = (data_doporuceni.groupby("CisloRozkazu")
+                        .size()
+                        .reset_index(name="pocet")
+                        .sort_values("pocet", ascending=False)
+                        .head(10)
+)
+print(tabulate(pocty, headers="keys", tablefmt="psql"))
+
+#agregace KC pomocí sjednocení
+data_doporuceni = data_doporuceni.groupby("CisloRozkazu")["DoporuceneKC"].agg(
+    lambda x: set().union(*x)
+).reset_index()
+print("#"*190)
+print("Doporucene KC pro rozkazy bez duplicit")
+print(tabulate(data_doporuceni, headers="keys", tablefmt="psql"))
