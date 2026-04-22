@@ -73,4 +73,14 @@ print("#"*190)
 print("Prehled doporucenych KC pro jednotlive KA")
 print(tabulate(kc_dle_ka.head(),headers="keys", tablefmt="psql"))
 
+# spojeni dat zjisteni a rozkazu
+data = zjisteni.merge(narizene_kc, how="left", on="CisloRozkazu")
 
+print(tabulate(data.head()))
+
+# spojeni k jednotlivym kontrolnim akcim doporucene KC a prisluslne rozkazy
+data_doporuceni = ka_dle_rozkazu.merge(kc_dle_ka, how="left", on="CisloKA")
+data_doporuceni["DoporuceneKC"] = data_doporuceni["DoporuceneKC"].apply(
+    lambda x: set() if pd.isnull(x) else x
+)
+print(tabulate(data_doporuceni.head(),headers="keys", tablefmt="psql"))
