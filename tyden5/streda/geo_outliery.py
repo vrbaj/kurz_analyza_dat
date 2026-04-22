@@ -14,6 +14,16 @@ from pathlib import Path
 FILTRACE = False
 DB = False
 
+# cesta k soubouru s hranicí jako řetězec znaků string
+cesta_hranice = str(Path("./ne_10m_admin_0_countries.zip").resolve())
+# kontrola cesty k souboru s hranicemi
+print(cesta_hranice)
+
+# načtení bodů hranic
+svet_hranice = geopandas.read_file(cesta_hranice)
+# Česko hranice (pozor, soubor obsahuje hranice všech států)
+cesko_hranice = svet_hranice[svet_hranice["NAME_EN"] == "Czech Republic"]
+
 if FILTRACE:
     if DB:
         # definice připojení k DB
@@ -48,15 +58,7 @@ if FILTRACE:
     gdf = geopandas.GeoDataFrame(lokace, geometry=kontrola_souradnice, crs="EPSG:4326")
     print(gdf.head())
 
-    # cesta k soubouru s hranicí jako řetězec znaků string
-    cesta_hranice = str(Path("./ne_10m_admin_0_countries.zip").resolve())
-    # kontrola cesty k souboru s hranicemi
-    print(cesta_hranice)
 
-    # načtení bodů hranic
-    svet_hranice = geopandas.read_file(cesta_hranice)
-    # Česko hranice (pozor, soubor obsahuje hranice všech států)
-    cesko_hranice = svet_hranice[svet_hranice["NAME_EN"] == "Czech Republic"]
     # převod do Mercatorova válcového konformního zobrazení
     cesko_hranice_mercator = cesko_hranice.to_crs(epsg=32633)
     # výběr kontrol mimo ČR
@@ -91,7 +93,10 @@ else:
             location=[radek["axisy"], radek["axisx"]],
             radius = 3,
             fill=True,
-            color=barva,
+            color=barva,  # barva podle výsledku kontroly
             fill_opacity=0.7,
+            # popisek bodu se souřadnicemi a kontrolní činností
             popup=f"X={radek["axisx"]}, Y={radek["axisy"]} - kontrolni činnost: {kontrolni_cinnost}",
         ).add_to(interaktivni_mapa)
+
+    folium.GeoJson(data=cesko_hranice.boundary.__geo_interface__)
