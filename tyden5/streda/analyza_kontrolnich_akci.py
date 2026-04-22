@@ -29,6 +29,13 @@ def stahni_data(nazev_query):
     return data
 
 # nejprve zavolame poprve cimz se stahnou data
-data1 = stahni_data("pocty_kc_dle_zjisteni")
-print(data1.head())
+zjisteni = stahni_data("pocty_kc_dle_zjisteni")
+#print(tabulate(zjisteni.head(), headers="keys", tablefmt="psql"))
+
+# převedeme NehgativniKC na mnozinu
+zjisteni["NegativniKC"] = zjisteni["NegativniKC"].apply(
+    lambda x: set() if pd.isnull(x) else
+    set(sorted(x.strip().split(",")))
+)
+print(tabulate(zjisteni.head(), headers="keys", tablefmt="psql"))
 
