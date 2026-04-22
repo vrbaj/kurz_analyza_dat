@@ -21,3 +21,17 @@ SELECT
 FROM inetuser.MDx_Disorder d
 JOIN inetuser.MDx_Order o ON d.crecorda = o.crecord;
 """
+
+# připojení k DB
+conn = pyodbc.connect(conn_string)
+
+# vytvoření pd DataFrame s výsledkem query
+df = pd.read_sql(query, conn)
+
+# odpojení od db
+conn.close()
+
+# kontrola výsledku query
+print(df.head())
+print(df.shape)
+print(df.columns)
