@@ -132,14 +132,16 @@ data_finalni["PodilPozitivnich"] = (
 
 data_finalni["UspesnostNarizenychKC"] = (
     data_finalni.apply(
-        lambda radek: len(radek["PozitivniKC"].intersection(radek["NarizeneKC"]))/len(radek["NarizeneKC"])
+        lambda radek: len(radek["PozitivniKC"].intersection(radek["NarizeneKC"]))/len(radek["NarizeneKC"]),
+        axis=1
     )
 )
 
 data_finalni["ShodaNarizenychDoporucenychKC"] = (
     data_finalni.apply(
         lambda radek: len(radek["NarizeneKC"].intersection(radek["DoporuceneKC"]))/
-                      len(data_finalni["DoporuceneKC"])
+                      len(data_finalni["DoporuceneKC"]),
+        axis=1
     )
 )
 
