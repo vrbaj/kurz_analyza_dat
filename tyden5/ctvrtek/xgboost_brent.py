@@ -476,9 +476,17 @@ def main() -> None:
     print("Holdout evaluace")
     evalute_forecast(result.test[TARGET_COL], result.predictions)
     comparison = pd.concat([result.test[TARGET_COL], result.predictions], axis=1)
-
+    comparison = ["actual", "prediction"]
+    print("posledních 12 predikcí")
+    print(comparison.rail(12).round(3))
 
     # krok 3
+    wf_preds = walk_forward_one_step(result.data, result.feature_cols, TEST_MONTHS)
+    wf_actual = result.data.loc[wf_preds.index, TARGET_COL]
+    print("walk forward evaluace")
+    evalute_forecast(wf_actual, wf_preds)
+
+
 
 
 
