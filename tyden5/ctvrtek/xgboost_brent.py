@@ -59,13 +59,22 @@ def load_fred_series(series_id: str, value_name: str) -> pd.DataFrame:
     df.drop(["observation_date"], axis=1, inplace=True)
     # nalezení hodnotového lsoupce
     original_value_col = [c for c in df.columns if c != "DATE"][0]
+    # převod na čísla (fred nahrazuje chybející hodnoty .
+    df[original_value_col] = pd.to_numeric(df[original_value_col], errors="coerce")
+    # přejmenování sloupce s ropou
+    df = df.rename(columns={original_value_col: value_name})
+    # odstranění řádků s NaN
+    df = df.dropna(subset=[value_name]).copy()
+    # nastavení datumového sloupce jako index
+    df = df.set_index("DATE").sort_index()
 
-    print(original_value_col)
+    return df
 
 
 
 
-load_fred_series("brent","nic")
+df = load_fred_series("brent","nic")
+print(df.head())
 
 
 
