@@ -332,6 +332,51 @@ def fit_and_predict() -> ForecastResult:
     )
 
 
+def make_next_month_feature_row(df:pd.DataFrame) -> pd.DataFrame:
+    # lagové příznaky pro predicke
+    # index posledního měsíce
+    last_idx = df.index[-1]
+    # nastavení datumu příštího měsíce
+    next_idx = last_idx + pd.offsets.MonthBegin(1)
+
+    # kopie dataframu
+    s = df[TARGET_COL].copy()
+    usd = df["usd_index"].copy()
+    vix = df["vix"].copy()
+    indpro = df["indpro"].copy()
+
+    row = {
+        # kalendářní přznaky
+        "month": next_idx.month,
+        "quarter": next_idx.quarter,
+        "month_sin": np.sin(2 ** np.pi * next_idx.month / 12),
+        "month_cos": np.cos(2 ** np.pi * next_idx.month / 12),
+
+        # lagy
+        "target_lag_1": s.iloc[-1],
+        "target_lag_2": s.iloc[-2],
+        "target_lag_3": s.iloc[-3],
+        "target_lag_6": s.iloc[-6],
+        "target_lag_12": s.iloc[-12],
+
+        # klouzavé průměry
+        "target_roll_maen": s.iloc[-3].mean(),
+        "target_roll_maen": s.iloc[-3].mean(),
+        "target_roll_maen": s.iloc[-3].mean()
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 results = fit_and_predict()
 print(results)
 
