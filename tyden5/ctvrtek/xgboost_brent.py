@@ -156,6 +156,7 @@ def add_target_lag_features(df: pd.DataFrame, target_col: str) -> pd.DataFrame:
     return out
 
 df = build_base_dataset()
+print(df.columns)
 # out = add_calendar_features(df)
-out = add_target_lag_features(df, "brent")
+out = add_target_lag_features(df, "brent_monthly_avg")
 print(out.head())
