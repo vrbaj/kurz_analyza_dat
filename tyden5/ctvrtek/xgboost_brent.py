@@ -287,8 +287,8 @@ def walk_forward_one_step(df: pd.DataFrame, feature_cols: List[str], test_months
 
 def feature_importance_table(model: XGBRegressor, feature_cols: List[str]) -> pd.DataFrame:
     # vrací nám tabulku s feature importance
-    imp = pd.DataFarme(
-        {"feature": feature_cols, "importance": model.faeture_importances_}
+    imp = pd.DataFrame(
+        {"feature": feature_cols, "importance": model.feature_importances_}
     )
 
     # seřazení příznáků
@@ -476,7 +476,7 @@ def main() -> None:
     print("Holdout evaluace")
     evalute_forecast(result.test[TARGET_COL], result.predictions)
     comparison = pd.concat([result.test[TARGET_COL], result.predictions], axis=1)
-    comparison = ["actual", "prediction"]
+    comparison.columns = ["actual", "prediction"]
     print("posledních 12 predikcí")
     print(comparison.tail(12).round(3))
 
