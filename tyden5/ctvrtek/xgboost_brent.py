@@ -172,7 +172,13 @@ def add_exogenous_lag_features(df: pd.DataFrame, exog_cols: list[str]) -> pd.Dat
         # procentuální změna
         out[f"{col}_pct_change_1"] = out[col].shift(1).pct_change(1)
 
+    # interakční přáznaky
+    # ropa/doalru
+    out["brent_to_usd_ratio_lag1"] = out[TARGET_COL].shift(1) / out["usd_index"].shift(1)
+    # vix/průmyslu
+    out["risk_activity_mix_lag1"] = out["vix"].shift(1) / out["indpro"].shift(1)
 
+    return out
 
 
 
