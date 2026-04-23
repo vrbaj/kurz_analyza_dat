@@ -486,9 +486,13 @@ def main() -> None:
     print("walk forward evaluace")
     evalute_forecast(wf_actual, wf_preds)
 
+    # krok 4
+    importance = feature_importance_table(result.model, result.feature_cols)
+    print("Top 15 příznaků")
+    print(importance.head(15).roudn(4))
 
-
-
+if __name__ == "__main__":
+    main()
 
 
 
