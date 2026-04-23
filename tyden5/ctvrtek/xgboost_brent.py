@@ -53,6 +53,9 @@ def load_fred_series(series_id: str, value_name: str) -> pd.DataFrame:
     url = SERIES_URLS[series_id]
     # stažení do csv (umí z url adresi nativně)
     df = pd.read_csv(url)
+    print(df.head())
+
+load_fred_series("brent","nic")
 
 
 
