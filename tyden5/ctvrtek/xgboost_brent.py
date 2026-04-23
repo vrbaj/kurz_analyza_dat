@@ -466,6 +466,20 @@ def plot_predictions(
     plt.show()
 
 
+def main() -> None:
+    # krok 1
+    result = fit_and_predict()
+    print("Trénovací měsíce:", len(result.train))
+    print("Testovácí měsíce:", len(result.test))
+
+    # krok 2
+    print("Holdout evaluace")
+    evalute_forecast(result.test[TARGET_COL], result.predictions)
+    comparison = pd.concat([result.test[TARGET_COL], result.predictions], axis=1)
+
+
+    # krok 3
+
 
 
 
