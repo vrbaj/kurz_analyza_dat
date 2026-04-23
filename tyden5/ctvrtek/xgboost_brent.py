@@ -155,6 +155,18 @@ def add_target_lag_features(df: pd.DataFrame, target_col: str) -> pd.DataFrame:
 
     return out
 
+
+def add_exogenous_lag_features(df: pd.DataFrame, exog_cols: list[str]) -> pd.DataFrame:
+    # externí příznaky, třeb apoměr cena ropy/index doalru
+    out = df.copy()
+    # cklus pro výpočet exogeních lagů
+    for col in exog_cols:
+        out[f"{col}_lag_1"] = out[col].shift(1)
+        out[f"{col}_lag_2"] = out[col].shift(2)
+        out[f"{col}_lag_3"] = out[col].shift(3)
+
+
+
 df = build_base_dataset()
 print(df.columns)
 # out = add_calendar_features(df)
