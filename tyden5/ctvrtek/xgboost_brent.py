@@ -199,9 +199,30 @@ def build_dataset() -> pd.DataFrame:
 
     return df
 
-df = build_dataset()
-print(df.head())
-print(df.columns)
+
+# ========================================
+# TRÉNOVÁNÍ A VALIDACE
+# ========================================
+
+def train_test_split_time_series(df: pd.DataFrame, test_months: int) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    # funcke pro rozdělení data n atestovací a trénovací části
+    train = df.iloc[:-test_months].copy()
+    test = df.iloc[-test_months:].copy()
+
+    return train, test
+
+def fit_xgboost(train: pd.DataFrame, feature_cols: List[str]) -> XGBRegressor:
+    # trénuje regesní model na train datech
+    # rozdělit data na vstupy a výdtupy
+    X_train = train[feature_cols]
+    y_train = train[TARGET_COL]
+
+    # konfogurace modelu
+    model = XGBRegressor(
+
+    )
+
+
 
 
 
