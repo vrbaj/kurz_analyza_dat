@@ -148,9 +148,10 @@ def add_target_lag_features(df: pd.DataFrame, target_col: str) -> pd.DataFrame:
     out["target_mom_1"] = out[target_col].shift(1) - out[target_col].shift(2)
     out["target_mom_3"] = out[target_col].shift(1) - out[target_col].shift(4)
 
-    #
-
-
+    # procentuální změny
+    out["target_pct_change_1"] = out[target_col].shift(1).pct_change(1)
+    out["target_pct_change_3"] = out[target_col].shift(1).pct_change(3)
+    out["target_pct_change_12"] = out[target_col].shift(1).pct_change(12)
 
 df = build_base_dataset()
 out = add_calendar_features(df)
