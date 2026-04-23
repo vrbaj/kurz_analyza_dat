@@ -378,8 +378,16 @@ def make_next_month_feature_row(df:pd.DataFrame) -> pd.DataFrame:
         "target_pct_change_3": (s.iloc[-1] - s.iloc[-4]) / s.iloc[-4],
         "target_pct_change_12": (s.iloc[-1] - s.iloc[-13]) / s.iloc[-13],
 
+        # usd index feature
+        "usd_index_lag_1": usd.iloc[-1],
+        "usd_index_lag_2": usd.iloc[-2],
+        "usd_index_lag_3": usd.iloc[-3],
+        "usd_index_roll_mean_3": usd.iloc[-3:].mean(),
+        "usd_index_roll_std_3": usd.iloc[-3:].std(),
+        "usd_index_pct_change_1": (usd.iloc[-1] - usd.iloc[-2]) / usd.iloc[-2],
 
 
+        #
 
 
 
