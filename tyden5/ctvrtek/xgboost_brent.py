@@ -285,6 +285,12 @@ def walk_forward_one_step(df: pd.DataFrame, feature_cols: List[str], test_months
     return pd.Series(preds, index=pred_index, name="prediction")
 
 
+def feature_importance_table(model: XGBRegressor, feature_cols: List[str]) -> pd.DataFrame:
+    # vrací nám tabulku s feature importance
+    imp = pd.DataFarme(
+        {"feature": feature_cols, "importance": model.faeture_importances_}
+    )
+
 
 
 
