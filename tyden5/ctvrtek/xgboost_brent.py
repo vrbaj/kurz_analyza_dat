@@ -194,22 +194,22 @@ def build_dataset() -> pd.DataFrame:
     # krok 4: přidání exogenních příznaků
     df = add_exogenous_lag_features(df, ["usd_index", "vix", "indpro"])
 
+    # krok 5: odstranění NaN hodnot
+    df = df.dropna().copy()
 
+    return df
 
-
-
-
-
-
-
-
-
-
-
-
-
-df = build_base_dataset()
+df = build_dataset()
+print(df.head())
 print(df.columns)
-# out = add_calendar_features(df)
-out = add_target_lag_features(df, "brent_monthly_avg")
-print(out.head())
+
+
+
+
+
+
+
+
+
+
+
