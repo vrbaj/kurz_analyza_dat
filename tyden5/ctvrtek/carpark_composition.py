@@ -31,3 +31,16 @@ X = df[["rok"]]
 predikce_park = pd.DataFrame({"rok": roky_pred})
 
 print("-> predikce vozového parku")
+
+# predicke pro každou kategorii vozdla
+for col in sloupce_parku:
+    model = LinearRegression()
+    model.fit(X,df[col])
+    preds = model.predict(pd.DataFrame({"rok": roky_pred}))
+    preds = np.maximum(0, preds).astype(int)
+    predikce_park[col] = preds
+    r2 = model.score(X, df[col])
+    print(f" {col:15s} trend: {model.coef_[0]:+.0f}/rok  R2 = {r2:.3f}")
+
+print("predikvoaný park")
+print(predikce_park.to_string(index=False))
