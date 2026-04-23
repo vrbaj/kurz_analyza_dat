@@ -79,13 +79,34 @@ def to_monthly_last(df:pd.DataFrame, col: str) -> pd.DataFrame:
     # vrací poslední hodntou v měsíci
     return df[[col]].resample("MS").last()
 
+# =======================================
+# SESTAVENÍ DATASETU
+# ======================================
+
+def build_base_dataset() -> pd.DataFrame:
+    # funkce pro sestavení datasetu ze všech odkazů
+    # stažení surových dat
+    brent_daily = load_fred_series("brent", "brent")
+    usd_daily = load_fred_series("usd_index", "usd_index")
+    vix_daily = load_fred_series("vix", "vix")
+    indpro_monthly = load_fred_series("indpro", "indpro")
+
+    # převod ropy na měsíční prměr
+    brent_m = to_monthly_mean(brent_daily, "brent").rename(columns={"brent": TARGET_COL})
+    # měsíční průměr síly dolaru
+    usd_m = to_monthly_mean(usd_daily, "usd_index")
+    # měsíční průměr vix indexu
+    vix_m = to_monthly_mean(vix_daily, "vix")
+    # resample jen pro unifikaci indexu
+    indpro_m = indpro_monthly[["inpro"]].resample("MS").last()
+
+    # spojení datových řad do jednoho dataframu
+    df = brent_m.join([usd_m, vix_m, indpro_m], how="inner")
+
+    return df
 
 
-df = load_fred_series("brent","BRENT")
-last = to_monthly_last(df, "BRENT")
-
+df = build_base_dataset()
 print(df.head())
-
-
 
 
