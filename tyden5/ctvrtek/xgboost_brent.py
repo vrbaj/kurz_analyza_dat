@@ -165,6 +165,19 @@ def add_exogenous_lag_features(df: pd.DataFrame, exog_cols: list[str]) -> pd.Dat
         out[f"{col}_lag_2"] = out[col].shift(2)
         out[f"{col}_lag_3"] = out[col].shift(3)
 
+        # klouzavý průměr
+        out[f"{col}_roll_mean_3"] = out[col].shift(1).rolling(3).mean()
+        # klouzavá std
+        out[f"{col}_roll_std_3"] = out[col].shift(1).rolling(3).std()
+        # procentuální změna
+        out[f"{col}_pct_change_1"] = out[col].shift(1).pct_change(1)
+
+
+
+
+
+
+
 
 
 df = build_base_dataset()
