@@ -44,3 +44,45 @@ for col in sloupce_parku:
 
 print("predikvoaný park")
 print(predikce_park.to_string(index=False))
+
+# 3) model spotřeby
+
+for kat in ["OA","NA","T","BS"]:
+    for palivo in ["benzin", "nafta"]:
+        col = f"{kat}_{palivo}"
+        if col in df.columns:
+            df[f"km_{col}"] = df[col] * najezdy[kat] / 1e9
+
+# názvy sloupců pro model spotřeby
+feat_benzin = ["km_OA_benzin", "km_NA_benzin", "km_T_benzin", "km_BS_benzin"]
+feat_nafta = ["km_OA_nafta", "km_NA_nafta", "km_T_nafta", "km_BS_nafta"]
+
+# treningová data pro benzín
+df_train_benzin = df[~df["rok"].isin(BENZIN_VYLOUCENE_ROKY)]
+df
+# model pro benzín
+model_benzin = LinearRegression(fit_intercept=False)
+model_benzin.fit(df_train_benzin[feat_benzin], df_train_benzin["Benzin"])
+# model pro naftu
+model_nafta = LinearRegression(fit_intercept=False)
+model_nafta.fit(df[feat_nafta], df["Nafta"])
+
+# metriky
+r2_b = model_benzin.score(df_train_benzin[feat_benzin], df_train_benzin["Benzin"])
+r2_n = model_nafta.score(df[feat_nafta], df["Nafta"])
+
+# modelové hodnoty pro hsitorické roky
+df["Benzin_model"] = model_benzin.predict(df[feat_benzin])
+df["Nafta_model"] = model_nafta.predict(df[feat_nafta])
+
+# výpočet kilometrů pro predikovaný park
+for kat in ["OA","NA","T","BS"]:
+    for palivo in ["benzin", "nafta"]:
+        col = f"{kat}_{palivo}"
+        if col in predikce_park.columns:
+            predikce_park[f"km_{col}"] = predikce_park[col] * najezdy[kat] / 1e9
+
+
+
+
+
