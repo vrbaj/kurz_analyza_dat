@@ -97,7 +97,36 @@ if benzin_2025_verif:
     print(f"Nafta pred: {n25:.2f}, skut={nafta_2025_verif:.2f}")
 
 
+# grafické vyjádření
 
+fig, axes = plt.subplots(1,2)
 
+df_ok = df[~df["rok"].isin(BENZIN_VYLOUCENE_ROKY)]
+df_vyloucene = df[df["rok"].isin(BENZIN_VYLOUCENE_ROKY)]
 
+ax = axes[0, 0]
+ax.plot(df_ok["rok"], df["Benzin"], "o-",
+        color="E67E22",
+        linewidth=2,
+        markersize=6,
+        label="skuecnost")
+
+ax.plot(df_vyloucene["rok"], df_vyloucene["Benzin"], "o",
+        color="red",
+        markersize=5,
+        label="vylouceno z modelu")
+
+ax.plot(df["rok"], df["Benzin_model"], "s--",
+        color="e67E22",
+        linewidth=1,
+        markersize=2,
+        alpha=0.5,
+        label="Model fit")
+
+roky_all = np.concatenate([["rok"].iloc[-1]], roky_pred)
+vals_all = np.concatenate([["Benzin_model"].iloc[-1], predikce_park["Benzin_pred"].values])
+ax.plot(roky_all, vals_all, "--")
+ax.scatter(roky_pred, predikce_park["Benzin_pred"], label=predikce)
+
+plt.show()
 
