@@ -328,11 +328,12 @@ def fit_and_predict() -> ForecastResult:
         train=train,
         test=test,
         feature_cols=feature_cols,
-        predictions=predictions,
+        predictions=predictions
     )
 
 
-
+results = fit_and_predict()
+print(results)
 
 
 
