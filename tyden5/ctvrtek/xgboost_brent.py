@@ -360,9 +360,26 @@ def make_next_month_feature_row(df:pd.DataFrame) -> pd.DataFrame:
         "target_lag_12": s.iloc[-12],
 
         # klouzavé průměry
-        "target_roll_maen_3": s.iloc[-3].mean(),
-        "target_roll_maen_6": s.iloc[-6].mean(),
-        "target_roll_maen_12": s.iloc[-12].mean()
+        "target_roll_mean_3": s.iloc[-3].mean(),
+        "target_roll_mean_6": s.iloc[-6].mean(),
+        "target_roll_mean_12": s.iloc[-12].mean(),
+
+        # volatilita
+        "target_roll_std_3": s.iloc[-3].std(),
+        "target_roll_std_6": s.iloc[-6].std(),
+        "target_roll_std_12": s.iloc[-12].std(),
+
+        # momentum
+        "target_mom_1": s.iloc[-1] - s.iloc[-2],
+        "target_mom_3": s.iloc[-1] - s.iloc[-4],
+
+        #
+
+
+
+
+
+
     }
 
 
