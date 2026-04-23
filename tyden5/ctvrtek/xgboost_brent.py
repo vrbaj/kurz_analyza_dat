@@ -53,7 +53,17 @@ def load_fred_series(series_id: str, value_name: str) -> pd.DataFrame:
     url = SERIES_URLS[series_id]
     # stažení do csv (umí z url adresi nativně)
     df = pd.read_csv(url)
-    print(df.head())
+    # přejmenování datumu a převod na datumový formát
+    df["DATE"] = pd.to_datetime(df["observation_date"])
+    # odstranění starého textového datumu
+    df.drop(["observation_date"], axis=1, inplace=True)
+    # nalezení hodnotového lsoupce
+    original_value_col = [c for c in df.columns if c != "DATE"][0]
+
+    print(original_value_col)
+
+
+
 
 load_fred_series("brent","nic")
 
