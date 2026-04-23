@@ -251,7 +251,7 @@ def evalute_forecast(y_true: pd.Series, y_pred: pd.Series) -> None:
     # RMSE
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
     # MAPE
-    mape = np.mean(np.abs((y_true, y_pred) / y_true)) * 100
+    mape = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
 
     # výpis metrik
     print("Vyhodnocení")
