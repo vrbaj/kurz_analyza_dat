@@ -261,6 +261,28 @@ def evalute_forecast(y_true: pd.Series, y_pred: pd.Series) -> None:
 
 
 def walk_forward_one_step(df: pd.DataFrame, feature_cols: List[str], test_months: int) -> pd.Series:
+    # založení seznamů
+    preds = []
+    pred_index = []
+
+    # nastavení prvního indexu
+    start_idx = len(df) - test_months
+
+    # cyklus iterující přes každý měsíc v testu
+    for i in range(start_idx, len(df)):
+        # trénovací data, před aktuálním testovacím bodem
+        train_slice = df.iloc[:i].copy()
+        # to samé pro testovací
+        test_row = df.iloc[[i]].copy()
+        # natrénování modelu
+        model = fit_xgboost(train_slice, feature_cols)
+        # predicke pro aktuální měsíc
+        pred = model.predict(test_row[feature_cols])[0]
+        # uložení predikcí do listu
+        preds.append(pred)
+        pred_index.append(test_row.index[0])
+
+    return pd.Series(preds, index=pred_index, name="prediction")
 
 
 
