@@ -181,6 +181,28 @@ def add_exogenous_lag_features(df: pd.DataFrame, exog_cols: list[str]) -> pd.Dat
     return out
 
 
+def build_dataset() -> pd.DataFrame:
+    # krok 1: stažení surových dat
+    df = build_base_dataset()
+
+    # kork 2: vypočtení kalendářních příznaků
+    df = add_calendar_features(df)
+
+    # krok 3: výpočet lagových příznaků
+    df = add_target_lag_features(df, TARGET_COL)
+
+    # krok 4: přidání exogenních příznaků
+    df = add_exogenous_lag_features(df, ["usd_index", "vix", "indpro"])
+
+
+
+
+
+
+
+
+
+
 
 
 
