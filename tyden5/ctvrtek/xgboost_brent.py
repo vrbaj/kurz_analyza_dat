@@ -349,8 +349,8 @@ def make_next_month_feature_row(df:pd.DataFrame) -> pd.DataFrame:
         # kalendářní přznaky
         "month": next_idx.month,
         "quarter": next_idx.quarter,
-        "month_sin": np.sin(2 ** np.pi * next_idx.month / 12),
-        "month_cos": np.cos(2 ** np.pi * next_idx.month / 12),
+        "month_sin": np.sin(2 * np.pi * next_idx.month / 12),
+        "month_cos": np.cos(2 * np.pi * next_idx.month / 12),
 
         # lagy
         "target_lag_1": s.iloc[-1],
@@ -360,9 +360,9 @@ def make_next_month_feature_row(df:pd.DataFrame) -> pd.DataFrame:
         "target_lag_12": s.iloc[-12],
 
         # klouzavé průměry
-        "target_roll_maen": s.iloc[-3].mean(),
-        "target_roll_maen": s.iloc[-3].mean(),
-        "target_roll_maen": s.iloc[-3].mean()
+        "target_roll_maen_3": s.iloc[-3].mean(),
+        "target_roll_maen_6": s.iloc[-6].mean(),
+        "target_roll_maen_12": s.iloc[-12].mean()
     }
 
 
