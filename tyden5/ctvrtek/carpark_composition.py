@@ -5,6 +5,6 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 # 1) nahrání souboru s daty
-df_raw = pd.read_excel("inputs/auto_cr.xlsx")
+df_raw = pd.read_excel("inputs/auta_cr.xlsx")
 
 print(df_raw.head())
