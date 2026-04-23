@@ -373,7 +373,10 @@ def make_next_month_feature_row(df:pd.DataFrame) -> pd.DataFrame:
         "target_mom_1": s.iloc[-1] - s.iloc[-2],
         "target_mom_3": s.iloc[-1] - s.iloc[-4],
 
-        #
+        # target procentuální změny
+        "target_pct_change_1": (s.iloc[-1] - s.iloc[-2]) / s.iloc[-2],
+        "target_pct_change_3": (s.iloc[-1] - s.iloc[-4]) / s.iloc[-4],
+        "target_pct_change_12": (s.iloc[-1] - s.iloc[-13]) / s.iloc[-13],
 
 
 
