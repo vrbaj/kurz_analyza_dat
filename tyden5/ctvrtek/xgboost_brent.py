@@ -291,6 +291,35 @@ def feature_importance_table(model: XGBRegressor, feature_cols: List[str]) -> pd
         {"feature": feature_cols, "importance": model.faeture_importances_}
     )
 
+    # seřazení příznáků
+    imp = imp.sort_values("importance", ascending=False)
+
+    return imp
+
+# ============================================
+# Predicke
+# =============================================
+
+def fit_and_predict() -> ForecastResult:
+    # hlavní pipelina, seskipení všech ostatních funkcí a spuštění tréningu
+
+    # postavení datasetu z příznaků
+    df = build_dataset()
+
+    # časový split dat
+    train, test = train_test_split_time_series(df, TEST_MONTHS)
+
+    # vyhození některých exogeních sloupců (ať model nepužívá to co nemá v reálném čase)
+    raw_exog_cols = ["usd_index", "vix", "indpro"]
+    feature_cols = [c for c in df.columns if c != TARGET_COL and c not in raw_exog_cols]
+
+    model = fit_xgboost(train, feature_cols)
+
+    # predikci na testovacích datech
+    predictions = pd.Series(
+
+    )
+
 
 
 
