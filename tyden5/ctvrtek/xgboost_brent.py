@@ -134,8 +134,21 @@ def add_target_lag_features(df: pd.DataFrame, target_col: str) -> pd.DataFrame:
         # tvorba lagových sloupců
         out[f"target_lag_{lag}"] = out[target_col].shift(lag)
 
-    #
+    # klouzávé průměry
+    out["target_roll_mean_3"] = out[target_col].shift(1).rolling(3).mean()
+    out["target_roll_mean_6"] = out[target_col].shift(1).rolling(6).mean()
+    out["target_roll_mean_12"] = out[target_col].shift(1).rolling(12).mean()
 
+    # klouzavá volatilita
+    out["target_roll_std_3"] = out[target_col].shift(1).rolling(3).std()
+    out["target_roll_std_6"] = out[target_col].shift(1).rolling(6).std()
+    out["target_roll_std_12"] = out[target_col].shift(1).rolling(12).std()
+
+    # momentum
+    out["target_mom_1"] = out[target_col].shift(1) - out[target_col].shift(2)
+    out["target_mom_3"] = out[target_col].shift(1) - out[target_col].shift(4)
+
+    #
 
 
 
