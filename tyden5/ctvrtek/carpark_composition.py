@@ -226,7 +226,7 @@ ax.legend(fontsize=9, framealpha=0.9)
 
 # Uložení grafu
 plt.tight_layout()                            # automatické rozmístění grafů
-plt.savefig("results/predikce_auta.png", dpi=200, bbox_inches="tight")  # uložení do souboru
+plt.savefig("predikce_auta.png", dpi=200, bbox_inches="tight")  # uložení do souboru
 plt.show()                                    # zobrazení na obrazovce
 print("\nGraf uložen.")
 
