@@ -457,7 +457,7 @@ def plot_predictions(
                 zorder=5,
                 label=f"Budoucnost ({next_date.strftime("%Y-%m")}): {next_pred:.1f} USD")
 
-    plt.title("Predikce ceny ropy brent (USD/bbl)", fonsize=14)
+    plt.title("Predikce ceny ropy brent (USD/bbl)", fontsize=14)
     plt.ylabel("Cena_usd")
     plt.legend()
     plt.grid(True, alpha=0.3)
