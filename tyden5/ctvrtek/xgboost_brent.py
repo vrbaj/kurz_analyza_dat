@@ -124,6 +124,21 @@ def add_calendar_features(df: pd.DataFrame) -> pd.DataFrame:
 
     return out
 
+
+def add_target_lag_features(df: pd.DataFrame, target_col: str) -> pd.DataFrame:
+    # funkcepro výpočet lagovýych příznaků
+    out = df.copy()
+
+    # lagové příznaky
+    for lag in [1, 2, 3, 6, 12]:
+        # tvorba lagových sloupců
+        out[f"target_lag_{lag}"] = out[target_col].shift(lag)
+
+    #
+
+
+
+
 df = build_base_dataset()
 out = add_calendar_features(df)
 print(out.head())
