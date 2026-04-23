@@ -105,8 +105,25 @@ def build_base_dataset() -> pd.DataFrame:
 
     return df
 
+# =========================================
+# FEATER ENGINEERING
+# =========================================
+
+def add_calendar_features(df: pd.DataFrame) -> pd.DataFrame:
+    # přidáme kalendářní příznaky do dataframu
+    # uděláme si kopii dataframu ať nemodifikujem původní
+    out = df.copy()
+    # číslo měsíce z indexu
+    out["month"] = out.index.month
+    # extrakce kvartálu z datumu
+    out["quarter"] = out.index.quarter
+    # sinosová složka měsíce
+    out["month_sin"] = np.sin(2 * np.pi * out["month"] / 12)
+    # kosinová složka měsíce
+    out["month_cos"] = np.cos(2 * np.pi * out["month"] / 12)
+
+    return out
 
 df = build_base_dataset()
-print(df.head())
-
-
+out = add_calendar_features(df)
+print(out.head())
