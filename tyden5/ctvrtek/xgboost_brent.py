@@ -260,6 +260,8 @@ def evalute_forecast(y_true: pd.Series, y_pred: pd.Series) -> None:
     print(f"MAPE : {mape:.2f}%")
 
 
+def walk_forward_one_step(df: pd.DataFrame, feature_cols: List[str], test_months: int) -> pd.Series:
+
 
 
 
