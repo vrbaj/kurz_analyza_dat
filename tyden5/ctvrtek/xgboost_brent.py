@@ -386,9 +386,15 @@ def make_next_month_feature_row(df:pd.DataFrame) -> pd.DataFrame:
         "usd_index_roll_std_3": usd.iloc[-3:].std(),
         "usd_index_pct_change_1": (usd.iloc[-1] - usd.iloc[-2]) / usd.iloc[-2],
 
+        # vix index features
+        "vix_lag_1": vix.iloc[-1],
+        "vix_lag_2": vix.iloc[-2],
+        "vix_lag_3": vix.iloc[-3],
+        "vix_roll_mean_3": vix.iloc[-3:].mean(),
+        "vix_roll_std_3": vix.iloc[-3:].std(),
+        "vix_pct_change_1": (vix.iloc[-1] - vix.iloc[-2]) / vix.iloc[-2],
 
         #
-
 
 
     }
