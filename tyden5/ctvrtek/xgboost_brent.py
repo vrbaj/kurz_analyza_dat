@@ -71,9 +71,19 @@ def load_fred_series(series_id: str, value_name: str) -> pd.DataFrame:
     return df
 
 
+def to_monthly_mean(df: pd.DataFrame, col: str) -> pd.DataFrame:
+    # funkce na převod denních dat na měsíční průměry
+    return df[[col]].resample("MS").mean()
+
+def to_monthly_last(df:pd.DataFrame, col: str) -> pd.DataFrame:
+    # vrací poslední hodntou v měsíci
+    return df[[col]].resample("MS").last()
 
 
-df = load_fred_series("brent","nic")
+
+df = load_fred_series("brent","BRENT")
+last = to_monthly_last(df, "BRENT")
+
 print(df.head())
 
 
