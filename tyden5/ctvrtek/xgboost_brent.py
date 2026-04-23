@@ -322,7 +322,14 @@ def fit_and_predict() -> ForecastResult:
         name="prediction",
     )
 
-
+    return ForecastResult(
+        model=model,
+        data=df,
+        train=train,
+        test=test,
+        feature_cols=feature_cols,
+        predictions=predictions,
+    )
 
 
 
