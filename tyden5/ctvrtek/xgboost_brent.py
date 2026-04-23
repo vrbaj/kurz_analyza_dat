@@ -497,7 +497,14 @@ def main() -> None:
     print(f"Předpověď pro {next_row.index[0].strftime("%Y-%m")}: {next_pred:.2f} USD/bbl")
 
     # krok 6
-
+    plot_predictions(
+        data=result.data,
+        test=result.test,
+        houldout_preds=result.predictions,
+        wf_preds=wf_preds,
+        next_pred=next_pred,
+        next_date=next_row.index[0]
+    )
 
 if __name__ == "__main__":
     main()
