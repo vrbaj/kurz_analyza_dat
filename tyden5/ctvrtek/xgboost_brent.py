@@ -489,7 +489,15 @@ def main() -> None:
     # krok 4
     importance = feature_importance_table(result.model, result.feature_cols)
     print("Top 15 příznaků")
-    print(importance.head(15).roudn(4))
+    print(importance.head(15).round(4))
+
+    # krok 5
+    next_row = make_next_month_feature_row(result.data)
+    next_pred = result.model.predict(next_row[result.feature_cols])[0]
+    print(f"Předpověď pro {next_row.index[0].strftime("%Y-%m")}: {next_pred:.2f} USD/bbl")
+
+    # krok 6
+
 
 if __name__ == "__main__":
     main()
