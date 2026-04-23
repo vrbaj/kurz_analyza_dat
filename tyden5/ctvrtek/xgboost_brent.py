@@ -217,6 +217,7 @@ def fit_xgboost(train: pd.DataFrame, feature_cols: List[str]) -> XGBRegressor:
     X_train = train[feature_cols]
     y_train = train[TARGET_COL]
 
+    # TODO: optimalizace hyperparametrů pomocí GridSearch
     # konfogurace modelu
     model = XGBRegressor(
         # počet stromů
@@ -243,6 +244,20 @@ def fit_xgboost(train: pd.DataFrame, feature_cols: List[str]) -> XGBRegressor:
 
     return model
 
+
+def evalute_forecast(y_true: pd.Series, y_pred: pd.Series) -> None:
+    # MAE
+    mae = mean_absolute_error(y_true, y_pred)
+    # RMSE
+    rmse = np.sqrt(mean_squared_error(y_true, y_pred))
+    # MAPE
+    mape = np.mean(np.abs((y_true, y_pred) / y_true)) * 100
+
+    # výpis metrik
+    print("Vyhodnocení")
+    print(f"MAE : {mae:.3f}")
+    print(f"RMSE : {rmse:.3f}")
+    print(f"MAPE : {mape:.2f}%")
 
 
 
