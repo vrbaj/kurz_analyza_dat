@@ -21,4 +21,13 @@ verif = df_raw[pd.to_numeric(df_raw["rok"],errors="coerce").isna() & df_raw["Ben
 benzin_2025_verif = verif["Benzin"].values[0] if len(verif) > 0 else None
 nafta_2025_verif = verif["Nafta"].values[0] if len(verif) > 0 else None
 
-print(df_raw.head())
+
+# 2)  predikce složení vozového parku
+sloupce_parku = [c for c in df.columns if c not in ["rok", "Benzin", "Nafta"]]
+# roky co chcemem predikvoat
+roky_pred = np.arange(df["rok"].max() + 1, df["rok"].max() + 1 + ROKY_PRED)
+X = df[["rok"]]
+# tabulka pro uložení predicke
+predikce_park = pd.DataFrame({"rok": roky_pred})
+
+print("-> predikce vozového parku")
