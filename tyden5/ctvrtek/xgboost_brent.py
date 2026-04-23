@@ -317,8 +317,12 @@ def fit_and_predict() -> ForecastResult:
 
     # predikci na testovacích datech
     predictions = pd.Series(
-
+        model.predict(test[feature_cols]),
+        index=test.index,
+        name="prediction",
     )
+
+
 
 
 
