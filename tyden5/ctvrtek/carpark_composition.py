@@ -97,36 +97,136 @@ if benzin_2025_verif:
     print(f"Nafta pred: {n25:.2f}, skut={nafta_2025_verif:.2f}")
 
 
-# grafické vyjádření
+# Barevné kódy pro typy paliv
+barvy = {"benzin": "#E67E22", "nafta": "#2C3E50", "elektro": "#27AE60"}
+# České popisky paliv pro legendu
+paliva_label = {"benzin": "Benzín", "nafta": "Nafta", "elektro": "Elektro"}
 
-fig, axes = plt.subplots(1,2)
+# Vytvoření mřížky 2×3 grafů
+fig, axes = plt.subplots(2, 3, figsize=(18, 11))
+fig.suptitle("Predikce vozového parku a spotřeby paliv v ČR",
+             fontsize=15, fontweight="bold", y=1.01)
 
-df_ok = df[~df["rok"].isin(BENZIN_VYLOUCENE_ROKY)]
-df_vyloucene = df[df["rok"].isin(BENZIN_VYLOUCENE_ROKY)]
+# --- Horní řada: 3 grafy vozového parku (OA, NA, T) ---
+for ax, (kat, label) in zip(axes[0], [("OA", "Osobní automobily"),
+                                       ("NA", "Nákladní automobily"),
+                                       ("T", "Tahače")]):
+    for palivo in ["benzin", "nafta", "elektro"]:
+        col = f"{kat}_{palivo}"               # název sloupce, např. "OA_benzin"
+        barva = barvy[palivo]                  # barva pro dané palivo
 
-ax = axes[0, 0]
-ax.plot(df_ok["rok"], df["Benzin"], "o-",
-        color="E67E22",
-        linewidth=2,
-        markersize=6,
-        label="skuecnost")
+        # Historická data – plná čára s body
+        ax.plot(df["rok"], df[col], "o-", color=barva, markersize=5,
+                linewidth=1.5, label=paliva_label[palivo])
 
-ax.plot(df_vyloucene["rok"], df_vyloucene["Benzin"], "o",
-        color="red",
-        markersize=5,
-        label="vylouceno z modelu")
+        # Napojení predikce na poslední historický bod
+        roky_all = np.concatenate([[df["rok"].iloc[-1]], roky_pred])
+        if col in predikce_park.columns:
+            vals_all = np.concatenate([[df[col].iloc[-1]], predikce_park[col].values])
+        else:
+            continue  # pokud sloupec v predikci není, přeskoč
 
-ax.plot(df["rok"], df["Benzin_model"], "s--",
-        color="e67E22",
-        linewidth=1,
-        markersize=2,
-        alpha=0.5,
-        label="Model fit")
+        # Predikce – čárkovaná čára + diamantové body
+        ax.plot(roky_all, vals_all, "--", color=barva, linewidth=1.5, alpha=0.5)
+        ax.scatter(roky_pred, predikce_park[col], color=barva, s=35, zorder=5,
+                   edgecolors="white", linewidths=0.8, marker="D")
 
-roky_all = np.concatenate([["rok"].iloc[-1]], roky_pred)
-vals_all = np.concatenate([["Benzin_model"].iloc[-1], predikce_park["Benzin_pred"].values])
-ax.plot(roky_all, vals_all, "--")
-ax.scatter(roky_pred, predikce_park["Benzin_pred"], label=predikce)
+    # Modře podbarvená zóna predikce
+    ax.axvspan(roky_pred[0] - 0.5, roky_pred[-1] + 0.5, alpha=0.07,
+               color="blue", label="Predikce")
+    ax.set_title(label, fontsize=12, fontweight="bold")  # nadpis grafu
+    ax.set_xlabel("Rok")                                  # popis osy X
+    ax.set_ylabel("Počet vozidel")                        # popis osy Y
+    ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))  # celá čísla na ose X
+    # Formátování osy Y – mezery v tisících (1 000 000 místo 1000000)
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(
+        lambda x, _: f"{x:,.0f}".replace(",", " ")))
+    ax.legend(fontsize=9, framealpha=0.9)                 # legenda
 
-plt.show()
+# --- Spodní řada ---
+
+# Oddělení covid/post-covid bodů pro vizualizaci
+df_ok = df[~df["rok"].isin(BENZIN_VYLOUCENE_ROKY)]       # roky použité v tréninku
+df_vyloucene = df[df["rok"].isin(BENZIN_VYLOUCENE_ROKY)]  # vyloučené roky
+
+# Graf: Spotřeba benzínu
+ax = axes[1, 0]
+# Skutečné hodnoty – normální roky
+ax.plot(df_ok["rok"], df_ok["Benzin"], "o-", color="#E67E22",
+        linewidth=2, markersize=6, label="Skutečnost")
+# Skutečné hodnoty – vyloučené roky (červeně)
+ax.plot(df_vyloucene["rok"], df_vyloucene["Benzin"], "o", color="red",
+        markersize=8, markeredgecolor="white", zorder=5, label="Vyloučeno z modelu")
+# Modelový fit na historických datech
+ax.plot(df["rok"], df["Benzin_model"], "s--", color="#E67E22",
+        linewidth=1.5, markersize=5, alpha=0.5, label="Model (fit)")
+# Čárkovaná čára predikce napojená na poslední historický bod
+roky_all = np.concatenate([[df["rok"].iloc[-1]], roky_pred])
+vals_all = np.concatenate([[df["Benzin_model"].iloc[-1]], predikce_park["Benzin_pred"].values])
+ax.plot(roky_all, vals_all, "--", color="#E67E22", alpha=0.5, linewidth=1.5)
+# Predikční body (diamanty)
+ax.scatter(roky_pred, predikce_park["Benzin_pred"], color="#E67E22", s=50,
+           zorder=5, edgecolors="white", linewidths=0.8, marker="D", label="Predikce")
+# Verifikační bod 2025 (červená hvězda)
+if benzin_2025_verif:
+    ax.plot(2025, benzin_2025_verif, "*", color="red", markersize=15,
+            zorder=6, label="Skutečnost 2025")
+ax.axvspan(roky_pred[0] - 0.5, roky_pred[-1] + 0.5, alpha=0.07, color="blue")
+ax.set_title(f"Spotřeba benzínu (R²={r2_b:.3f})", fontsize=12, fontweight="bold")
+ax.set_xlabel("Rok")
+ax.set_ylabel("Spotřeba")
+ax.legend(fontsize=8)
+ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+
+# Graf: Spotřeba nafty
+ax = axes[1, 1]
+ax.plot(df["rok"], df["Nafta"], "o-", color="#2C3E50",
+        linewidth=2, markersize=6, label="Skutečnost")
+ax.plot(df["rok"], df["Nafta_model"], "s--", color="#2C3E50",
+        linewidth=1.5, markersize=5, alpha=0.5, label="Model (fit)")
+roky_all = np.concatenate([[df["rok"].iloc[-1]], roky_pred])
+vals_all = np.concatenate([[df["Nafta_model"].iloc[-1]], predikce_park["Nafta_pred"].values])
+ax.plot(roky_all, vals_all, "--", color="#2C3E50", alpha=0.5, linewidth=1.5)
+ax.scatter(roky_pred, predikce_park["Nafta_pred"], color="#2C3E50", s=50,
+           zorder=5, edgecolors="white", linewidths=0.8, marker="D", label="Predikce")
+if nafta_2025_verif:
+    ax.plot(2025, nafta_2025_verif, "*", color="red", markersize=15,
+            zorder=6, label="Skutečnost 2025")
+ax.axvspan(roky_pred[0] - 0.5, roky_pred[-1] + 0.5, alpha=0.07, color="blue")
+ax.set_title(f"Spotřeba nafty (R²={r2_n:.3f})", fontsize=12, fontweight="bold")
+ax.set_xlabel("Rok")
+ax.set_ylabel("Spotřeba")
+ax.legend(fontsize=8)
+ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+
+# Graf: Autobusy (vozový park)
+ax = axes[1, 2]
+for palivo, lbl_col in [("benzin", "Benzín"), ("nafta", "Nafta"), ("alektro", "Elektro")]:
+    col = f"BS_{palivo}"                      # sloupec autobusy, např. "BS_nafta"
+    barva = barvy.get(palivo, barvy.get("elektro"))  # "alektro" mapuje na barvu elektro
+    # Historická data
+    ax.plot(df["rok"], df[col], "o-", color=barva, markersize=5,
+            linewidth=1.5, label=lbl_col)
+    # Predikce
+    if col in predikce_park.columns:
+        roky_all = np.concatenate([[df["rok"].iloc[-1]], roky_pred])
+        vals_all = np.concatenate([[df[col].iloc[-1]], predikce_park[col].values])
+        ax.plot(roky_all, vals_all, "--", color=barva, linewidth=1.5, alpha=0.5)
+        ax.scatter(roky_pred, predikce_park[col], color=barva, s=35, zorder=5,
+                   edgecolors="white", linewidths=0.8, marker="D")
+ax.axvspan(roky_pred[0] - 0.5, roky_pred[-1] + 0.5, alpha=0.07,
+           color="blue", label="Predikce")
+ax.set_title("Autobusy", fontsize=12, fontweight="bold")
+ax.set_xlabel("Rok")
+ax.set_ylabel("Počet vozidel")
+ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+ax.yaxis.set_major_formatter(ticker.FuncFormatter(
+    lambda x, _: f"{x:,.0f}".replace(",", " ")))
+ax.legend(fontsize=9, framealpha=0.9)
+
+# Uložení grafu
+plt.tight_layout()                            # automatické rozmístění grafů
+plt.savefig("results/predikce_auta.png", dpi=200, bbox_inches="tight")  # uložení do souboru
+plt.show()                                    # zobrazení na obrazovce
+print("\nGraf uložen.")
 
