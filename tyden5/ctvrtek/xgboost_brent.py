@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_absolute_error, mean_squared_error
+from xgboost import XGBRegressor
 
 # potlačení varování pomocí knihovny warnings
 warnings.filterwarnings("ignore")
@@ -23,3 +24,23 @@ SERIES: Dict[str,str] = {
     # index průmyslové produkce USA
     "indpro": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=INDPRO",
 }
+
+# definice cílového sloupce
+TARGET_COL = "brent_monthly_avg"
+# počet testovácích měsíců
+TEST_MONTHS = 24
+# fixní seed pro reprodukovatelnost
+RANDOM_SEED = 42
+
+
+# definice dekorátoru
+@dataclass
+class ForecastResult:
+    model:XGBRegressor
+    data: pd.DataFrame
+    train: pd.DataFrame
+    test: pd.DataFrame
+    feature_cols: List[str]
+    predictions: pd.Series
+
+
