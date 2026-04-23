@@ -153,6 +153,9 @@ def add_target_lag_features(df: pd.DataFrame, target_col: str) -> pd.DataFrame:
     out["target_pct_change_3"] = out[target_col].shift(1).pct_change(3)
     out["target_pct_change_12"] = out[target_col].shift(1).pct_change(12)
 
+    return out
+
 df = build_base_dataset()
-out = add_calendar_features(df)
+# out = add_calendar_features(df)
+out = add_target_lag_features(df, "brent")
 print(out.head())
