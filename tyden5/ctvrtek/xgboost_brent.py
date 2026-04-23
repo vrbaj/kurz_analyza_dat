@@ -411,6 +411,37 @@ def make_next_month_feature_row(df:pd.DataFrame) -> pd.DataFrame:
 
 
 
+# ================================
+# vizualizace
+# ================================
+
+def plot_predictions(
+        data: pd.DataFrame,
+        test: pd.DataFrame,
+        houldout_preds: pd.Series,
+        wf_preds: pd.Series,
+        next_pred: float,
+        next_date: pd.Timestamp
+) -> None:
+
+    # nastavení velikosti plátna
+    plt.figure(figsize=(12, 6))
+    # omezení časové osy
+    plot_data = data[data.index >= "2010-01-01"]
+
+    # formátování čáry s ropou
+    plt.plot(plot_data.index, plot_data[TARGET_COL],
+             label= "Skutčnost (Brent)",
+             color="black",
+             linewidth=1.5)
+    # oddělovací vertikální čára
+    plt.axvline(test.index[0],
+                color="grey",
+                linestyle="--",
+                label="Začátek testovací sady")
+    # přidání čáry s naší predikcí
+    plt.plot(test.index, houldout_preds
+             )
 
 
 
@@ -420,8 +451,8 @@ def make_next_month_feature_row(df:pd.DataFrame) -> pd.DataFrame:
 
 
 
-results = fit_and_predict()
-print(results)
+
+
 
 
 
