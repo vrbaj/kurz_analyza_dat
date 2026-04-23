@@ -82,6 +82,21 @@ for kat in ["OA","NA","T","BS"]:
         if col in predikce_park.columns:
             predikce_park[f"km_{col}"] = predikce_park[col] * najezdy[kat] / 1e9
 
+# predikovaná spotřeba
+predikce_park["Benzin_pred"] = model_benzin.predict(predikce_park[feat_benzin])
+predikce_park["Nafta_pred"] = model_nafta.predict(predikce_park[feat_nafta])
+
+print("Predicke spotřeby")
+print(predikce_park[["rok","Benzin_pred","Nafta_pred"]].to_string(index=False))
+# verifikace, porovnání predickea skutečnosti
+if benzin_2025_verif:
+    b25 = predikce_park.loc[predikce_park["rok"] == 2025, "Benzin_pred"].values[0]
+    n25 = predikce_park.loc[predikce_park["rok"] == 2025, "Nafta_pred"].values[0]
+    print("Verifikace")
+    print(f"Benzín pred: {b25:.2f}, skut={benzin_2025_verif:.2f}")
+    print(f"Nafta pred: {n25:.2f}, skut={nafta_2025_verif:.2f}")
+
+
 
 
 
