@@ -219,10 +219,29 @@ def fit_xgboost(train: pd.DataFrame, feature_cols: List[str]) -> XGBRegressor:
 
     # konfogurace modelu
     model = XGBRegressor(
-
+        # počet stromů
+        n_estimators=600,
+        # jak moc se nový strom učí z chyb předchozích
+        learning_rate=0.05,
+        # maximální hloubka stromu
+        max_depth=3,
+        # minimální váha vzorku vl istu
+        min_child_weight=3,
+        # kolik trénovacích dat každý strom vidí
+        subsample=0.9,
+        # strom vidí jen x % příznaků
+        colsample_bytree=0.85,
+        # parametry regularizace
+        reg_alpha=0.0,
+        reg_lambda=1.0,
+        objective="reg:squarederror",
+        tree_method="hist",
+        random_state=RANDOM_SEED
     )
 
+    model.fit(X_train, y_train)
 
+    return model
 
 
 
