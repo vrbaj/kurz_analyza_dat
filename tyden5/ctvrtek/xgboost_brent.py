@@ -394,11 +394,20 @@ def make_next_month_feature_row(df:pd.DataFrame) -> pd.DataFrame:
         "vix_roll_std_3": vix.iloc[-3:].std(),
         "vix_pct_change_1": (vix.iloc[-1] - vix.iloc[-2]) / vix.iloc[-2],
 
-        #
+        # indpro index
+        "indpro_lag_1": indpro.iloc[-1],
+        "indpro_lag_2": indpro.iloc[-2],
+        "indpro_lag_3": indpro.iloc[-3],
+        "indpro_roll_mean_3": indpro.iloc[-3:].mean(),
+        "indpro_roll_std_3": indpro.iloc[-3:].std(),
+        "indpro_pct_change_1": (indpro.iloc[-1] - indpro.iloc[-2]) / indpro.iloc[-2],
 
-
+        # interakční features
+        "brent_to_usd_ratio_lag1": s.iloc[-1] / usd.iloc[-1],
+        "risk_activity_mix_lag1": vix.iloc[-1] / indpro.iloc[-1],
     }
 
+    return pd.DataFrame([row], index=[next_idx])
 
 
 
