@@ -440,8 +440,23 @@ def plot_predictions(
                 linestyle="--",
                 label="Začátek testovací sady")
     # přidání čáry s naší predikcí
-    plt.plot(test.index, houldout_preds
-             )
+    plt.plot(test.index, houldout_preds,
+             label="Predikce",
+             color="orange",
+             linestyle="-.",
+             alpha=0.8)
+    # walk forward predikce
+    plt.plot(wf_preds.index, wf_preds,
+             label="walk forward predikce",
+             color="green",
+             linewidth=2)
+    # přidání červeného bodu na místě predikce
+    plt.scatter([next_date], [next_pred],
+                color="red",
+                s=100,
+                zorder=5,
+                label=f"Budoucnost ({next_date.strftime("%Y-%m")}): {next_pred:.1f} USD")
+
 
 
 
