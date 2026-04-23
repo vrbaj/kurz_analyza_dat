@@ -98,7 +98,7 @@ def build_base_dataset() -> pd.DataFrame:
     # měsíční průměr vix indexu
     vix_m = to_monthly_mean(vix_daily, "vix")
     # resample jen pro unifikaci indexu
-    indpro_m = indpro_monthly[["inpro"]].resample("MS").last()
+    indpro_m = indpro_monthly[["indpro"]].resample("MS").last()
 
     # spojení datových řad do jednoho dataframu
     df = brent_m.join([usd_m, vix_m, indpro_m], how="inner")
