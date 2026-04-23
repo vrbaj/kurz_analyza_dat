@@ -86,6 +86,8 @@ for kat in ["OA","NA","T","BS"]:
 predikce_park["Benzin_pred"] = model_benzin.predict(predikce_park[feat_benzin])
 predikce_park["Nafta_pred"] = model_nafta.predict(predikce_park[feat_nafta])
 
+predikce_park.to_csv("export_predikce.csv")
+
 print("Predicke spotřeby")
 print(predikce_park[["rok","Benzin_pred","Nafta_pred"]].to_string(index=False))
 # verifikace, porovnání predickea skutečnosti
