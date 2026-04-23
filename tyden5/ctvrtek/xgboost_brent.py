@@ -14,7 +14,7 @@ from xgboost import XGBRegressor
 warnings.filterwarnings("ignore")
 
 # nahrání dat z webu
-SERIES: Dict[str,str] = {
+SERIES_URLS: Dict[str,str] = {
     # denní cena ropy brent
     "brent": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DCOILBRENTEU",
     # index dolaru
@@ -42,5 +42,18 @@ class ForecastResult:
     test: pd.DataFrame
     feature_cols: List[str]
     predictions: pd.Series
+
+# =================================================
+# FUNKCE PRO STAHOVÁNÍ DAT
+# =================================================
+
+def load_fred_series(series_id: str, value_name: str) -> pd.DataFrame:
+    # funkce pro stahování dadt ze stránky fred
+    # získání url adresy ze slovníku
+    url = SERIES_URLS[series_id]
+    # stažení do csv (umí z url adresi nativně)
+    df = pd.read_csv(url)
+
+
 
 
