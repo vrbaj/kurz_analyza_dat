@@ -56,4 +56,12 @@ ZPRACUJ = 5
 for index, row in tqdm(data.head(ZPRACUJ).iterrows(), total=ZPRACUJ):
   prompt = vytvor_uzivatelsky_prompt(row.to_dict())
 
-  #response =
+  response = completion(
+    model="ollama/ministral-3:3b",
+    messages = [
+      {"role": "system", "content": system_prompt},
+      {"role": "user", "content": prompt},
+    ],
+    api_base = "http://localhost:11434",
+  )
+  print(response)
