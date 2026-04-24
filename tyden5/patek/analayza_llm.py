@@ -4,6 +4,7 @@ import pandas as pd
 from pydantic import BaseModel, Field
 from tqdm import tqdm
 from tabulate import tabulate
+from litellm import completion
 
 # Nacteni dat
 data = pd.read_csv(Path("Kontroly_MD_poruseni-zbozi.csv"))
@@ -55,4 +56,4 @@ ZPRACUJ = 5
 for index, row in tqdm(data.head(ZPRACUJ).iterrows(), total=ZPRACUJ):
   prompt = vytvor_uzivatelsky_prompt(row.to_dict())
 
-  
+  #response =
