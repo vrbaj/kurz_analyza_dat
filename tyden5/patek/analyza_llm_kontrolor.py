@@ -35,6 +35,24 @@ Pokud je hlášení v pořádku do pole ok ulož True, pokud ne tak False!
 Do pole chyby ulož seznam chyb, pokud nejsou žádné chyby tak nech pole prázdné.
 """
 
+# system prompt
+prompt_kontrolora = \
+  """Zkontroluj, zda následující kontrola hlášení je fakticky správně."""
+
+# user prompt pro kontrolora
+def vytvor_uzivatelsky_prompt_kontrolora(row, chyby) -> str:
+  prompt = f"""Nahlášený chyby:
+{chyby}
+
+Kontrolované hlášení:
+Místo: {row["TypMista"]}
+Druh vozidla: {row["DruhVozidla"]}
+Komodita: {row["Komodita"]}
+Množství porušení: {row["MnozstviPoruseni"]} {row["Jednotka"]}
+Slovní doplnění:
+{row["Poznamka"]}"""
+  return prompt
+
 # vytvoříme funkci k analýze jednoho řádku a převedení na user prompt
 def vytvor_uzivatelsky_prompt(row) -> str:
   if pd.isna(row["Poznamka"]):
