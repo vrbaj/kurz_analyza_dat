@@ -58,6 +58,10 @@ def zpracuj_odpoved(response) -> str:
 
 #print(vytvor_uzivatelsky_prompt(data.iloc[0]))
 
+class StrukturovanaOdpoved(BaseModel):
+  ok: bool # True pokud je hlášení v pořádku, False pokud je špatně
+  chyby: list[str] # seznam chyb (prázdný pokud je hlášení v pořádku)
+
 ZPRACUJ = 5
 for index, row in tqdm(data.head(ZPRACUJ).iterrows(), total=ZPRACUJ):
   prompt = vytvor_uzivatelsky_prompt(row.to_dict())
@@ -68,6 +72,7 @@ for index, row in tqdm(data.head(ZPRACUJ).iterrows(), total=ZPRACUJ):
       {"role": "system", "content": system_prompt},
       {"role": "user", "content": prompt},
     ],
+    response_format=StrukturovanaOdpoved,
     api_base = "http://localhost:11434",
   )
-  print(response)
+  print(zpracuj_odpoved(response))
