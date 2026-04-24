@@ -37,7 +37,8 @@ Do pole chyby ulož seznam chyb, pokud nejsou žádné chyby tak nech pole práz
 
 # system prompt
 prompt_kontrolora = \
-  """Zkontroluj, zda následující kontrola hlášení je fakticky správně."""
+  """Zkontroluj, zda následující kontrola hlášení je fakticky správně.
+  Vrať True pokud je kontrola správně, False pokud je kontrola špatně."""
 
 # user prompt pro kontrolora
 def vytvor_uzivatelsky_prompt_kontrolora(row, chyby) -> str:
@@ -111,6 +112,14 @@ for index, row in tqdm(data.head(ZPRACUJ).iterrows(), total=ZPRACUJ):
   odpoved = zpracuj_odpoved(response)
   if not odpoved["ok"]:
     print(odpoved["chyby"])
+    kontrolor_prompt = vytvor_uzivatelsky_prompt_kontrolora(row, odpoved["chyby"])
+    resposnse_kontrolora = completion(
+      model="ollama/ministral-3:3b",
+      messages=[
+        {"role": "system", "content": prompt_kontrolora},
+        {"role": "user", "content": kontrolor_prompt},
+      ]
+    )
     row["chyby"] = odpoved["chyby"]
     mozne_chybne_radky = pd.concat([mozne_chybne_radky, row])
 
