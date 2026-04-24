@@ -6,6 +6,10 @@ from tqdm import tqdm
 from tabulate import tabulate
 from litellm import completion
 
+# moznosti rozsireni:
+# https://docs.litellm.ai/docs/providers/openai
+# https://ollama.com/search
+
 # Nacteni dat
 data = pd.read_csv(Path("Kontroly_MD_poruseni-zbozi.csv"))
 
