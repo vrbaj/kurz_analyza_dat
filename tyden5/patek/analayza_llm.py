@@ -72,6 +72,8 @@ class StrukturovanaOdpoved(BaseModel):
   ok: bool # True pokud je hlášení v pořádku, False pokud je špatně
   chyby: list[str] # seznam chyb (prázdný pokud je hlášení v pořádku)
 
+mozne_chybne_radky = pd.DataFrame()
+
 ZPRACUJ = 5
 for index, row in tqdm(data.head(ZPRACUJ).iterrows(), total=ZPRACUJ):
   prompt = vytvor_uzivatelsky_prompt(row.to_dict())
@@ -85,4 +87,10 @@ for index, row in tqdm(data.head(ZPRACUJ).iterrows(), total=ZPRACUJ):
     response_format=StrukturovanaOdpoved,
     api_base = "http://localhost:11434",
   )
-  print(zpracuj_odpoved(response))
+  odpoved = zpracuj_odpoved(response)
+  if not odpoved["ok"]:
+    print(odpoved["chyby"])
+    row["chyba"] = odpoved["chyby"]
+    mozne_chybne_radky = pd.concat([mozne_chybne_radky, row])
+
+mozne_chybne_radky.to_csv("mozne_chybne_radky.csv")
