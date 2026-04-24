@@ -49,3 +49,4 @@ Slovní doplnění:
 """
   return prompt
 
+print(vytvor_uzivatelsky_prompt(data.iloc[0]))
