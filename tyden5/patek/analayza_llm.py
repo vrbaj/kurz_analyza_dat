@@ -29,6 +29,8 @@ system_prompt = """Jsi datový analytik celní správy.
 Tvým úkolem je kontrolovat hlášení hlídek a objevit případné špatné hlášení.
 Kontroluj pouze dodané informace, nesnaž se vymýšlet něco navíc. 
 Najdi pouze jednoznačně špatné informace.
+Odpověď by měla být co nejkratší. Vždy by měla začínat slovy "OK" nebo "Špatně".
+Nepoužívej formátovací znaky, pouze text. Pokud je hlášení v pořádku odpovez pouze "OK"!
 """
 
 # vytvoříme funkci k analýze jednoho řádku a převedení na user prompt
@@ -49,6 +51,10 @@ Slovní doplnění:
 {row["Poznamka"]}
 """
   return prompt
+
+def zpracuj_odpoved(response) -> str:
+  odpoved = response.choices[0].message.content
+  return odpoved
 
 #print(vytvor_uzivatelsky_prompt(data.iloc[0]))
 
