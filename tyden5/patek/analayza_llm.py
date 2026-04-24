@@ -54,9 +54,17 @@ Slovní doplnění:
 """
   return prompt
 
-def zpracuj_odpoved(response) -> str:
+def zpracuj_odpoved(response) -> dict:
+  # odpoved jako str
   odpoved = response.choices[0].message.content
-  return odpoved
+  # odpoved prevedena na objekt strukturovanaodpoved
+  odpoved = StrukturovanaOdpoved.model_validate_json(odpoved)
+  # prevest na jiny format
+  out = {
+    "ok", odpoved.ok,
+    "chyby", ",".join(odpoved.chyby)
+  }
+  return out
 
 #print(vytvor_uzivatelsky_prompt(data.iloc[0]))
 
