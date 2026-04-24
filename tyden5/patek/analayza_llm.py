@@ -49,4 +49,10 @@ Slovní doplnění:
 """
   return prompt
 
-print(vytvor_uzivatelsky_prompt(data.iloc[0]))
+#print(vytvor_uzivatelsky_prompt(data.iloc[0]))
+
+ZPRACUJ = 5
+for index, row in tqdm(data.head(ZPRACUJ).iterrows(), total=ZPRACUJ):
+  prompt = vytvor_uzivatelsky_prompt(row.to_dict())
+
+  
