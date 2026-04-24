@@ -61,8 +61,8 @@ def zpracuj_odpoved(response) -> dict:
   odpoved = StrukturovanaOdpoved.model_validate_json(odpoved)
   # prevest na jiny format
   out = {
-    "ok", odpoved.ok,
-    "chyby", ",".join(odpoved.chyby)
+    "ok": odpoved.ok,
+    "chyby": ",".join(odpoved.chyby)
   }
   return out
 
@@ -90,7 +90,7 @@ for index, row in tqdm(data.head(ZPRACUJ).iterrows(), total=ZPRACUJ):
   odpoved = zpracuj_odpoved(response)
   if not odpoved["ok"]:
     print(odpoved["chyby"])
-    row["chyba"] = odpoved["chyby"]
+    row["chyby"] = odpoved["chyby"]
     mozne_chybne_radky = pd.concat([mozne_chybne_radky, row])
 
 mozne_chybne_radky.to_csv("mozne_chybne_radky.csv")
