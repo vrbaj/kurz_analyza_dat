@@ -122,9 +122,10 @@ for index, row in tqdm(data.head(ZPRACUJ).iterrows(), total=ZPRACUJ):
     )
     pouzite_tokeny += resposnse_kontrolora.usage.total_tokens
     kontrolor_odpoved = resposnse_kontrolora.choices[0].message.content
-    if kontrolor_odpoved.strip().lower() == "false":
+    if kontrolor_odpoved.strip().lower() == "true":
       print("Kontrolor potvrdil chybu.")
       row["chyby"] = odpoved["chyby"]
+      row["radek"] = index
       mozne_chybne_radky = pd.concat([mozne_chybne_radky, row])
     else:
       print("Kontrolor zpochybnil chybu")
