@@ -37,3 +37,15 @@ def vytvor_uzivatelsky_prompt(row) -> str:
   if pd.isna(row["DruhVozidla"]):
     row["DruhVozidla"] = "Žádné"
   row["Komodita"] = row["Komodita"].replace("VV - ", "")
+
+  prompt = f"""Zkontroluj následující hlášení:
+
+Místo: {row["TypMista"]}
+Druh vozidla: {row["DruhVozidla"]}
+Komodita: {row["Komodita"]}
+Množství porušení: {row["MnozstviPoruseni"]} {row["Jednotka"]}
+Slovní doplnění:
+{row["Poznamka"]}
+"""
+  return prompt
+
