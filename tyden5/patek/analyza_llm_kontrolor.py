@@ -120,8 +120,14 @@ for index, row in tqdm(data.head(ZPRACUJ).iterrows(), total=ZPRACUJ):
         {"role": "user", "content": kontrolor_prompt},
       ]
     )
-    row["chyby"] = odpoved["chyby"]
-    mozne_chybne_radky = pd.concat([mozne_chybne_radky, row])
+    pouzite_tokeny += resposnse_kontrolora.usage.total_tokens
+    kontrolor_odpoved = resposnse_kontrolora.choices[0].message.content
+    if kontrolor_odpoved.strip().lower() == "false":
+      print("Kontrolor potvrdil chybu.")
+      row["chyby"] = odpoved["chyby"]
+      mozne_chybne_radky = pd.concat([mozne_chybne_radky, row])
+    else:
+      print("Kontrolor zpochybnil chybu")
 
 mozne_chybne_radky.to_csv("mozne_chybne_radky.csv")
 print(f"Použito tokenů: {pouzite_tokeny}")
