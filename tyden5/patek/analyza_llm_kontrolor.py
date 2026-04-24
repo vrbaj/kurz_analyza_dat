@@ -100,8 +100,12 @@ def zpracuj_odpoved(response) -> dict:
       if out["chyby"] !="":
         out["chyby"] += ","
       out["chyby"] += f"Nevychází výpočet: {ls} != {ps}"
+      out["vypocet_nesedi"] = True
+    else:
+      out["vypocet_nesedi"] = False
   except:
     print(f"Neplatný výpočet LS: {odpoved.vypocet_LS}")
+    out["vypocet_nesedi"] = False
   return out
 
 #print(vytvor_uzivatelsky_prompt(data.iloc[0]))
@@ -150,6 +154,11 @@ for index, row in tqdm(data.head(ZPRACUJ).iterrows(), total=ZPRACUJ):
       mozne_chybne_radky = pd.concat([mozne_chybne_radky, row])
     else:
       print("Kontrolor zpochybnil chybu")
+      if odpoved["vypocet_nesedi"]:
+        print("kontrolor zpochybnil chybu ale vypocet nesedi, takze ignorujeme kontrolora")
+        row["chyby"] = odpoved["chyby"]
+        row["radek"] = index
+        mozne_chybne_radky = pd.concat([mozne_chybne_radky, row])
 
 mozne_chybne_radky.to_csv("mozne_chybne_radky.csv")
 print(f"Použito tokenů: {pouzite_tokeny}")
