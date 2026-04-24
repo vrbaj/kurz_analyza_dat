@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 from tqdm import tqdm
 from tabulate import tabulate
 from litellm import completion
+import ast
 
 # moznosti rozsireni:
 # https://docs.litellm.ai/docs/providers/openai
@@ -34,9 +35,12 @@ Tvým úkolem je kontrolovat hlášení hlídek a objevit případné špatné h
 Kontroluj pouze dodané informace, nesnaž se vymýšlet něco navíc. 
 Najdi pouze jednoznačně špatné informace.
 Odpověď by měla být co nejkratší.
+Neověřuj výpočty, místo toho je vrať v odpovědi a ověřím je na kalkulačce.
 Nepoužívej formátovací znaky, pouze text. 
 Pokud je hlášení v pořádku do pole ok ulož True, pokud ne tak False!
 Do pole chyby ulož seznam chyb, pokud nejsou žádné chyby tak nech pole prázdné.
+Do pole vypocet_LS ulož levou stranu rovnice, kterou je potřeba ověřit (např. "20 + 30 + 15").
+Do pole vypocet_PS ulož pravou stranu rovnice, kterou je potřeba ověřit (např. "65").
 """
 
 # system prompt
@@ -85,8 +89,19 @@ def zpracuj_odpoved(response) -> dict:
   # prevest na jiny format
   out = {
     "ok": odpoved.ok,
-    "chyby": ",".join(odpoved.chyby)
+    "chyby": ",".join(odpoved.chyby),
   }
+  try:
+    ls = ast.literal_eval(odpoved.vypocet_LS)
+    ps = odpoved.vypocet_PS
+    vychazi = ls == ps
+    if not vychazi:
+      out["ok"] = False
+      if out["chyby"] !="":
+        out["chyby"] += ","
+      out["chyby"] += f"Nevychází výpočet: {ls} != {ps}"
+  except:
+    print(f"Neplatný výpočet LS: {odpoved.vypocet_LS}")
   return out
 
 #print(vytvor_uzivatelsky_prompt(data.iloc[0]))
@@ -94,6 +109,8 @@ def zpracuj_odpoved(response) -> dict:
 class StrukturovanaOdpoved(BaseModel):
   ok: bool # True pokud je hlášení v pořádku, False pokud je špatně
   chyby: list[str] # seznam chyb (prázdný pokud je hlášení v pořádku)
+  vypocet_LS: str # vypocet k provedeni
+  vypocet_PS: int # Kolik to ma vychazet
 
 mozne_chybne_radky = pd.DataFrame()
 pouzite_tokeny = 0
